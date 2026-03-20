@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Khatib365 — Ahmed El-Khatib. Power Platform Technical Lead, craftsman, and Microsoft ecosystem specialist based in Saudi Arabia." />
+  <meta name="description" content="Khatib365 — Ahmed El-Khatib. Power Platform Technical Lead, consultant, conference speaker, and Microsoft ecosystem specialist based in Saudi Arabia." />
   <title>Khatib365 — Ahmed El-Khatib</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,11 +22,10 @@
       <span></span><span></span><span></span>
     </button>
     <div class="nav-links" id="navLinks">
-      <a href="#about"    class="nav-link">About</a>
-      <a href="#skills"   class="nav-link">Skills</a>
-      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#about"   class="nav-link">About</a>
+      <a href="#skills"  class="nav-link">Skills</a>
       <a href="blog/index.html" class="nav-link">Writing</a>
-      <a href="#contact"  class="nav-link nav-link--cta">Let's talk</a>
+      <a href="#contact" class="nav-link nav-link--cta">Let's talk</a>
     </div>
   </nav>
 
@@ -41,27 +40,98 @@
           I build enterprise solutions that hold up under pressure —<br />
           and I document the craft so others don't have to guess.
         </p>
-        <div class="hero-badges">
-          <span class="badge">PL-200</span>
-          <span class="badge">PL-400</span>
-          <span class="badge">PL-600</span>
-          <span class="badge badge--accent">MS Power Up Champion</span>
-        </div>
         <div class="hero-ctas">
-          <a href="#projects" class="btn btn-primary">See my work</a>
-          <a href="blog/index.html" class="btn btn-secondary">Read the blog</a>
+          <a href="blog/index.html" class="btn btn-primary">Read the blog</a>
+          <a href="#contact" class="btn btn-secondary">Let's talk</a>
         </div>
       </div>
+
       <div class="hero-right">
-        <div class="hero-emblem">
-          <div class="emblem-ring emblem-ring--outer"></div>
-          <div class="emblem-ring emblem-ring--mid"></div>
-          <div class="emblem-center">
-            <span class="emblem-k">K</span>
-            <span class="emblem-sub code">365</span>
+        <!-- ── Animated Tech Constellation ── -->
+        <div class="tech-orbit" aria-hidden="true">
+          <svg class="to-svg" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Connection lines: center(150,150) → each node -->
+            <line x1="150" y1="150" x2="150" y2="42"  class="to-line to-l1"/>
+            <line x1="150" y1="150" x2="244" y2="96"  class="to-line to-l2"/>
+            <line x1="150" y1="150" x2="244" y2="204" class="to-line to-l3"/>
+            <line x1="150" y1="150" x2="150" y2="258" class="to-line to-l4"/>
+            <line x1="150" y1="150" x2="56"  y2="204" class="to-line to-l5"/>
+            <line x1="150" y1="150" x2="56"  y2="96"  class="to-line to-l6"/>
+          </svg>
+
+          <!-- Center hub -->
+          <div class="to-center">
+            <span class="to-brand">Khatib</span>
+            <span class="to-brand-accent">365</span>
           </div>
-          <div class="emblem-label emblem-label--top code">craftsman</div>
-          <div class="emblem-label emblem-label--bottom code">since 2016</div>
+
+          <!-- Node 1 — top: Power Platform -->
+          <div class="to-node to-n1">
+            <div class="to-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <span class="to-label">Power Platform</span>
+          </div>
+
+          <!-- Node 2 — top-right: Azure -->
+          <div class="to-node to-n2">
+            <div class="to-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+              </svg>
+            </div>
+            <span class="to-label">Azure</span>
+          </div>
+
+          <!-- Node 3 — bottom-right: Dataverse -->
+          <div class="to-node to-n3">
+            <div class="to-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+              </svg>
+            </div>
+            <span class="to-label">Dataverse</span>
+          </div>
+
+          <!-- Node 4 — bottom: D365 -->
+          <div class="to-node to-n4">
+            <div class="to-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+            </div>
+            <span class="to-label">D365</span>
+          </div>
+
+          <!-- Node 5 — bottom-left: ALM -->
+          <div class="to-node to-n5">
+            <div class="to-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="18" r="3"/>
+                <circle cx="6" cy="6" r="3"/>
+                <path d="M13 6h3a2 2 0 0 1 2 2v7"/>
+                <line x1="6" y1="9" x2="6" y2="21"/>
+              </svg>
+            </div>
+            <span class="to-label">ALM</span>
+          </div>
+
+          <!-- Node 6 — top-left: Pro-Code -->
+          <div class="to-node to-n6">
+            <div class="to-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </div>
+            <span class="to-label">Pro-Code</span>
+          </div>
         </div>
       </div>
     </div>
@@ -83,12 +153,12 @@
             <span class="qf-label code">years in the<br />Microsoft ecosystem</span>
           </div>
           <div class="quick-fact">
-            <span class="qf-num">3</span>
-            <span class="qf-label code">Power Platform<br />certifications</span>
+            <span class="qf-num">50+</span>
+            <span class="qf-label code">developers<br />mentored &amp; led</span>
           </div>
           <div class="quick-fact">
             <span class="qf-num">∞</span>
-            <span class="qf-label code">solutions shipped<br />& still running</span>
+            <span class="qf-label code">solutions shipped<br />&amp; still running</span>
           </div>
         </div>
       </div>
@@ -100,35 +170,42 @@
         <div class="about-body">
           <p>
             I'm Khatib — Technical Lead for Power Platform and CRM at Trax Group, Saudi Arabia.
-            I run both departments, overseeing solution architecture, ALM governance, team delivery, 
+            I run both departments, overseeing solution architecture, ALM governance, team delivery,
             and client work across Dynamics 365, Dataverse, Azure, and the full Power Platform stack.
           </p>
           <p>
-            My work lives at the intersection of pro-code precision and platform leverage. 
-            I write plugins, build Custom APIs, craft PCF controls, design Power Automate 
-            orchestrations, and integrate Azure services — because the right tool for the job 
+            My work lives at the intersection of pro-code precision and platform leverage.
+            I write plugins, build Custom APIs, craft PCF controls, design Power Automate
+            orchestrations, and integrate Azure services — because the right tool for the job
             matters more than any single paradigm.
           </p>
           <p>
-            I'm a <strong>Microsoft Power Up Champion</strong> and hold PL-200, PL-400, and PL-600 
-            certifications. This blog is where I document what I wish had been written down when 
-            I was learning it the hard way.
+            I'm available for <strong>consultation</strong>, <strong>conference talks</strong>,
+            <strong>webinars</strong>, and <strong>mentoring</strong> — because knowledge compounds
+            when it's shared. This blog is where I document what I wish had been written down
+            when I was learning it the hard way.
           </p>
           <blockquote class="about-quote">
-            "Quality isn't a feature you add at the end. It's the standard 
+            "Quality isn't a feature you add at the end. It's the standard
             you hold from the first line of code."
           </blockquote>
         </div>
 
         <div class="about-links">
-          <a href="https://linkedin.com/in/ahmed-el-khatib" class="about-link" target="_blank">
-            <span class="about-link-icon">in</span> LinkedIn
+          <a href="https://linkedin.com/in/ahmed-el-khatib" class="about-link" target="_blank" rel="noopener noreferrer">
+            <span class="about-link-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </span> LinkedIn
           </a>
           <a href="https://github.com/ahmedelkhatib7" class="about-link" target="_blank" rel="noopener noreferrer">
-            <span class="about-link-icon">gh</span> GitHub
+            <span class="about-link-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </span> GitHub
           </a>
-          <a href="#contact" class="about-link">
-            <span class="about-link-icon">@</span> Email me
+          <a href="mailto:ahmedelkhatib30@gmail.com" class="about-link">
+            <span class="about-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span> Email me
           </a>
         </div>
       </div>
@@ -139,10 +216,10 @@
   <section class="skills" id="skills">
     <div class="section-container section-container--full">
       <div class="skills-header">
-        <p class="section-eyebrow code">02 — Skills & expertise</p>
+        <p class="section-eyebrow code">02 — Skills &amp; expertise</p>
         <h2 class="section-title">The full stack<br /><em>of the craft.</em></h2>
         <p class="skills-intro">
-          Eight years of building, breaking, and rebuilding things in the Microsoft ecosystem 
+          Eight years of building, breaking, and rebuilding things in the Microsoft ecosystem
           — across the entire delivery lifecycle.
         </p>
       </div>
@@ -150,9 +227,13 @@
       <div class="skills-grid">
 
         <div class="skill-card skill-card--large">
-          <div class="skill-card-icon">⬡</div>
+          <div class="skill-card-icon">
+            <svg class="skill-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
           <h3 class="skill-card-title">Power Platform</h3>
-          <p class="skill-card-body">Canvas & Model-Driven Apps, Power Automate, Power Pages, Power BI, AI Builder, Copilot Studio. End-to-end from architecture to delivery.</p>
+          <p class="skill-card-body">Canvas &amp; Model-Driven Apps, Power Automate, Power Pages, Power BI, AI Builder, Copilot Studio. End-to-end from architecture to delivery.</p>
           <ul class="skill-tags">
             <li>Canvas Apps</li><li>Model-Driven Apps</li><li>Power Automate</li>
             <li>Power Pages</li><li>AI Builder</li><li>Copilot Studio</li>
@@ -160,17 +241,28 @@
         </div>
 
         <div class="skill-card skill-card--large">
-          <div class="skill-card-icon">◈</div>
-          <h3 class="skill-card-title">Dataverse & D365</h3>
-          <p class="skill-card-body">Dataverse as a proper data platform — plugins, Custom APIs, Business Events, security models. Dynamics 365 CE/CRM and F&O integration patterns.</p>
+          <div class="skill-card-icon">
+            <svg class="skill-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+          </div>
+          <h3 class="skill-card-title">Dataverse &amp; D365</h3>
+          <p class="skill-card-body">Dataverse as a proper data platform — plugins, Custom APIs, Business Events, security models. Dynamics 365 CE/CRM and F&amp;O integration patterns.</p>
           <ul class="skill-tags">
-            <li>Dataverse</li><li>Dynamics 365 CE</li><li>D365 F&O</li>
+            <li>Dataverse</li><li>Dynamics 365 CE</li><li>D365 F&amp;O</li>
             <li>Custom APIs</li><li>Plugins</li><li>Business Events</li>
           </ul>
         </div>
 
         <div class="skill-card">
-          <div class="skill-card-icon">✦</div>
+          <div class="skill-card-icon">
+            <svg class="skill-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </div>
           <h3 class="skill-card-title">Pro-Code Development</h3>
           <p class="skill-card-body">PCF Controls, JavaScript web resources, TypeScript, Custom Workflow Activities. When low-code hits its ceiling.</p>
           <ul class="skill-tags">
@@ -179,7 +271,11 @@
         </div>
 
         <div class="skill-card">
-          <div class="skill-card-icon">⬠</div>
+          <div class="skill-card-icon">
+            <svg class="skill-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+            </svg>
+          </div>
           <h3 class="skill-card-title">Azure Integration</h3>
           <p class="skill-card-body">Logic Apps, API Management, Azure Functions, Service Bus, Azure OpenAI. Connecting Power Platform to the real enterprise.</p>
           <ul class="skill-tags">
@@ -188,8 +284,15 @@
         </div>
 
         <div class="skill-card">
-          <div class="skill-card-icon">⊞</div>
-          <h3 class="skill-card-title">ALM & DevOps</h3>
+          <div class="skill-card-icon">
+            <svg class="skill-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="18" r="3"/>
+              <circle cx="6" cy="6" r="3"/>
+              <path d="M13 6h3a2 2 0 0 1 2 2v7"/>
+              <line x1="6" y1="9" x2="6" y2="21"/>
+            </svg>
+          </div>
+          <h3 class="skill-card-title">ALM &amp; DevOps</h3>
           <p class="skill-card-body">Environment topology, Azure DevOps pipelines, solution packaging, branching strategies, and the governance frameworks that let teams move fast safely.</p>
           <ul class="skill-tags">
             <li>Azure DevOps</li><li>Solution Pipelines</li><li>ALM</li><li>Governance</li>
@@ -197,7 +300,14 @@
         </div>
 
         <div class="skill-card">
-          <div class="skill-card-icon">◎</div>
+          <div class="skill-card-icon">
+            <svg class="skill-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
           <h3 class="skill-card-title">Team Leadership</h3>
           <p class="skill-card-body">Hiring, onboarding, performance reviews, stand-ups, technical direction. Building teams that ship quality work consistently.</p>
           <ul class="skill-tags">
@@ -209,130 +319,11 @@
     </div>
   </section>
 
-  <!-- ═══ PROJECTS ═══ -->
-  <section class="projects" id="projects">
-    <div class="section-container section-container--full">
-      <div class="projects-header">
-        <p class="section-eyebrow code">03 — Projects & case studies</p>
-        <h2 class="section-title">Work that<br /><em>ships and sticks.</em></h2>
-      </div>
-
-      <div class="projects-list">
-
-        <article class="project-card project-card--featured">
-          <div class="project-card-inner">
-            <div class="project-meta">
-              <span class="project-tag">Power Apps · D365 F&O · Integration</span>
-              <span class="project-year code">2025</span>
-            </div>
-            <h3 class="project-title">Masheed Sales Mobility Solution</h3>
-            <p class="project-body">
-              End-to-end sales mobility platform built on Power Apps, integrated with Dynamics 365 
-              Finance & Operations. Covers area-based access control, customer hierarchy management 
-              (three-level: Customer → Address → Address Registration), agreement lifecycle, and 
-              TMS integration with third-party logistics. Delivered from spec to go-live.
-            </p>
-            <div class="project-outcomes">
-              <div class="outcome">
-                <span class="outcome-label code">Stack</span>
-                <span class="outcome-value">Canvas App · Dataverse · D365 F&O · Power Automate</span>
-              </div>
-              <div class="outcome">
-                <span class="outcome-label code">Role</span>
-                <span class="outcome-value">Solution Architect & Technical Lead</span>
-              </div>
-            </div>
-          </div>
-          <div class="project-card-accent"></div>
-        </article>
-
-        <div class="projects-grid">
-
-          <article class="project-card">
-            <div class="project-meta">
-              <span class="project-tag">Power Pages · Azure AI</span>
-              <span class="project-year code">2024</span>
-            </div>
-            <h3 class="project-title">ADIO Golden Vendor Platform</h3>
-            <p class="project-body">
-              Supplier catalogue marketplace for Abu Dhabi manufacturers. Dataverse-backed, 
-              Power Pages frontend, Azure AI Document Intelligence for onboarding, 
-              Azure OpenAI for catalogue enrichment.
-            </p>
-            <div class="project-outcomes">
-              <div class="outcome">
-                <span class="outcome-label code">Stack</span>
-                <span class="outcome-value">Power Pages · Dataverse · Azure OpenAI</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="project-card">
-            <div class="project-meta">
-              <span class="project-tag">Power Automate · D365</span>
-              <span class="project-year code">2024</span>
-            </div>
-            <h3 class="project-title">ATCL Inventory & Logistics Automation</h3>
-            <p class="project-body">
-              Power Automate flows for Arabian Transportation Co. covering batch expiry alerts, 
-              transfer order notifications, FetchXML reporting, and dynamic HTML email dispatch.
-            </p>
-            <div class="project-outcomes">
-              <div class="outcome">
-                <span class="outcome-label code">Stack</span>
-                <span class="outcome-value">Power Automate · D365 · Dataverse · FetchXML</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="project-card">
-            <div class="project-meta">
-              <span class="project-tag">Canvas App · Power Automate</span>
-              <span class="project-year code">2024</span>
-            </div>
-            <h3 class="project-title">Customer Account Approval Workflow</h3>
-            <p class="project-body">
-              Multi-stage, consensus-based approval system. Canvas App for Tier 2 approvers, 
-              Dataverse as the state machine, Power Automate for orchestration. 
-              Complex routing logic with auditability.
-            </p>
-            <div class="project-outcomes">
-              <div class="outcome">
-                <span class="outcome-label code">Stack</span>
-                <span class="outcome-value">Canvas App · Dataverse · Power Automate</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="project-card">
-            <div class="project-meta">
-              <span class="project-tag">Power Platform · ALM</span>
-              <span class="project-year code">2023</span>
-            </div>
-            <h3 class="project-title">Power Platform Practice Framework</h3>
-            <p class="project-body">
-              Internal COE framework: environment topology, CI/CD pipeline standards, 
-              naming conventions, and a phased retrofit roadmap for a team of 10+ developers.
-            </p>
-            <div class="project-outcomes">
-              <div class="outcome">
-                <span class="outcome-label code">Stack</span>
-                <span class="outcome-value">Azure DevOps · Power Platform Pipelines · ALM</span>
-              </div>
-            </div>
-          </article>
-
-        </div>
-
-      </div>
-    </div>
-  </section>
-
   <!-- ═══ BLOG ═══ -->
   <section class="blog" id="blog">
     <div class="section-container section-container--full">
       <div class="blog-header">
-        <p class="section-eyebrow code">04 — Writing</p>
+        <p class="section-eyebrow code">03 — Writing</p>
         <h2 class="section-title">From the field,<br /><em>documented.</em></h2>
         <p class="blog-intro">
           No vendor fluff. Real patterns, real mistakes, real decisions — from enterprise Power Platform delivery.
@@ -351,8 +342,8 @@
               Before You Write a Single Line of Code, Get Your Environments Right
             </h3>
             <p class="blog-featured-body">
-              Most Power Platform projects fail at deployment — not because of bad code, but because 
-              of decisions made in the first five minutes. The wrong URL, no security groups, a skipped 
+              Most Power Platform projects fail at deployment — not because of bad code, but because
+              of decisions made in the first five minutes. The wrong URL, no security groups, a skipped
               toggle. Here's what to get right before anything else.
             </p>
             <a href="blog/post1-environment-strategy.html" class="btn btn-primary">Read the post</a>
@@ -372,70 +363,6 @@
         </div>
       </article>
 
-      <div class="blog-grid">
-
-        <article class="blog-card">
-          <div class="blog-post-meta">
-            <span class="blog-tag">Dataverse</span>
-            <span class="blog-date code">Feb 2025</span>
-          </div>
-          <h3 class="blog-card-title">Dataverse as a State Machine: Approval Workflows That Scale</h3>
-          <p class="blog-card-body">Stop putting approval logic in flows. Here's how Dataverse holds state while Power Automate stays a dumb orchestrator — and why it matters at scale.</p>
-          <span class="blog-read-link code" style="opacity:0.35;cursor:default;">Coming soon</span>
-        </article>
-
-        <article class="blog-card">
-          <div class="blog-post-meta">
-            <span class="blog-tag">Integration</span>
-            <span class="blog-date code">Jan 2025</span>
-          </div>
-          <h3 class="blog-card-title">D365 F&O + Power Platform: The Honest Integration Guide</h3>
-          <p class="blog-card-body">Virtual entities, custom connectors, dual-write — which pattern fits which scenario, without the Microsoft marketing spin.</p>
-          <span class="blog-read-link code" style="opacity:0.35;cursor:default;">Coming soon</span>
-        </article>
-
-        <article class="blog-card">
-          <div class="blog-post-meta">
-            <span class="blog-tag">Azure · AI</span>
-            <span class="blog-date code">Dec 2024</span>
-          </div>
-          <h3 class="blog-card-title">Azure OpenAI in Power Platform Without the Security Nightmare</h3>
-          <p class="blog-card-body">Managed identity, safe prompt handling, keeping secrets out of flow definitions. Practical patterns, not theory.</p>
-          <span class="blog-read-link code" style="opacity:0.35;cursor:default;">Coming soon</span>
-        </article>
-
-        <article class="blog-card">
-          <div class="blog-post-meta">
-            <span class="blog-tag">PCF · Pro-Code</span>
-            <span class="blog-date code">Nov 2024</span>
-          </div>
-          <h3 class="blog-card-title">PCF Controls Are Underrated: Build Once, Use Everywhere</h3>
-          <p class="blog-card-body">The Power Apps Component Framework is the biggest unlock most teams ignore. Here's why every serious team needs a PCF library.</p>
-          <span class="blog-read-link code" style="opacity:0.35;cursor:default;">Coming soon</span>
-        </article>
-
-        <article class="blog-card">
-          <div class="blog-post-meta">
-            <span class="blog-tag">Leadership</span>
-            <span class="blog-date code">Oct 2024</span>
-          </div>
-          <h3 class="blog-card-title">Running a Power Platform Team: What Nobody Tells You</h3>
-          <p class="blog-card-body">Hiring pro-code developers vs. makers, performance reviews, and the governance gap most teams fall into. Lessons from the trenches.</p>
-          <span class="blog-read-link code" style="opacity:0.35;cursor:default;">Coming soon</span>
-        </article>
-
-        <article class="blog-card">
-          <div class="blog-post-meta">
-            <span class="blog-tag">Architecture</span>
-            <span class="blog-date code">Sep 2024</span>
-          </div>
-          <h3 class="blog-card-title">Warehouse Mobility Platform Selection: Canvas vs PWA vs Code</h3>
-          <p class="blog-card-body">50–100 users, handheld devices, offline requirements. The full evaluation framework and the honest verdict on which platform wins.</p>
-          <span class="blog-read-link code" style="opacity:0.35;cursor:default;">Coming soon</span>
-        </article>
-
-      </div>
-
       <div class="blog-footer">
         <a href="blog/index.html" class="btn btn-secondary">Browse all posts</a>
       </div>
@@ -447,15 +374,18 @@
   <section class="contact" id="contact">
     <div class="contact-container">
       <div class="contact-header">
-        <p class="section-eyebrow code">05 — Contact</p>
+        <p class="section-eyebrow code">04 — Contact</p>
         <h2 class="section-title">Let's build<br /><em>something proper.</em></h2>
         <p class="contact-body">
-          Whether it's a project, a speaking invitation, a collaboration,
-          or you want to debate ALM strategy — I'm reachable. I reply to everyone.
+          Whether it's a consultation session, a conference talk, a webinar slot,
+          or mentoring the next generation of Power Platform engineers — I'm reachable.
+          I reply to everyone.
         </p>
         <div class="contact-ctas">
           <a href="https://linkedin.com/in/ahmed-el-khatib" class="btn btn-primary contact-btn" target="_blank" rel="noopener noreferrer">
-            <span class="contact-btn-icon code">in</span> Connect on LinkedIn
+            <span class="contact-btn-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </span> Connect on LinkedIn
           </a>
           <a href="mailto:ahmedelkhatib30@gmail.com" class="btn btn-secondary contact-btn">
             <span class="contact-btn-icon code">@</span> Send an email
@@ -466,22 +396,53 @@
       <div class="contact-open">
         <p class="contact-open-label code">Open to</p>
         <div class="contact-open-grid">
+
           <div class="contact-open-item">
-            <span class="contact-open-icon">◈</span>
-            <span>Enterprise Power Platform projects</span>
+            <span class="contact-open-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="18" height="18">
+                <rect x="2" y="7" width="20" height="14" rx="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                <line x1="12" y1="12" x2="12" y2="16"/>
+                <line x1="10" y1="14" x2="14" y2="14"/>
+              </svg>
+            </span>
+            <span>Consultation &amp; architecture reviews</span>
           </div>
+
           <div class="contact-open-item">
-            <span class="contact-open-icon">✦</span>
-            <span>Technical consulting &amp; architecture reviews</span>
+            <span class="contact-open-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="18" height="18">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </span>
+            <span>Conference talks</span>
           </div>
+
           <div class="contact-open-item">
-            <span class="contact-open-icon">⬡</span>
-            <span>Conference talks &amp; webinars</span>
+            <span class="contact-open-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="18" height="18">
+                <polygon points="23 7 16 12 23 17 23 7"/>
+                <rect x="1" y="5" width="15" height="14" rx="2"/>
+              </svg>
+            </span>
+            <span>Webinars &amp; online sessions</span>
           </div>
+
           <div class="contact-open-item">
-            <span class="contact-open-icon">◎</span>
+            <span class="contact-open-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="18" height="18">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </span>
             <span>Mentoring Power Platform practitioners</span>
           </div>
+
         </div>
       </div>
     </div>
@@ -499,7 +460,6 @@
       <div class="footer-links">
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
         <a href="blog/index.html">Writing</a>
         <a href="#contact">Contact</a>
       </div>

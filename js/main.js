@@ -38,10 +38,9 @@ document.querySelectorAll('.nav-link').forEach(link => {
 // ── SCROLL REVEAL ──
 const reveals = document.querySelectorAll(
   '.hero-left, .hero-right, .about-photo-col, .about-content, ' +
-  '.skills-header, .skill-card, .projects-header, ' +
-  '.project-card--featured, .project-card, ' +
+  '.skills-header, .skill-card, ' +
   '.blog-header, .blog-featured, .blog-card, ' +
-  '.contact-left, .contact-form, .hero-scroll-hint'
+  '.contact-header, .contact-open, .hero-scroll-hint'
 );
 
 reveals.forEach(el => el.classList.add('reveal'));
@@ -57,7 +56,7 @@ const revealObs = new IntersectionObserver(entries => {
 }, { threshold: 0.08 });
 
 // stagger cards
-['skill-card', 'project-card', 'blog-card'].forEach(cls => {
+['skill-card', 'blog-card'].forEach(cls => {
   document.querySelectorAll(`.${cls}`).forEach((el, i) => {
     el.dataset.delay = i * 70;
   });

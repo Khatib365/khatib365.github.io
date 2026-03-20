@@ -746,6 +746,140 @@ section { padding: 7rem 3rem; }
 .footer-links a:hover { color: var(--sand); }
 .footer-copy { color: var(--ink-mid); font-size: 0.68rem; }
 
+/* ═══════════════════ SKILL SVG ICONS ═══════════════════ */
+.skill-svg-icon {
+  width: 30px; height: 30px;
+  color: var(--copper);
+  display: block;
+}
+.skill-card-icon {
+  margin-bottom: 1.1rem;
+  line-height: 1;
+}
+
+/* ═══════════════════ TECH ORBIT (hero right) ═══════════════════ */
+.tech-orbit {
+  position: relative;
+  width: 300px; height: 310px;
+  flex-shrink: 0;
+}
+
+.to-svg {
+  position: absolute;
+  inset: 0; width: 100%; height: 100%;
+  overflow: visible;
+}
+
+/* Animated flowing dashed lines */
+.to-line {
+  stroke: rgba(156,90,46,0.22);
+  stroke-width: 1;
+  stroke-dasharray: 4 7;
+  animation: to-dash 2.8s linear infinite;
+}
+.to-l2 { animation-delay: -0.47s; }
+.to-l3 { animation-delay: -0.93s; }
+.to-l4 { animation-delay: -1.4s;  }
+.to-l5 { animation-delay: -1.87s; }
+.to-l6 { animation-delay: -2.33s; }
+
+@keyframes to-dash {
+  to { stroke-dashoffset: -22; }
+}
+
+/* Center hub */
+.to-center {
+  position: absolute;
+  left: 50%; top: 150px;
+  transform: translate(-50%, -50%);
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  background: var(--parchment-d);
+  border: 1.5px solid rgba(156,90,46,0.25);
+  box-shadow:
+    0 0 0 8px var(--canvas),
+    0 0 0 9px rgba(156,90,46,0.12);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 2;
+  animation: to-pulse 3.5s ease-in-out infinite;
+}
+@keyframes to-pulse {
+  0%, 100% { box-shadow: 0 0 0 8px var(--canvas), 0 0 0 9px rgba(156,90,46,0.12); }
+  50%       { box-shadow: 0 0 0 8px var(--canvas), 0 0 0 15px rgba(156,90,46,0.05); }
+}
+
+.to-brand {
+  font-family: var(--serif);
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--ink); line-height: 1;
+}
+.to-brand-accent {
+  font-family: var(--mono);
+  font-size: 0.58rem; color: var(--copper);
+  letter-spacing: 0.04em;
+}
+
+/* Orbit nodes */
+.to-node {
+  position: absolute;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 5px;
+  z-index: 2;
+}
+
+.to-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--parchment);
+  border: 1px solid rgba(156,90,46,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--copper);
+  box-shadow: 0 2px 12px rgba(28,24,18,0.08);
+  transition: all 0.28s ease;
+  cursor: default;
+}
+.to-icon svg { width: 20px; height: 20px; }
+
+.to-node:hover .to-icon {
+  background: var(--copper-pale);
+  border-color: var(--copper);
+  box-shadow: 0 4px 22px rgba(156,90,46,0.28);
+  transform: scale(1.12);
+}
+.to-node:hover { animation-play-state: paused; }
+
+.to-label {
+  font-family: var(--mono);
+  font-size: 0.57rem; color: var(--ink-mid);
+  letter-spacing: 0.03em; white-space: nowrap;
+}
+
+/* Node positions: centered on SVG line endpoints */
+/* n1 top   (150,42): left = 150-24 = 126, top = 42-24 = 18  */
+/* n2 TR    (244,96): left = 244-24 = 220, top = 96-24 = 72  */
+/* n3 BR   (244,204): left = 220,           top = 204-24=180  */
+/* n4 bot  (150,258): left = 126,           top = 258-24=234  */
+/* n5 BL    (56,204): left = 56-24 = 32,   top = 180          */
+/* n6 TL    (56,96):  left = 32,            top = 72           */
+.to-n1 { left:126px; top: 18px;  animation: to-float 4s ease-in-out infinite 0.0s; }
+.to-n2 { left:220px; top: 72px;  animation: to-float 4s ease-in-out infinite 0.65s; }
+.to-n3 { left:220px; top:180px;  animation: to-float 4s ease-in-out infinite 1.3s; }
+.to-n4 { left:126px; top:234px;  animation: to-float 4s ease-in-out infinite 1.95s; }
+.to-n5 { left: 32px; top:180px;  animation: to-float 4s ease-in-out infinite 2.6s; }
+.to-n6 { left: 32px; top: 72px;  animation: to-float 4s ease-in-out infinite 3.25s; }
+
+@keyframes to-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+/* ═══════════════════ CONTACT ICON SIZING ═══════════════════ */
+.contact-open-icon {
+  color: var(--copper); flex-shrink: 0; margin-top: 0.1rem;
+  display: flex; align-items: center;
+}
+
 /* ═══════════════════ ANIMATIONS ═══════════════════ */
 .reveal {
   opacity: 0; transform: translateY(24px);

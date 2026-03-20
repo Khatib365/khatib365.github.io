@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Khatib365 Blog — Power Platform, ALM, integration architecture, and building enterprise solutions properly.">
+<meta name="description" content="Khatib365 — Power Platform, ALM, integration architecture, and building enterprise solutions properly.">
 <title>Writing — Khatib365</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
 <style>
   :root {
     --parchment:   #f4efe6;
+    --parchment-d: #ece4d5;
     --canvas:      #faf7f1;
     --sand:        #e8dcc8;
     --ink:         #1c1812;
@@ -20,6 +21,7 @@
     --copper-light:#c47a4a;
     --copper-pale: #f2e8dc;
     --rule:        rgba(28,24,18,0.1);
+    --rule-light:  rgba(28,24,18,0.06);
     --serif:  'Cormorant Garamond', Georgia, serif;
     --sans:   'Jost', system-ui, sans-serif;
     --mono:   'Fira Code', 'Courier New', monospace;
@@ -27,9 +29,7 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
-
   body {
     background: var(--canvas);
     color: var(--ink);
@@ -37,8 +37,8 @@
     font-size: 16px;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
-
   a { color: inherit; text-decoration: none; }
 
   /* ── NAV ── */
@@ -47,597 +47,358 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 1.2rem 3rem;
     background: rgba(250,247,241,0.92);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
     border-bottom: 1px solid transparent;
     transition: all 0.3s ease;
   }
-
   .nav.scrolled {
     padding: 0.85rem 3rem;
     border-bottom-color: var(--rule);
     box-shadow: 0 2px 24px rgba(28,24,18,0.07);
   }
-
-  .nav-brand {
-    font-family: var(--serif);
-    font-size: 1.4rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1;
-  }
-
+  .nav-brand { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
   .brand-khatib { color: var(--ink); }
   .brand-365    { color: var(--copper); }
-
-  .nav-links {
-    display: flex; align-items: center; gap: 2.5rem;
-  }
-
-  .nav-link {
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: var(--ink-mid);
-    transition: color 0.2s;
-    position: relative;
-  }
-
+  .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+  .nav-link { font-size: 0.85rem; font-weight: 400; color: var(--ink-mid); transition: color 0.2s; position: relative; }
   .nav-link:hover { color: var(--ink); }
-
-  .nav-link.active {
-    color: var(--copper);
-    font-weight: 500;
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0; right: 0;
-    height: 1px;
-    background: var(--copper);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.22s ease;
-  }
-
-  .nav-link:hover::after,
-  .nav-link.active::after { transform: scaleX(1); }
-
+  .nav-link.active { color: var(--copper); font-weight: 500; }
+  .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--copper); transform: scaleX(0); transform-origin: left; transition: transform 0.22s ease; }
+  .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
   .nav-toggle { display: none; }
 
   /* ── PAGE HEADER ── */
   .blog-header {
     padding: 120px 3rem 64px;
-    max-width: var(--max-w);
-    margin: 0 auto;
+    background: linear-gradient(135deg, var(--canvas) 0%, var(--parchment) 60%, var(--parchment-d) 100%);
+    position: relative;
+    overflow: hidden;
     border-bottom: 1px solid var(--rule);
   }
-
+  .blog-header::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 480px; height: 480px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(156,90,46,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .blog-header::after {
+    content: '';
+    position: absolute; bottom: -40px; left: 20%;
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(156,90,46,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
   .blog-header-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 40px;
     flex-wrap: wrap;
+    position: relative; z-index: 1;
   }
-
   .blog-eyebrow {
     font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--copper);
-    margin-bottom: 16px;
+    font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--copper); margin-bottom: 16px;
   }
-
   .blog-page-title {
     font-family: var(--serif);
-    font-size: clamp(2.4rem, 5vw, 4rem);
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    margin-bottom: 16px;
+    font-size: clamp(2.6rem, 5vw, 4.2rem);
+    font-weight: 600; line-height: 1.08;
+    letter-spacing: -0.025em; color: var(--ink); margin-bottom: 16px;
   }
-
-  .blog-page-title em {
-    font-style: italic;
-    color: var(--copper);
-  }
-
+  .blog-page-title em { font-style: italic; color: var(--copper); font-weight: 400; }
   .blog-page-desc {
-    font-size: 1.05rem;
-    color: var(--ink-mid);
-    max-width: 480px;
-    line-height: 1.65;
-    font-weight: 300;
+    font-size: 1.05rem; color: var(--ink-mid);
+    max-width: 480px; line-height: 1.65; font-weight: 300;
   }
-
-  .blog-stats {
-    display: flex;
-    gap: 32px;
-    flex-shrink: 0;
-  }
-
-  .blog-stat {
-    text-align: right;
-  }
-
+  .blog-stats { display: flex; gap: 32px; flex-shrink: 0; }
+  .blog-stat { text-align: right; }
   .blog-stat-num {
-    font-family: var(--serif);
-    font-size: 2.4rem;
-    font-weight: 600;
-    color: var(--ink);
-    line-height: 1;
-    display: block;
+    font-family: var(--serif); font-size: 2.6rem; font-weight: 600;
+    color: var(--ink); line-height: 1; display: block;
   }
-
   .blog-stat-label {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-light);
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light);
   }
 
   /* ── FILTER BAR ── */
   .filter-bar {
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 28px 3rem;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    max-width: var(--max-w); margin: 0 auto;
+    padding: 24px 3rem;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     border-bottom: 1px solid var(--rule);
   }
-
   .filter-label {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-light);
-    margin-right: 4px;
+    font-family: var(--mono); font-size: 0.68rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-light); margin-right: 4px;
   }
-
   .filter-btn {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    padding: 5px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--sand);
-    background: transparent;
-    color: var(--ink-mid);
-    cursor: pointer;
-    transition: all 0.18s;
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    padding: 5px 14px; border-radius: 20px;
+    border: 1px solid var(--sand); background: transparent;
+    color: var(--ink-mid); cursor: pointer; transition: all 0.18s;
   }
-
-  .filter-btn:hover {
-    border-color: var(--copper);
-    color: var(--copper);
-  }
-
+  .filter-btn:hover { border-color: var(--copper); color: var(--copper); }
   .filter-btn.active {
-    background: var(--copper);
-    border-color: var(--copper);
-    color: white;
+    background: var(--copper); border-color: var(--copper); color: white;
   }
 
   /* ── MAIN CONTENT ── */
   .blog-main {
-    max-width: var(--max-w);
-    margin: 0 auto;
+    max-width: var(--max-w); margin: 0 auto;
     padding: 56px 3rem 100px;
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 64px;
-    align-items: start;
+    display: grid; grid-template-columns: 1fr 320px;
+    gap: 64px; align-items: start;
   }
 
   /* ── POST LIST ── */
-  .post-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+  .post-list { display: flex; flex-direction: column; gap: 0; }
 
   .post-item {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 0 32px;
-    padding: 36px 0;
+    display: grid; grid-template-columns: 80px 1fr;
+    gap: 0 32px; padding: 40px 0;
     border-bottom: 1px solid var(--rule);
     transition: opacity 0.2s;
+    position: relative;
+    border-radius: 0 10px 10px 0;
+    margin-left: -1rem; padding-left: 1rem;
+    transition: background 0.22s ease;
   }
-
   .post-item:first-child { padding-top: 0; }
   .post-item:last-child { border-bottom: none; }
-
   .post-item.hidden { display: none; }
 
-  .post-num {
-    font-family: var(--serif);
-    font-size: 3rem;
-    font-weight: 600;
-    color: var(--sand);
-    line-height: 1;
-    padding-top: 4px;
-    text-align: right;
+  /* left accent bar on hover */
+  .post-item::before {
+    content: '';
+    position: absolute; left: 0; top: 12%; bottom: 12%;
+    width: 2px; background: var(--copper);
+    transform: scaleY(0); transform-origin: center;
+    transition: transform 0.28s ease; border-radius: 1px;
   }
+  .post-item:hover { background: rgba(156,90,46,0.03); }
+  .post-item:hover::before { transform: scaleY(1); }
 
-  .post-body {}
+  .post-num {
+    font-family: var(--serif); font-size: 3.2rem; font-weight: 600;
+    color: var(--sand); line-height: 1; padding-top: 4px; text-align: right;
+    transition: color 0.22s;
+  }
+  .post-item:hover .post-num { color: var(--copper); opacity: 0.35; }
 
   .post-meta {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px; flex-wrap: wrap;
   }
-
   .post-series {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: white;
-    background: var(--copper);
-    padding: 2px 9px;
-    border-radius: 3px;
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: white; background: var(--copper); padding: 2px 9px; border-radius: 3px;
   }
-
   .post-tag {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--copper);
-    background: var(--copper-pale);
-    padding: 2px 9px;
-    border-radius: 3px;
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--copper); background: var(--copper-pale); padding: 2px 9px; border-radius: 3px;
   }
-
-  .post-date {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--ink-light);
-    letter-spacing: 0.06em;
-  }
+  .post-date { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-light); letter-spacing: 0.06em; }
 
   .post-title {
-    font-family: var(--serif);
-    font-size: 1.55rem;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-    margin-bottom: 10px;
-    transition: color 0.2s;
+    font-family: var(--serif); font-size: 1.65rem; font-weight: 600;
+    line-height: 1.18; letter-spacing: -0.015em; color: var(--ink);
+    margin-bottom: 12px; transition: color 0.2s;
   }
-
   .post-item:hover .post-title { color: var(--copper); }
 
   .post-excerpt {
-    font-size: 0.92rem;
-    color: var(--ink-mid);
-    line-height: 1.65;
-    font-weight: 300;
-    margin-bottom: 16px;
-    max-width: 560px;
+    font-size: 0.92rem; color: var(--ink-mid); line-height: 1.7;
+    font-weight: 300; margin-bottom: 18px; max-width: 580px;
   }
-
   .post-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
   }
-
-  .post-read-time {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    color: var(--ink-light);
-    letter-spacing: 0.06em;
-  }
-
+  .post-read-time { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-light); letter-spacing: 0.06em; }
   .post-link {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--copper);
-    letter-spacing: 0.08em;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-family: var(--mono); font-size: 0.72rem; color: var(--copper);
+    letter-spacing: 0.08em; display: flex; align-items: center; gap: 6px;
     transition: gap 0.2s;
   }
+  .post-item:hover .post-link { gap: 11px; }
+  .post-coming { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-light); letter-spacing: 0.08em; opacity: 0.55; }
 
-  .post-item:hover .post-link { gap: 10px; }
-
-  .post-coming {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--ink-light);
-    letter-spacing: 0.08em;
-    opacity: 0.6;
-  }
-
-  /* ── SIDEBAR ── */
-  .blog-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 36px;
-    position: sticky;
-    top: 96px;
-  }
-
-  .sidebar-card {
-    background: var(--parchment);
-    border: 1px solid var(--sand);
-    border-radius: 12px;
-    padding: 24px 22px;
-  }
-
-  .sidebar-title {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--copper);
-    margin-bottom: 16px;
-  }
-
-  .series-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .series-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-    line-height: 1.4;
-  }
-
-  .series-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--copper);
-    flex-shrink: 0;
-    opacity: 0.4;
-  }
-
-  .series-dot.live { opacity: 1; }
-
-  .about-mini {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .about-mini-name {
-    font-family: var(--serif);
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--ink);
-  }
-
-  .about-mini-role {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--copper);
-  }
-
-  .about-mini-bio {
-    font-size: 0.85rem;
-    color: var(--ink-mid);
-    line-height: 1.6;
-    font-weight: 300;
-  }
-
-  .about-mini-link {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--copper);
-    letter-spacing: 0.06em;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: gap 0.2s;
-  }
-
-  .about-mini-link:hover { gap: 10px; }
-
-  /* ── FOOTER ── */
-  .footer {
-    background: var(--ink);
-    padding: 2.5rem 3rem;
-  }
-
-  .footer-inner {
-    max-width: var(--max-w);
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-
-  .footer .nav-brand { font-size: 1.2rem; }
-  .footer .brand-khatib { color: var(--sand); }
-  .footer .brand-365 { color: var(--copper-light); }
-
-  .footer-copy {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--ink-mid);
-    letter-spacing: 0.06em;
-  }
-
-  .footer-links {
-    display: flex;
-    gap: 24px;
-  }
-
-  .footer-link {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--ink-mid);
-    letter-spacing: 0.06em;
-    transition: color 0.2s;
-  }
-
-  .footer-link:hover { color: var(--copper-light); }
-
-  /* ── LIVE BADGE ── */
+  /* Live badge */
   .post-live-badge {
-    font-family: var(--mono);
-    font-size: 0.58rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: white;
-    background: var(--copper);
-    padding: 2px 9px 3px;
-    border-radius: 3px;
+    font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: white; background: var(--copper); padding: 2px 9px 3px; border-radius: 3px;
     animation: pulse-badge 2.8s ease-in-out infinite;
   }
   @keyframes pulse-badge {
     0%, 100% { box-shadow: 0 0 0 0 rgba(156,90,46,0.4); }
-    50% { box-shadow: 0 0 0 4px rgba(156,90,46,0); }
+    50%       { box-shadow: 0 0 0 5px rgba(156,90,46,0); }
   }
 
-  /* ── ENHANCED POST ITEMS ── */
-  .post-item {
-    position: relative;
-    border-radius: 0 10px 10px 0;
-    margin-left: -1rem;
-    padding-left: 1rem;
-    transition: background 0.22s ease;
+  /* ── SIDEBAR ── */
+  .blog-sidebar {
+    display: flex; flex-direction: column; gap: 28px;
+    position: sticky; top: 96px;
   }
-  .post-item::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 10%; bottom: 10%;
-    width: 2px;
-    background: var(--copper);
-    transform: scaleY(0);
-    transform-origin: center;
-    transition: transform 0.28s ease;
-    border-radius: 1px;
+  .sidebar-card {
+    background: var(--parchment);
+    border: 1px solid var(--sand);
+    border-radius: 14px; padding: 24px 22px;
   }
-  .post-item:hover { background: rgba(156,90,46,0.04); }
-  .post-item:hover::before { transform: scaleY(1); }
-  .post-item:hover .post-num { color: var(--copper); opacity: 0.35; }
-  .post-num { transition: color 0.22s; }
+  .sidebar-title {
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--copper); margin-bottom: 16px;
+  }
+  .series-list { display: flex; flex-direction: column; gap: 10px; }
+  .series-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.85rem; color: var(--ink-soft); line-height: 1.4;
+  }
+  .series-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--copper); flex-shrink: 0; opacity: 0.25;
+  }
+  .series-dot.live { opacity: 1; }
 
-  /* ── SERIES PROGRESS BAR ── */
-  .series-progress {
-    margin-top: 14px;
-  }
+  /* Series progress */
+  .series-progress { margin-top: 14px; }
   .series-progress-track {
-    height: 3px;
-    background: var(--sand);
-    border-radius: 2px;
-    margin: 10px 0 6px;
-    overflow: hidden;
+    height: 3px; background: var(--sand); border-radius: 2px;
+    margin: 10px 0 6px; overflow: hidden;
   }
   .series-progress-fill {
-    height: 100%;
-    width: 8.3%;
+    height: 100%; width: 8.3%;
     background: linear-gradient(90deg, var(--copper), var(--copper-light));
     border-radius: 2px;
   }
   .series-progress-label {
-    font-family: var(--mono);
-    font-size: 0.6rem;
-    color: var(--ink-light);
-    letter-spacing: 0.06em;
-    display: flex;
-    justify-content: space-between;
+    font-family: var(--mono); font-size: 0.6rem; color: var(--ink-light);
+    letter-spacing: 0.06em; display: flex; justify-content: space-between;
   }
 
-  /* ── AUTHOR PHOTO IN SIDEBAR ── */
-  .author-mini-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
+  /* Author card */
+  .author-mini-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
   .author-mini-photo {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--sand);
-    flex-shrink: 0;
-    background: var(--copper-pale);
+    width: 48px; height: 48px; border-radius: 50%;
+    object-fit: cover; border: 2px solid var(--sand); flex-shrink: 0;
   }
   .author-mini-meta { display: flex; flex-direction: column; gap: 2px; }
+  .about-mini-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--ink); }
+  .about-mini-role { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--copper); }
+  .about-mini-bio { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6; font-weight: 300; margin-bottom: 14px; }
+  .about-mini-link {
+    font-family: var(--mono); font-size: 0.7rem; color: var(--copper);
+    letter-spacing: 0.06em; display: inline-flex; align-items: center;
+    gap: 6px; transition: gap 0.2s;
+  }
+  .about-mini-link:hover { gap: 10px; }
 
-  /* ── FOLLOW CARD ── */
-  .follow-card {
-    background: var(--ink);
-    border-radius: 12px;
-    padding: 24px 22px;
-  }
+  /* Follow card (dark) */
+  .follow-card { background: var(--ink); border-radius: 14px; padding: 24px 22px; }
   .follow-card-eyebrow {
-    font-family: var(--mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--copper-light);
-    margin-bottom: 10px;
-    display: block;
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--copper-light); margin-bottom: 10px; display: block;
   }
-  .follow-card-title {
-    font-family: var(--serif);
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--sand);
-    margin-bottom: 8px;
-    line-height: 1.3;
-  }
-  .follow-card-body {
-    font-size: 0.82rem;
-    color: var(--ink-mid);
-    line-height: 1.6;
-    font-weight: 300;
-    margin-bottom: 18px;
-  }
-  .follow-card-links {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+  .follow-card-title { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; color: var(--sand); margin-bottom: 8px; line-height: 1.3; }
+  .follow-card-body { font-size: 0.83rem; color: var(--ink-mid); line-height: 1.6; font-weight: 300; margin-bottom: 18px; }
+  .follow-card-links { display: flex; flex-direction: column; gap: 8px; }
   .follow-card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--mono);
-    font-size: 0.7rem;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.7rem; color: var(--ink-light);
+    padding: 9px 13px; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 7px; transition: all 0.2s; letter-spacing: 0.04em;
+  }
+  .follow-card-link:hover { background: rgba(255,255,255,0.06); color: var(--sand); border-color: rgba(255,255,255,0.18); }
+  .follow-card-link-icon { background: rgba(255,255,255,0.08); border-radius: 3px; padding: 1px 5px; font-size: 0.62rem; }
+
+  /* ── FOOTER ── */
+  .footer { background: var(--ink); padding: 2.5rem 3rem; }
+  .footer-inner {
+    max-width: var(--max-w); margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .footer .nav-brand { font-size: 1.2rem; }
+  .footer .brand-khatib { color: var(--sand); }
+  .footer .brand-365 { color: var(--copper-light); }
+  .footer-copy { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-mid); letter-spacing: 0.06em; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-link { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-mid); letter-spacing: 0.06em; transition: color 0.2s; }
+  .footer-link:hover { color: var(--copper-light); }
+
+  /* ── PRO TIP TOAST ── */
+  .tip-toast {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    z-index: 999;
+    max-width: 340px;
+    background: var(--ink);
+    border-radius: 14px;
+    padding: 0;
+    box-shadow: 0 12px 40px rgba(28,24,18,0.25), 0 0 0 1px rgba(255,255,255,0.05);
+    transform: translateY(calc(100% + 40px));
+    opacity: 0;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+    overflow: hidden;
+  }
+  .tip-toast.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .tip-toast.hiding {
+    transform: translateY(calc(100% + 40px));
+    opacity: 0;
+  }
+  .tip-toast-progress {
+    height: 2px;
+    background: linear-gradient(90deg, var(--copper), var(--copper-light));
+    width: 100%;
+    transform-origin: left;
+    animation: tip-drain 7s linear forwards;
+  }
+  @keyframes tip-drain {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+  }
+  .tip-toast-body { padding: 18px 20px 20px; }
+  .tip-toast-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .tip-toast-label {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--copper-light);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tip-toast-label-icon { font-size: 0.75rem; }
+  .tip-close {
+    background: rgba(255,255,255,0.07); border: none; border-radius: 50%;
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    color: var(--ink-mid); cursor: pointer; font-size: 0.7rem;
+    transition: background 0.2s; line-height: 1;
+  }
+  .tip-close:hover { background: rgba(255,255,255,0.14); color: var(--sand); }
+  .tip-toast-text {
+    font-size: 0.88rem; color: rgba(232,220,200,0.9);
+    line-height: 1.65; font-weight: 300;
+  }
+  .tip-toast-text strong { color: var(--copper-light); font-weight: 500; }
+
+  /* ── EMPTY STATE (when no published posts match filter) ── */
+  .no-posts-msg {
+    padding: 3rem 0;
+    text-align: center;
     color: var(--ink-light);
-    text-decoration: none;
-    padding: 8px 12px;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
-    transition: all 0.2s;
-    letter-spacing: 0.04em;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    display: none;
   }
-  .follow-card-link:hover {
-    background: rgba(255,255,255,0.06);
-    color: var(--sand);
-    border-color: rgba(255,255,255,0.18);
-  }
-  .follow-card-link-icon {
-    background: rgba(255,255,255,0.08);
-    border-radius: 3px;
-    padding: 1px 5px;
-    font-size: 0.62rem;
-  }
+  .no-posts-msg.visible { display: block; }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
@@ -645,27 +406,26 @@
     .nav.scrolled { padding: 0.8rem 1.5rem; }
     .nav-links { display: none; }
     .nav-toggle { display: block; background: none; border: none; font-size: 1.2rem; color: var(--ink); cursor: pointer; }
-
-  .nav-links.open {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0; right: 0;
-    background: rgba(250,247,241,0.98);
-    padding: 1rem 1.5rem 1.5rem;
-    border-bottom: 1px solid var(--rule);
-    gap: 1rem;
-  }
-    .blog-header { padding: 100px 1.5rem 40px; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: rgba(250,247,241,0.98);
+      padding: 1rem 1.5rem 1.5rem;
+      border-bottom: 1px solid var(--rule); gap: 1rem;
+    }
+    .blog-header { padding: 100px 1.5rem 48px; }
     .blog-header-inner { flex-direction: column; align-items: flex-start; }
     .blog-stats { align-self: flex-start; }
     .filter-bar { padding: 20px 1.5rem; }
     .blog-main { grid-template-columns: 1fr; padding: 40px 1.5rem 80px; gap: 48px; }
     .blog-sidebar { position: static; }
-    .post-item { grid-template-columns: 48px 1fr; gap: 0 20px; }
-    .post-num { font-size: 2rem; }
+    .post-item { grid-template-columns: 52px 1fr; gap: 0 20px; }
+    .post-num { font-size: 2.2rem; }
     .footer { padding: 2rem 1.5rem; }
+    .tip-toast { max-width: calc(100vw - 40px); right: 20px; bottom: 20px; }
+  }
+  @media (max-width: 480px) {
+    .blog-stats { gap: 20px; }
   }
 </style>
 </head>
@@ -676,11 +436,10 @@
   <a href="../" class="nav-brand">
     <span class="brand-khatib">Khatib</span><span class="brand-365">365</span>
   </a>
-  <div class="nav-links">
+  <div class="nav-links" id="navLinks">
     <a href="../#about" class="nav-link">About</a>
     <a href="index.html" class="nav-link active">Writing</a>
     <a href="../#skills" class="nav-link">Skills</a>
-    <a href="../#projects" class="nav-link">Projects</a>
     <a href="../#contact" class="nav-link">Contact</a>
   </div>
   <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
@@ -700,18 +459,17 @@
         <span class="blog-stat-label">Published</span>
       </div>
       <div class="blog-stat">
-        <span class="blog-stat-num">11</span>
-        <span class="blog-stat-label">Coming soon</span>
+        <span class="blog-stat-num">12</span>
+        <span class="blog-stat-label">Series posts</span>
       </div>
     </div>
   </div>
 </header>
 
 <!-- FILTER BAR -->
-<div class="filter-bar">
+<div class="filter-bar" id="filterBar">
   <span class="filter-label">Filter</span>
   <button class="filter-btn active" data-filter="all">All</button>
-  <button class="filter-btn" data-filter="published">Published</button>
   <button class="filter-btn" data-filter="alm">ALM</button>
   <button class="filter-btn" data-filter="integration">Integration</button>
   <button class="filter-btn" data-filter="dataverse">Dataverse</button>
@@ -725,7 +483,7 @@
   <div class="post-list" id="postList">
 
     <!-- Post 01 — LIVE -->
-    <article class="post-item" data-tags="alm published" data-live="true">
+    <article class="post-item" data-tags="alm" data-live="true">
       <div class="post-num">01</div>
       <div class="post-body">
         <div class="post-meta">
@@ -743,192 +501,10 @@
       </div>
     </article>
 
-    <!-- Post 02 — Coming -->
-    <article class="post-item" data-tags="alm">
-      <div class="post-num">02</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">ALM · Solutions</span>
-        </div>
-        <h2 class="post-title">Solution Architecture — The Decisions You Can't Undo Mid-Project</h2>
-        <p class="post-excerpt">One solution or many? How to segment by layer, publisher strategy, and what happens when you get this wrong after go-live.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~10 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 03 — Coming -->
-    <article class="post-item" data-tags="alm">
-      <div class="post-num">03</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">ALM · Security</span>
-        </div>
-        <h2 class="post-title">Identity and Connection References — Set This Up Before You Build Anything</h2>
-        <p class="post-excerpt">Service principals, application users, environment security groups. The thing everyone ignores until deployment breaks.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~9 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 04 — Coming -->
-    <article class="post-item" data-tags="alm">
-      <div class="post-num">04</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">ALM · Git</span>
-        </div>
-        <h2 class="post-title">Dataverse Git Integration Is GA — Here's What That Actually Changes</h2>
-        <p class="post-excerpt">Native Git integration from make.powerapps.com is now generally available. What it replaces, what it doesn't, and when to still use PAC CLI.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~11 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 05 — Coming -->
-    <article class="post-item" data-tags="alm">
-      <div class="post-num">05</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">ALM · Pipelines</span>
-        </div>
-        <h2 class="post-title">Native Pipelines vs Azure DevOps CI/CD — Picking Your Path</h2>
-        <p class="post-excerpt">Two legitimate deployment paths now exist for Power Platform. Which one fits your team, your maturity, and your project.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~10 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 06 — Coming -->
-    <article class="post-item" data-tags="integration">
-      <div class="post-num">06</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">ALM · DevOps</span>
-        </div>
-        <h2 class="post-title">Building the CI Pipeline — Export, Unpack, Commit</h2>
-        <p class="post-excerpt">Azure DevOps Build Tools walkthrough. Export solution from Dev, unpack, commit to repo. Common failures and how to fix them.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~13 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 07 — Coming -->
-    <article class="post-item" data-tags="integration">
-      <div class="post-num">07</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">ALM · DevOps</span>
-        </div>
-        <h2 class="post-title">Building the CD Pipeline — Pack, Deploy, Promote</h2>
-        <p class="post-excerpt">The release side. Environment variables and connection references at deploy time, approval gates, and what most tutorials skip over.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~14 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 08 — Coming -->
-    <article class="post-item" data-tags="ai">
-      <div class="post-num">08</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">AI · ADO MCP</span>
-        </div>
-        <h2 class="post-title">Managing Your Backlog and Pipelines by Talking to Claude</h2>
-        <p class="post-excerpt">Azure DevOps MCP Server is GA. Real demo — ask Claude to create work items, check pipeline status, review a failed run. This is the post nobody else is writing yet.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~11 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 09 — Coming -->
-    <article class="post-item" data-tags="ai dataverse">
-      <div class="post-num">09</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">AI · Dataverse MCP</span>
-        </div>
-        <h2 class="post-title">Dataverse MCP + Claude — Smart Development Is Here</h2>
-        <p class="post-excerpt">Dataverse MCP is GA since December 2025. Read table metadata, generate documentation, query data conversationally. What actually works in production.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~12 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 10 — Coming -->
-    <article class="post-item" data-tags="ai">
-      <div class="post-num">10</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">AI · ALM</span>
-        </div>
-        <h2 class="post-title">AI-Assisted ALM — What Actually Works vs What's Hype</h2>
-        <p class="post-excerpt">Tying it together. Where AI fits in the deployment lifecycle — not as a gimmick but as a genuine productivity layer.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~10 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 11 — Coming -->
-    <article class="post-item" data-tags="alm">
-      <div class="post-num">11</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">Governance</span>
-        </div>
-        <h2 class="post-title">Managed Environments, DLP, and Governance at Scale</h2>
-        <p class="post-excerpt">What's worth it and what's overhead. For teams managing multiple projects and needing enforceable standards.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~10 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Post 12 — Coming -->
-    <article class="post-item" data-tags="alm">
-      <div class="post-num">12</div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-series">Series · Deployment</span>
-          <span class="post-tag">ALM · Recovery</span>
-        </div>
-        <h2 class="post-title">When Things Go Wrong — Failures, Conflicts, and Rollback</h2>
-        <p class="post-excerpt">Deployment failures, solution conflicts, layer corruption, rollback strategies. The post that comes from real battle scars.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~11 min read</span>
-          <span class="post-coming">Coming soon</span>
-        </div>
-      </div>
-    </article>
+    <!-- No posts message -->
+    <div class="no-posts-msg" id="noPostsMsg">
+      No published posts in this category yet — more coming soon.
+    </div>
 
   </div>
 
@@ -936,11 +512,11 @@
   <aside class="blog-sidebar">
 
     <div class="sidebar-card">
-      <div class="sidebar-title">About this series</div>
+      <div class="sidebar-title">Series roadmap</div>
       <div class="series-list">
         <div class="series-item"><div class="series-dot live"></div>Post 01 — Environment Strategy</div>
         <div class="series-item"><div class="series-dot"></div>Post 02 — Solution Architecture</div>
-        <div class="series-item"><div class="series-dot"></div>Post 03 — Identity & Security</div>
+        <div class="series-item"><div class="series-dot"></div>Post 03 — Identity &amp; Security</div>
         <div class="series-item"><div class="series-dot"></div>Post 04 — Dataverse Git Integration</div>
         <div class="series-item"><div class="series-dot"></div>Post 05 — Native vs ADO Pipelines</div>
         <div class="series-item"><div class="series-dot"></div>Post 06 — CI Pipeline</div>
@@ -956,7 +532,7 @@
           <div class="series-progress-fill"></div>
         </div>
         <div class="series-progress-label">
-          <span>1 of 12 posts live</span>
+          <span>1 of 12 live</span>
           <span>8%</span>
         </div>
       </div>
@@ -964,23 +540,21 @@
 
     <div class="sidebar-card">
       <div class="sidebar-title">The author</div>
-      <div class="about-mini">
-        <div class="author-mini-header">
-          <img src="../assets/photo.jpg" alt="Ahmed El-Khatib" class="author-mini-photo" />
-          <div class="author-mini-meta">
-            <div class="about-mini-name">Ahmed El-Khatib</div>
-            <div class="about-mini-role">PL-200 · PL-400 · PL-600</div>
-          </div>
+      <div class="author-mini-header">
+        <img src="../assets/photo.jpg" alt="Ahmed El-Khatib" class="author-mini-photo" />
+        <div class="author-mini-meta">
+          <div class="about-mini-name">Ahmed El-Khatib</div>
+          <div class="about-mini-role">Power Platform Lead</div>
         </div>
-        <p class="about-mini-bio">Power Platform Technical Lead at Trax Group, Saudi Arabia. 8+ years in the Microsoft ecosystem. Writing about what actually works on real enterprise projects.</p>
-        <a href="../" class="about-mini-link">Back to home →</a>
       </div>
+      <p class="about-mini-bio">Technical Lead at Trax Group, Saudi Arabia. 8+ years in the Microsoft ecosystem. Available for consultation, conference talks, webinars, and mentoring.</p>
+      <a href="../" class="about-mini-link">Back to home →</a>
     </div>
 
     <div class="follow-card">
       <span class="follow-card-eyebrow">Stay in the loop</span>
       <div class="follow-card-title">New posts, when they drop.</div>
-      <p class="follow-card-body">No newsletter. Just follow on LinkedIn — I post when something new goes live.</p>
+      <p class="follow-card-body">No newsletter. Follow on LinkedIn — I post when something new goes live.</p>
       <div class="follow-card-links">
         <a href="https://linkedin.com/in/ahmed-el-khatib" class="follow-card-link" target="_blank" rel="noopener noreferrer">
           <span class="follow-card-link-icon">in</span> Follow on LinkedIn
@@ -1005,45 +579,98 @@
     <div class="footer-links">
       <a href="../" class="footer-link">Home</a>
       <a href="../#contact" class="footer-link">Contact</a>
-      <a href="https://linkedin.com/in/ahmed-el-khatib" class="footer-link">LinkedIn</a>
+      <a href="https://linkedin.com/in/ahmed-el-khatib" class="footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
     </div>
   </div>
 </footer>
 
+<!-- PRO TIP TOAST -->
+<div class="tip-toast" id="tipToast" role="status" aria-live="polite">
+  <div class="tip-toast-progress" id="tipProgress"></div>
+  <div class="tip-toast-body">
+    <div class="tip-toast-header">
+      <span class="tip-toast-label"><span class="tip-toast-label-icon">⚡</span> Power Platform Pro Tip</span>
+      <button class="tip-close" id="tipClose" aria-label="Dismiss tip">✕</button>
+    </div>
+    <p class="tip-toast-text" id="tipText"></p>
+  </div>
+</div>
+
 <script>
-  // Nav scroll
+  // ── Nav scroll
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 40);
   });
 
-  // Filter
+  // ── Mobile nav toggle
+  const toggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  toggle?.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // ── Filter: only operate on published posts
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const posts = document.querySelectorAll('.post-item');
+  const publishedPosts = document.querySelectorAll('.post-item[data-live="true"]');
+  const noPostsMsg = document.getElementById('noPostsMsg');
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const filter = btn.dataset.filter;
-      posts.forEach(post => {
+      let anyVisible = false;
+      publishedPosts.forEach(post => {
         const tags = post.dataset.tags || '';
-        post.classList.toggle('hidden', filter !== 'all' && !tags.includes(filter));
+        const show = filter === 'all' || tags.includes(filter);
+        post.classList.toggle('hidden', !show);
+        if (show) anyVisible = true;
       });
+      noPostsMsg.classList.toggle('visible', !anyVisible);
     });
   });
 
-  // Mobile nav toggle
-  const toggle = document.getElementById('navToggle');
-  const navLinks = document.querySelector('.nav-links');
-  toggle?.addEventListener('click', () => {
-    navLinks.classList.toggle('open');
+  // ── Pro Tip Toast
+  const tips = [
+    "<strong>Never deploy unmanaged solutions to production.</strong> Ever. Managed only — it's the one rule you can't break and retrofit.",
+    "<strong>Assign security groups to environments before you invite anyone.</strong> Retrofitting security groups after users are in causes permission chaos that's painful to untangle.",
+    "<strong>Use Environment Variables for every endpoint and credential in your flows.</strong> Hardcoded URLs and secrets will break your deployment the moment you promote to the next environment.",
+    "<strong>Keep your plugins synchronous only when you need the return value.</strong> Async plugins don't block the transaction thread — use them for any fire-and-forget logic.",
+    "<strong>One publisher prefix per team, per engagement.</strong> Mixing publisher prefixes across solutions is how unresolvable technical debt gets baked into the data model.",
+    "<strong>Power Automate flows triggered by Dataverse changes significantly outperform polling patterns.</strong> Use Dataverse-native triggers, not schedule-based polling, wherever possible.",
+    "<strong>Separate your data model solution from your UI solution.</strong> They evolve at different speeds and need their own release cadences — treat them that way from day one.",
+    "<strong>Custom APIs are better than direct plugin calls when your consumer is Azure or an external system.</strong> They're versioned, discoverable, and callable without the Dataverse SDK.",
+    "<strong>DLP policies are useless without a proper environment topology.</strong> Set your environment tiers (Dev / Test / Prod) and security groups first — then layer DLP on top.",
+    "<strong>Connection References aren't optional.</strong> They're how your solution survives moving between environments without manually reconfiguring every flow connection."
+  ];
+
+  const toast = document.getElementById('tipToast');
+  const tipText = document.getElementById('tipText');
+  const tipClose = document.getElementById('tipClose');
+  const tipProgress = document.getElementById('tipProgress');
+
+  let tipTimer = null;
+
+  function dismissTip() {
+    toast.classList.remove('visible');
+    toast.classList.add('hiding');
+    clearTimeout(tipTimer);
+    setTimeout(() => toast.classList.remove('hiding'), 500);
+  }
+
+  // Show a random tip 1.4s after page load
+  window.addEventListener('load', () => {
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    tipText.innerHTML = randomTip;
+
+    setTimeout(() => {
+      toast.classList.add('visible');
+      // Auto-dismiss after 7s (matches the progress bar animation)
+      tipTimer = setTimeout(dismissTip, 7200);
+    }, 1400);
   });
 
-  // Close on link click
-  navLinks?.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => navLinks.classList.remove('open'));
-  });
+  tipClose.addEventListener('click', dismissTip);
 </script>
 
 </body>
