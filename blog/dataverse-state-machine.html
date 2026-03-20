@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Stop putting approval logic in Power Automate flows. Here's how Dataverse holds state and Power Automate acts as a dumb orchestrator — and why it matters at scale." />
+  <title>Dataverse as a State Machine — Khatib365</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Jost:wght@300;400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/blog.css" />
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+</head>
+<body class="blog-body">
+
+  <!-- PROGRESS BAR -->
+  <div class="reading-progress" id="readingProgress"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-khatib">Khatib</span><span class="brand-365">365</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#about"    class="nav-link">About</a>
+      <a href="../index.html#skills"   class="nav-link">Skills</a>
+      <a href="../index.html#projects" class="nav-link">Projects</a>
+      <a href="index.html"     class="nav-link" style="color:var(--copper)">Writing</a>
+      <a href="../index.html#contact"  class="nav-link nav-link--cta">Let's talk</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="post-hero">
+    <div class="post-hero-inner">
+      <a href="index.html" class="post-back code">← Back to writing</a>
+      <div class="post-meta-top">
+        <span class="blog-tag">Dataverse</span>
+        <span class="blog-tag">Power Automate</span>
+        <span class="blog-tag">Architecture</span>
+        <span class="post-date code">February 2025</span>
+        <span class="post-read code">14 min read</span>
+      </div>
+      <h1 class="post-title">Dataverse as a State Machine:<br /><em>Approval Workflows That Scale</em></h1>
+      <p class="post-subtitle">
+        Stop putting your approval logic in Power Automate flows.
+        Here's the pattern that separates systems that last from ones that quietly break at 3am.
+      </p>
+      <div class="post-author">
+        <div class="author-avatar">AEK</div>
+        <div class="author-info">
+          <strong>Ahmed El-Khatib</strong>
+          <span class="code">Power Platform Technical Lead · Trax Group</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- LAYOUT -->
+  <div class="post-layout">
+
+    <!-- TABLE OF CONTENTS -->
+    <aside class="post-toc" id="toc">
+      <p class="toc-label code">In this post</p>
+      <nav class="toc-nav">
+        <a href="#the-problem" class="toc-link">The Problem with Flow-First Logic</a>
+        <a href="#the-insight" class="toc-link">The Core Insight</a>
+        <a href="#state-machine" class="toc-link">Designing the State Machine</a>
+        <a href="#dataverse-model" class="toc-link">Dataverse Data Model</a>
+        <a href="#transition-rules" class="toc-link">Transition Rules & Validation</a>
+        <a href="#flow-as-orchestrator" class="toc-link">Flow as a Dumb Orchestrator</a>
+        <a href="#audit-trail" class="toc-link">Audit Trail That Actually Works</a>
+        <a href="#real-world" class="toc-link">Real-World: Multi-Tier Approval</a>
+        <a href="#gotchas" class="toc-link">Gotchas & Edge Cases</a>
+        <a href="#takeaways" class="toc-link">Key Takeaways</a>
+      </nav>
+      <div class="toc-share">
+        <p class="toc-label code">Share</p>
+        <div class="share-links">
+          <a href="#" class="share-link code">LinkedIn</a>
+          <a href="#" class="share-link code">Twitter / X</a>
+          <a href="#" class="share-link code">Copy link</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ARTICLE -->
+    <article class="post-article" id="postArticle">
+
+      <!-- ─── INTRO ─── -->
+      <p class="post-lead">
+        I've reviewed a lot of Power Platform solutions across a lot of organizations. And almost every approval system I've encountered shares the same original sin: <strong>the business logic lives in the flow.</strong>
+      </p>
+
+      <p>
+        I understand why it happens. Power Automate is where you go when you think "automation." 
+        It's visual, it's fast, and it feels like the right place to say "when X happens, do Y, 
+        unless Z, then do W." So you build a flow. Then you add conditions. Then you add more conditions. 
+        Then someone asks for a new approval tier, and you realize you're now maintaining a 
+        300-action flow that nobody — including you — can fully reason about anymore.
+      </p>
+
+      <p>
+        There's a better way. And it starts with a shift in how you think about what Dataverse actually is.
+      </p>
+
+      <!-- ─── SECTION 1 ─── -->
+      <h2 id="the-problem">The Problem with Flow-First Logic</h2>
+
+      <p>
+        Let me describe a scenario you've probably seen. A company needs a customer account approval workflow. 
+        Accounts go through three stages: Submitted → Manager Review → Finance Review → Active. 
+        Someone builds a flow. It works. Six months later, requirements change:
+      </p>
+
+      <ul>
+        <li>Finance review is now optional, based on account value</li>
+        <li>Rejected accounts can be resubmitted, but only twice</li>
+        <li>If the submitter is also the manager, it auto-escalates</li>
+        <li>Any stage can be put on Hold by a supervisor</li>
+      </ul>
+
+      <p>
+        The flow now has 47 conditions, four parallel branches, and three different trigger points. 
+        When it breaks — and it will — you get to spend an afternoon reading a 400-row run history 
+        trying to find which branch silently swallowed an error.
+      </p>
+
+      <div class="callout callout--warning">
+        <div class="callout-icon">⚠</div>
+        <div class="callout-body">
+          <strong>The real cost isn't building the flow.</strong> It's every future change, 
+          every debugging session, every "why did this account get stuck?" conversation that follows. 
+          Flow-first approval logic doesn't scale with business complexity — it multiplies it.
+        </div>
+      </div>
+
+      <p>
+        The root issue is that flows are stateless executors. They run, they finish. 
+        They're not designed to <em>be</em> the state — they're designed to <em>react</em> to it. 
+        The moment you start embedding state in your flow logic, you've inverted the architecture.
+      </p>
+
+      <!-- ─── SECTION 2 ─── -->
+      <h2 id="the-insight">The Core Insight</h2>
+
+      <p>
+        Here's the reframe that changes everything:
+      </p>
+
+      <blockquote class="post-quote">
+        Dataverse is your state machine. Power Automate is just a notification bus.
+      </blockquote>
+
+      <p>
+        Every approval workflow is fundamentally a finite state machine. There are a fixed number of 
+        possible states (Submitted, Under Review, Approved, Rejected…), and a fixed set of 
+        transitions between them (Submit → Review, Approve → Active, Reject → Draft…). 
+        Each transition has conditions that must be true before it's valid.
+      </p>
+
+      <p>
+        When you model this in Dataverse — with proper Choice columns for status, Business Rules 
+        or plugins for transition validation, and Dataverse's native audit log — your flow 
+        becomes trivially simple. It just watches for state changes and sends emails. That's it. 
+        The logic is in the data model, where it belongs.
+      </p>
+
+      <!-- Diagram 1: The Contrast -->
+      <div class="diagram-block">
+        <p class="diagram-label code">Fig 1 — Flow-First vs State-First architecture</p>
+        <svg viewBox="0 0 780 340" xmlns="http://www.w3.org/2000/svg" class="diagram-svg">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9c5a2e" />
+            </marker>
+            <marker id="arrow-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#b5a99a" />
+            </marker>
+          </defs>
+
+          <!-- LEFT: Flow-First (bad) -->
+          <text x="190" y="22" text-anchor="middle" font-family="'Fira Code', monospace" font-size="11" fill="#b5a99a" letter-spacing="1">FLOW-FIRST (fragile)</text>
+          
+          <!-- Big flow blob -->
+          <rect x="60" y="36" width="260" height="260" rx="12" fill="#f4efe6" stroke="#e8dcc8" stroke-width="1.5"/>
+          <text x="190" y="60" text-anchor="middle" font-family="'Fira Code', monospace" font-size="10" fill="#b5a99a">Power Automate Flow</text>
+          
+          <!-- Conditions inside -->
+          <rect x="80" y="74" width="220" height="36" rx="6" fill="#ece4d5" stroke="#d4c8b8" stroke-width="1"/>
+          <text x="190" y="90" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">Trigger: Record Created</text>
+          <text x="190" y="103" text-anchor="middle" font-family="'Jost', sans-serif" font-size="10" fill="#7a6f60">check conditions...</text>
+
+          <rect x="80" y="124" width="220" height="36" rx="6" fill="#ece4d5" stroke="#d4c8b8" stroke-width="1"/>
+          <text x="190" y="140" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">If value &gt; 50k → Finance</text>
+          <text x="190" y="153" text-anchor="middle" font-family="'Jost', sans-serif" font-size="10" fill="#7a6f60">else if submitter = manager → Escalate</text>
+
+          <rect x="80" y="174" width="220" height="36" rx="6" fill="#ece4d5" stroke="#d4c8b8" stroke-width="1"/>
+          <text x="190" y="190" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">Check rejection count...</text>
+          <text x="190" y="203" text-anchor="middle" font-family="'Jost', sans-serif" font-size="10" fill="#7a6f60">if &gt; 2 → permanent reject</text>
+
+          <rect x="80" y="224" width="220" height="52" rx="6" fill="#f7ede9" stroke="#c47a4a" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="190" y="244" text-anchor="middle" font-family="'Jost', sans-serif" font-size="10" fill="#9c5a2e">+ 30 more conditions hidden</text>
+          <text x="190" y="258" text-anchor="middle" font-family="'Jost', sans-serif" font-size="10" fill="#9c5a2e">in nested parallel branches...</text>
+          <text x="190" y="272" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#c47a4a">→ business logic is here ← BAD</text>
+
+          <!-- RIGHT: State-First (good) -->
+          <text x="590" y="22" text-anchor="middle" font-family="'Fira Code', monospace" font-size="11" fill="#9c5a2e" letter-spacing="1">STATE-FIRST (resilient)</text>
+
+          <!-- Dataverse box -->
+          <rect x="460" y="36" width="260" height="150" rx="12" fill="#f2e8dc" stroke="#c47a4a" stroke-width="1.5"/>
+          <text x="590" y="60" text-anchor="middle" font-family="'Fira Code', monospace" font-size="10" fill="#9c5a2e">Dataverse — State Machine</text>
+          <rect x="480" y="74" width="220" height="30" rx="6" fill="#fff8f4" stroke="#e8d0c0" stroke-width="1"/>
+          <text x="590" y="92" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">Status Choice: 6 valid states</text>
+          <rect x="480" y="114" width="220" height="30" rx="6" fill="#fff8f4" stroke="#e8d0c0" stroke-width="1"/>
+          <text x="590" y="132" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">Plugin: validates transitions</text>
+          <rect x="480" y="154" width="220" height="26" rx="6" fill="#fff8f4" stroke="#e8d0c0" stroke-width="1"/>
+          <text x="590" y="170" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">Audit table: every state change</text>
+
+          <!-- Flow box (small, simple) -->
+          <rect x="480" y="210" width="220" height="86" rx="12" fill="#f4efe6" stroke="#e8dcc8" stroke-width="1"/>
+          <text x="590" y="230" text-anchor="middle" font-family="'Fira Code', monospace" font-size="10" fill="#b5a99a">Power Automate Flow</text>
+          <rect x="498" y="242" width="184" height="44" rx="6" fill="#ece4d5" stroke="#d4c8b8" stroke-width="1"/>
+          <text x="590" y="260" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">On status change: send email</text>
+          <text x="590" y="275" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#9c5a2e">→ dumb orchestrator ← GOOD</text>
+
+          <!-- Arrow between boxes right side -->
+          <line x1="590" y1="196" x2="590" y2="208" stroke="#9c5a2e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+          <!-- Divider -->
+          <line x1="390" y1="30" x2="390" y2="310" stroke="#e8dcc8" stroke-width="1" stroke-dasharray="6,4"/>
+          <text x="390" y="325" text-anchor="middle" font-family="'Fira Code', monospace" font-size="10" fill="#d4c8b8">vs</text>
+        </svg>
+      </div>
+
+      <!-- ─── SECTION 3 ─── -->
+      <h2 id="state-machine">Designing the State Machine</h2>
+
+      <p>
+        Before touching Dataverse, you need to map your states and transitions on paper. 
+        This is the most important step and the one most teams skip. A state machine has three things:
+      </p>
+
+      <ul>
+        <li><strong>States</strong> — the finite set of situations a record can be in</li>
+        <li><strong>Transitions</strong> — the valid moves between states, and who can trigger them</li>
+        <li><strong>Guards</strong> — conditions that must be true for a transition to be allowed</li>
+      </ul>
+
+      <p>
+        For a customer account approval workflow, here's what that mapping looks like:
+      </p>
+
+      <!-- Diagram 2: Full state machine -->
+      <div class="diagram-block">
+        <p class="diagram-label code">Fig 2 — Customer account approval state machine</p>
+        <svg viewBox="0 0 780 400" xmlns="http://www.w3.org/2000/svg" class="diagram-svg">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9c5a2e" opacity="0.7"/>
+            </marker>
+            <marker id="arr2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#b5a99a"/>
+            </marker>
+          </defs>
+
+          <!-- States -->
+          <!-- Draft -->
+          <g>
+            <rect x="30" y="170" width="110" height="50" rx="25" fill="#f4efe6" stroke="#d4c8b8" stroke-width="1.5"/>
+            <text x="85" y="191" text-anchor="middle" font-family="'Jost', sans-serif" font-size="12" font-weight="500" fill="#453d31">Draft</text>
+            <text x="85" y="207" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#b5a99a">initial</text>
+          </g>
+
+          <!-- Submitted -->
+          <g>
+            <rect x="200" y="170" width="120" height="50" rx="25" fill="#f2e8dc" stroke="#c47a4a" stroke-width="1.5"/>
+            <text x="260" y="191" text-anchor="middle" font-family="'Jost', sans-serif" font-size="12" font-weight="500" fill="#9c5a2e">Submitted</text>
+            <text x="260" y="207" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#c47a4a">awaiting</text>
+          </g>
+
+          <!-- Manager Review -->
+          <g>
+            <rect x="380" y="90" width="130" height="50" rx="25" fill="#f2e8dc" stroke="#c47a4a" stroke-width="1.5"/>
+            <text x="445" y="111" text-anchor="middle" font-family="'Jost', sans-serif" font-size="12" font-weight="500" fill="#9c5a2e">Manager</text>
+            <text x="445" y="126" text-anchor="middle" font-family="'Jost', sans-serif" font-size="12" font-weight="500" fill="#9c5a2e">Review</text>
+          </g>
+
+          <!-- Finance Review -->
+          <g>
+            <rect x="380" y="260" width="130" height="50" rx="25" fill="#f2e8dc" stroke="#c47a4a" stroke-width="1.5"/>
+            <text x="445" y="281" text-anchor="middle" font-family="'Jost', sans-serif" font-size="12" font-weight="500" fill="#9c5a2e">Finance</text>
+            <text x="445" y="296" text-anchor="middle" font-family="'Jost', sans-serif" font-size="12" font-weight="500" fill="#9c5a2e">Review</text>
+          </g>
+
+          <!-- Active -->
+          <g>
+            <rect x="580" y="140" width="110" height="50" rx="25" fill="#eaf3e0" stroke="#7ab05a" stroke-width="1.5"/>
+            <text x="635" y="161" text-anchor="middle" font-family="'Jost', sans-serif" font-size="12" font-weight="500" fill="#3d7520">Active</text>
+            <text x="635" y="177" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#7ab05a">approved</text>
+          </g>
+
+          <!-- Rejected -->
+          <g>
+            <rect x="580" y="230" width="110" height="50" rx="25" fill="#fceae8" stroke="#d44f3d" stroke-width="1.5"/>
+            <text x="635" y="251" text-anchor="middle" font-family="'Jost', sans-serif" font-size="12" font-weight="500" fill="#a03020">Rejected</text>
+            <text x="635" y="267" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#d44f3d">terminal*</text>
+          </g>
+
+          <!-- On Hold -->
+          <g>
+            <rect x="580" y="60" width="110" height="50" rx="25" fill="#f4efe6" stroke="#b5a99a" stroke-width="1.5"/>
+            <text x="635" y="80" text-anchor="middle" font-family="'Jost', sans-serif" font-size="12" font-weight="500" fill="#7a6f60">On Hold</text>
+            <text x="635" y="96" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#b5a99a">suspended</text>
+          </g>
+
+          <!-- TRANSITIONS -->
+          <!-- Draft → Submitted -->
+          <line x1="140" y1="195" x2="198" y2="195" stroke="#9c5a2e" stroke-width="1.5" marker-end="url(#arr)" opacity="0.7"/>
+          <text x="169" y="188" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#c47a4a">Submit</text>
+
+          <!-- Submitted → Manager Review -->
+          <line x1="318" y1="182" x2="378" y2="130" stroke="#9c5a2e" stroke-width="1.5" marker-end="url(#arr)" opacity="0.7"/>
+          <text x="340" y="152" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#c47a4a">Assign</text>
+
+          <!-- Manager Review → Finance Review (value > 50k) -->
+          <line x1="445" y1="140" x2="445" y2="258" stroke="#9c5a2e" stroke-width="1.5" marker-end="url(#arr)" opacity="0.7"/>
+          <text x="480" y="200" text-anchor="start" font-family="'Fira Code', monospace" font-size="8.5" fill="#c47a4a">if value &gt; 50k</text>
+
+          <!-- Manager Review → Active -->
+          <line x1="510" y1="110" x2="578" y2="158" stroke="#7ab05a" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>
+          <text x="540" y="128" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#7ab05a">Approve</text>
+
+          <!-- Finance Review → Active -->
+          <line x1="510" y1="275" x2="578" y2="245" stroke="#7ab05a" stroke-width="1.5" marker-end="url(#arr)" opacity="0.8"/>
+          <text x="548" y="272" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#7ab05a">Approve</text>
+
+          <!-- Manager → Rejected -->
+          <line x1="510" y1="128" x2="578" y2="248" stroke="#d44f3d" stroke-width="1.5" marker-end="url(#arr)" opacity="0.6" stroke-dasharray="5,3"/>
+          <text x="556" y="190" text-anchor="start" font-family="'Fira Code', monospace" font-size="9" fill="#d44f3d">Reject</text>
+
+          <!-- Finance → Rejected -->
+          <line x1="510" y1="285" x2="578" y2="265" stroke="#d44f3d" stroke-width="1.5" marker-end="url(#arr)" opacity="0.6" stroke-dasharray="5,3"/>
+
+          <!-- Rejected → Draft (curved, resubmit) -->
+          <path d="M635,280 Q680,360 200,340 Q140,340 110,222" fill="none" stroke="#b5a99a" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr2)"/>
+          <text x="400" y="368" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#b5a99a">Resubmit (max 2x)</text>
+
+          <!-- Manager → On Hold -->
+          <line x1="510" y1="100" x2="578" y2="88" stroke="#b5a99a" stroke-width="1.5" marker-end="url(#arr2)" stroke-dasharray="5,3"/>
+          <text x="542" y="91" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#b5a99a">Hold</text>
+
+          <!-- On Hold → Manager (resume) -->
+          <path d="M580,78 Q540,50 480,82" fill="none" stroke="#b5a99a" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr2)"/>
+          <text x="530" y="52" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#b5a99a">Resume</text>
+
+          <!-- Legend -->
+          <line x1="30" y1="370" x2="60" y2="370" stroke="#9c5a2e" stroke-width="1.5" opacity="0.7" marker-end="url(#arr)"/>
+          <text x="68" y="374" font-family="'Fira Code', monospace" font-size="9" fill="#7a6f60">Forward transition</text>
+          <line x1="170" y1="370" x2="200" y2="370" stroke="#d44f3d" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7" marker-end="url(#arr)"/>
+          <text x="208" y="374" font-family="'Fira Code', monospace" font-size="9" fill="#7a6f60">Rejection</text>
+          <line x1="290" y1="370" x2="320" y2="370" stroke="#b5a99a" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr2)"/>
+          <text x="328" y="374" font-family="'Fira Code', monospace" font-size="9" fill="#7a6f60">Optional / conditional</text>
+          <text x="30" y="392" font-family="'Fira Code', monospace" font-size="9" fill="#b5a99a">* Rejected is terminal after 2 resubmission attempts</text>
+        </svg>
+      </div>
+
+      <p>
+        Notice what this diagram contains: all your business logic. Guard conditions, valid actors, 
+        terminal states, loops. <em>This is the entire specification</em>. 
+        Once this is modeled correctly in Dataverse, your flows become a thin notification layer.
+      </p>
+
+      <!-- ─── SECTION 4 ─── -->
+      <h2 id="dataverse-model">Dataverse Data Model</h2>
+
+      <p>
+        Here's how I structure the tables. Three tables — the entity being approved, 
+        a status history table, and an approval action table.
+      </p>
+
+      <!-- Diagram 3: ERD -->
+      <div class="diagram-block">
+        <p class="diagram-label code">Fig 3 — Dataverse table structure</p>
+        <svg viewBox="0 0 780 280" xmlns="http://www.w3.org/2000/svg" class="diagram-svg">
+          <defs>
+            <marker id="erd-arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9c5a2e" opacity="0.6"/>
+            </marker>
+          </defs>
+
+          <!-- Customer Account Table -->
+          <rect x="30" y="30" width="210" height="210" rx="10" fill="#f4efe6" stroke="#d4c8b8" stroke-width="1.5"/>
+          <rect x="30" y="30" width="210" height="36" rx="10" fill="#9c5a2e"/>
+          <rect x="30" y="54" width="210" height="12" rx="0" fill="#9c5a2e"/>
+          <text x="135" y="52" text-anchor="middle" font-family="'Fira Code', monospace" font-size="11" font-weight="500" fill="#fff">khatib_customeraccount</text>
+
+          <text x="46" y="85" font-family="'Fira Code', monospace" font-size="10" fill="#9c5a2e">PK</text>
+          <text x="70" y="85" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">accountid (guid)</text>
+          <line x1="46" y1="92" x2="234" y2="92" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="46" y="108" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="70" y="108" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">name (text)</text>
+          <line x1="46" y1="115" x2="234" y2="115" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="46" y="131" font-family="'Fira Code', monospace" font-size="10" fill="#c47a4a">★ </text>
+          <text x="70" y="131" font-family="'Jost', sans-serif" font-size="10" font-weight="500" fill="#9c5a2e">statuscode (choice)</text>
+          <line x1="46" y1="138" x2="234" y2="138" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="46" y="154" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="70" y="154" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">submittedby (lookup)</text>
+          <line x1="46" y1="161" x2="234" y2="161" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="46" y="177" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="70" y="177" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">accountvalue (currency)</text>
+          <line x1="46" y1="184" x2="234" y2="184" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="46" y="200" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="70" y="200" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">rejectioncount (int)</text>
+          <line x1="46" y1="207" x2="234" y2="207" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="46" y="222" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="70" y="222" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">currentreviewer (lookup)</text>
+
+          <!-- Status History Table -->
+          <rect x="295" y="30" width="210" height="180" rx="10" fill="#f4efe6" stroke="#d4c8b8" stroke-width="1.5"/>
+          <rect x="295" y="30" width="210" height="36" rx="10" fill="#7a6f60"/>
+          <rect x="295" y="54" width="210" height="12" fill="#7a6f60"/>
+          <text x="400" y="52" text-anchor="middle" font-family="'Fira Code', monospace" font-size="11" font-weight="500" fill="#fff">khatib_statushistory</text>
+
+          <text x="311" y="85" font-family="'Fira Code', monospace" font-size="10" fill="#9c5a2e">PK</text>
+          <text x="335" y="85" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">historyid (guid)</text>
+          <line x1="311" y1="92" x2="499" y2="92" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="311" y="108" font-family="'Fira Code', monospace" font-size="10" fill="#c47a4a">FK</text>
+          <text x="335" y="108" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">accountid (lookup)</text>
+          <line x1="311" y1="115" x2="499" y2="115" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="311" y="131" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="335" y="131" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">fromstatus (choice)</text>
+          <line x1="311" y1="138" x2="499" y2="138" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="311" y="154" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="335" y="154" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">tostatus (choice)</text>
+          <line x1="311" y1="161" x2="499" y2="161" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="311" y="177" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="335" y="177" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">changedby (lookup)</text>
+          <line x1="311" y1="184" x2="499" y2="184" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="311" y="200" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="335" y="200" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">changedon (datetime)</text>
+
+          <!-- Approval Actions Table -->
+          <rect x="560" y="30" width="200" height="180" rx="10" fill="#f4efe6" stroke="#d4c8b8" stroke-width="1.5"/>
+          <rect x="560" y="30" width="200" height="36" rx="10" fill="#7a6f60"/>
+          <rect x="560" y="54" width="200" height="12" fill="#7a6f60"/>
+          <text x="660" y="52" text-anchor="middle" font-family="'Fira Code', monospace" font-size="11" font-weight="500" fill="#fff">khatib_approvalaction</text>
+
+          <text x="576" y="85" font-family="'Fira Code', monospace" font-size="10" fill="#9c5a2e">PK</text>
+          <text x="600" y="85" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">actionid (guid)</text>
+          <line x1="576" y1="92" x2="754" y2="92" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="576" y="108" font-family="'Fira Code', monospace" font-size="10" fill="#c47a4a">FK</text>
+          <text x="600" y="108" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">accountid (lookup)</text>
+          <line x1="576" y1="115" x2="754" y2="115" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="576" y="131" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="600" y="131" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">actiontype (choice)</text>
+          <line x1="576" y1="138" x2="754" y2="138" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="576" y="154" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="600" y="154" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">performedby (lookup)</text>
+          <line x1="576" y1="161" x2="754" y2="161" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="576" y="177" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="600" y="177" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">comments (memo)</text>
+          <line x1="576" y1="184" x2="754" y2="184" stroke="#e8dcc8" stroke-width="0.5"/>
+
+          <text x="576" y="200" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">   </text>
+          <text x="600" y="200" font-family="'Fira Code', monospace" font-size="10" fill="#453d31">performedon (datetime)</text>
+
+          <!-- Relationships -->
+          <line x1="240" y1="108" x2="293" y2="108" stroke="#9c5a2e" stroke-width="1.5" marker-end="url(#erd-arr)" opacity="0.6"/>
+          <line x1="505" y1="108" x2="558" y2="108" stroke="#9c5a2e" stroke-width="1.5" marker-end="url(#erd-arr)" opacity="0.6"/>
+
+          <!-- Legend bottom -->
+          <text x="30" y="258" font-family="'Fira Code', monospace" font-size="9" fill="#9c5a2e">★ The status column is the heart of the state machine.</text>
+          <text x="30" y="273" font-family="'Fira Code', monospace" font-size="9" fill="#b5a99a">PK = Primary Key  ·  FK = Foreign Key (Lookup)  ·  choice = Dataverse Choice column</text>
+        </svg>
+      </div>
+
+      <p>
+        The <code>statuscode</code> column is the crown jewel. It's a Choice column with every valid state as an option. 
+        But a Choice column alone is just a dropdown — what makes it a state machine is the 
+        <strong>plugin that guards every write to it.</strong>
+      </p>
+
+      <!-- ─── SECTION 5 ─── -->
+      <h2 id="transition-rules">Transition Rules & Validation</h2>
+
+      <p>
+        The plugin runs on <code>PreValidation</code> of the Update message, targeting 
+        <code>statuscode</code>. Before any status change is committed to the database, 
+        the plugin checks a transition matrix — a dictionary that maps every valid 
+        (fromState, toState) pair to its guard conditions.
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">C# — Plugin: ValidateStatusTransition</span>
+          <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>public class ValidateStatusTransition : IPlugin
+{
+    // Define valid transitions: (from, to) → guard condition key
+    private static readonly Dictionary&lt;(int from, int to), string&gt; _validTransitions = new()
+    {
+        { (Draft,     Submitted),       "CanSubmit"       },
+        { (Submitted, ManagerReview),   "CanAssign"       },
+        { (ManagerReview, Active),      "CanApprove"      },
+        { (ManagerReview, FinanceReview),"NeedsFinance"   },
+        { (ManagerReview, Rejected),    "CanReject"       },
+        { (ManagerReview, OnHold),      "CanHold"         },
+        { (FinanceReview, Active),      "CanApprove"      },
+        { (FinanceReview, Rejected),    "CanReject"       },
+        { (Rejected,  Draft),           "CanResubmit"     },
+        { (OnHold,    ManagerReview),   "CanResume"       },
+    };
+
+    public void Execute(IServiceProvider serviceProvider)
+    {
+        var context = (IPluginExecutionContext)serviceProvider
+            .GetService(typeof(IPluginExecutionContext));
+        var target = (Entity)context.InputParameters["Target"];
+
+        if (!target.Contains("statuscode")) return;
+
+        var orgService = /* ... get service ... */;
+        var current = orgService.Retrieve("khatib_customeraccount",
+            context.PrimaryEntityId, new ColumnSet("statuscode", 
+            "khatib_rejectioncount", "khatib_submittedby",
+            "khatib_accountvalue", "ownerid"));
+
+        int fromState = current.GetAttributeValue&lt;OptionSetValue&gt;("statuscode").Value;
+        int toState   = target.GetAttributeValue&lt;OptionSetValue&gt;("statuscode").Value;
+
+        // Is this a valid transition at all?
+        if (!_validTransitions.TryGetValue((fromState, toState), out var guardKey))
+            throw new InvalidPluginExecutionException(
+                $"Invalid status transition: {fromState} → {toState}");
+
+        // Evaluate the guard condition
+        if (!EvaluateGuard(guardKey, current, context))
+            throw new InvalidPluginExecutionException(
+                GetGuardFailureMessage(guardKey, current));
+
+        // Write audit history before the change commits
+        WriteStatusHistory(orgService, context.PrimaryEntityId,
+            fromState, toState, context.InitiatingUserId);
+    }
+
+    private bool EvaluateGuard(string guardKey, Entity record, 
+        IPluginExecutionContext context)
+    {
+        return guardKey switch
+        {
+            "CanResubmit"  => record.GetAttributeValue&lt;int&gt;(
+                                  "khatib_rejectioncount") &lt; 2,
+            "NeedsFinance" => record.GetAttributeValue&lt;Money&gt;(
+                                  "khatib_accountvalue")?.Value &gt; 50_000,
+            "CanApprove"   => IsAuthorizedReviewer(record, context),
+            "CanReject"    => IsAuthorizedReviewer(record, context),
+            "CanHold"      => IsSystemAdmin(context),
+            _              => true   // no additional guard
+        };
+    }
+}</code></pre>
+      </div>
+
+      <p>
+        A few things worth calling out here:
+      </p>
+
+      <ul>
+        <li>
+          <strong>The transition matrix is the entire business logic.</strong> Adding a new rule 
+          means adding one entry to the dictionary and one method. No flow to touch.
+        </li>
+        <li>
+          <strong>PreValidation means nothing commits if the guard fails.</strong> No partial 
+          saves, no corrupt state, no cleanup flows needed.
+        </li>
+        <li>
+          <strong>The audit write happens in the same transaction.</strong> You get atomicity — 
+          the status change and its history record either both succeed or both roll back.
+        </li>
+      </ul>
+
+      <div class="callout callout--tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <strong>Use a Custom API instead of a direct update</strong> if you want to expose 
+          the transition as a business operation (e.g., <code>khatib_SubmitAccount</code>, 
+          <code>khatib_ApproveAccount</code>). This gives you named, documented actions 
+          that Canvas Apps and flows can call without needing to know the underlying status values.
+          It also lets you pass additional parameters — like a rejection reason — 
+          cleanly alongside the state change.
+        </div>
+      </div>
+
+      <!-- ─── SECTION 6 ─── -->
+      <h2 id="flow-as-orchestrator">Flow as a Dumb Orchestrator</h2>
+
+      <p>
+        Here's what your Power Automate flow looks like with this architecture. 
+        The entire flow fits on one screen:
+      </p>
+
+      <!-- Diagram 4: Simple Flow -->
+      <div class="diagram-block">
+        <p class="diagram-label code">Fig 4 — The flow becomes trivially simple</p>
+        <svg viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg" class="diagram-svg">
+          <defs>
+            <marker id="fa" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#9c5a2e" opacity="0.7"/>
+            </marker>
+          </defs>
+          
+          <!-- Step 1: Trigger -->
+          <rect x="100" y="20" width="200" height="58" rx="10" fill="#f2e8dc" stroke="#c47a4a" stroke-width="1.5"/>
+          <text x="200" y="44" text-anchor="middle" font-family="'Fira Code', monospace" font-size="10" fill="#9c5a2e">TRIGGER</text>
+          <text x="200" y="60" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">When statuscode changes</text>
+          <line x1="200" y1="78" x2="200" y2="106" stroke="#9c5a2e" stroke-width="1.5" marker-end="url(#fa)" opacity="0.7"/>
+
+          <!-- Step 2: Get new status -->
+          <rect x="100" y="108" width="200" height="46" rx="10" fill="#f4efe6" stroke="#d4c8b8" stroke-width="1.5"/>
+          <text x="200" y="128" text-anchor="middle" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">ACTION</text>
+          <text x="200" y="145" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">Get updated record</text>
+          <line x1="200" y1="154" x2="200" y2="182" stroke="#9c5a2e" stroke-width="1.5" marker-end="url(#fa)" opacity="0.7"/>
+
+          <!-- Step 3: Switch -->
+          <rect x="80" y="184" width="240" height="46" rx="10" fill="#f4efe6" stroke="#d4c8b8" stroke-width="1.5"/>
+          <text x="200" y="204" text-anchor="middle" font-family="'Fira Code', monospace" font-size="10" fill="#7a6f60">SWITCH</text>
+          <text x="200" y="221" text-anchor="middle" font-family="'Jost', sans-serif" font-size="11" fill="#453d31">on statuscode value</text>
+
+          <!-- Branch lines -->
+          <line x1="130" y1="230" x2="130" y2="268" stroke="#d4c8b8" stroke-width="1"/>
+          <line x1="200" y1="230" x2="200" y2="268" stroke="#d4c8b8" stroke-width="1"/>
+          <line x1="270" y1="230" x2="270" y2="268" stroke="#d4c8b8" stroke-width="1"/>
+          <line x1="130" y1="248" x2="270" y2="248" stroke="#d4c8b8" stroke-width="1"/>
+
+          <!-- Case: ManagerReview -->
+          <rect x="50" y="270" width="130" height="52" rx="8" fill="#f4efe6" stroke="#d4c8b8" stroke-width="1"/>
+          <text x="115" y="290" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#b5a99a">ManagerReview</text>
+          <text x="115" y="308" text-anchor="middle" font-family="'Jost', sans-serif" font-size="10" fill="#453d31">Email manager</text>
+
+          <!-- Case: Active -->
+          <rect x="195" y="270" width="130" height="52" rx="8" fill="#eaf3e0" stroke="#a8d08d" stroke-width="1"/>
+          <text x="260" y="290" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#7ab05a">Active</text>
+          <text x="260" y="308" text-anchor="middle" font-family="'Jost', sans-serif" font-size="10" fill="#3d7520">Email submitter ✓</text>
+
+          <!-- ... and so on label -->
+          <rect x="85" y="340" width="230" height="36" rx="8" fill="#f4efe6" stroke="#e8dcc8" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="200" y="356" text-anchor="middle" font-family="'Fira Code', monospace" font-size="9" fill="#b5a99a">+ cases for each status...</text>
+          <text x="200" y="369" text-anchor="middle" font-family="'Jost', sans-serif" font-size="10" fill="#7a6f60">each case = send 1 email</text>
+
+          <!-- No logic label -->
+          <text x="200" y="410" text-anchor="middle" font-family="'Fira Code', monospace" font-size="10" fill="#9c5a2e">zero business logic · pure notification</text>
+        </svg>
+      </div>
+
+      <p>
+        That's it. No conditions. No "if rejection count is greater than…". No parallel branches. 
+        The flow's entire job is: "the state changed — send the appropriate email." 
+        Because the plugin has already validated that the state change was legal.
+      </p>
+
+      <!-- ─── SECTION 7 ─── -->
+      <h2 id="audit-trail">Audit Trail That Actually Works</h2>
+
+      <p>
+        Because <code>WriteStatusHistory</code> is called inside the plugin — in the same database 
+        transaction as the status change — you get a complete, tamper-proof audit trail with zero 
+        extra effort from the UI layer. Every record in <code>khatib_statushistory</code> tells you:
+      </p>
+
+      <ul>
+        <li>What the status was before</li>
+        <li>What it changed to</li>
+        <li>Who changed it (the initiating user, not the integration user)</li>
+        <li>When it happened (database timestamp, not client time)</li>
+      </ul>
+
+      <div class="callout callout--warning">
+        <div class="callout-icon">⚠</div>
+        <div class="callout-body">
+          <strong>Don't use Dataverse's built-in audit log for this.</strong> The native audit log 
+          is not easily queryable in Canvas Apps, it has storage implications in managed environments, 
+          and it doesn't let you store custom context (like the reviewer's comments). 
+          Your own status history table is cleaner, faster, and completely under your control.
+        </div>
+      </div>
+
+      <!-- ─── SECTION 8 ─── -->
+      <h2 id="real-world">Real-World: Multi-Tier Approval</h2>
+
+      <p>
+        On the Masheed project, we implemented a customer account approval with three approval tiers, 
+        a consensus mechanism at Tier 2 (all Tier 2 approvers had to agree, not just one), 
+        and a Canvas App for approvers to view and act on pending requests. 
+        Here's how the Canvas App side looked — radically simple because the complexity 
+        lived in Dataverse, not the app:
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-block-lang">Power Fx — Approve button OnSelect</span>
+          <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>// This is the ENTIRE approval button logic.
+// No status values. No condition checking. No if/else chains.
+// The Custom API does all of that — and throws a clear error if it fails.
+
+Set(varIsLoading, true);
+
+With(
+    { result: khatib_ApproveAccount.Run(
+        galPendingAccounts.Selected.khatib_customeraccountid,
+        txtComments.Text
+      )
+    },
+    If(
+        result.success,
+        Notify("Account approved successfully", NotificationType.Success);
+        Refresh(khatib_customeraccount),
+        Notify("Could not approve: " & result.errormessage, NotificationType.Error)
+    )
+);
+
+Set(varIsLoading, false);</code></pre>
+      </div>
+
+      <p>
+        The Canvas App doesn't need to know about states, counts, or guard conditions. 
+        It calls a named action, handles success or failure, and moves on. 
+        This is what it looks like when the separation of concerns is right.
+      </p>
+
+      <!-- ─── SECTION 9 ─── -->
+      <h2 id="gotchas">Gotchas & Edge Cases</h2>
+
+      <p>
+        A few things that will bite you if you're not careful:
+      </p>
+
+      <div class="gotcha-list">
+        <div class="gotcha">
+          <div class="gotcha-num code">01</div>
+          <div class="gotcha-body">
+            <strong>System updates bypass your plugin.</strong> If a flow or another plugin updates 
+            the status using the system user context (e.g., with <code>ExecuteAsSystemUser</code>), 
+            your validation is skipped. Always use the initiating user context, and make sure 
+            your integration flows run as named users, not the integration user.
+          </div>
+        </div>
+        <div class="gotcha">
+          <div class="gotcha-num code">02</div>
+          <div class="gotcha-body">
+            <strong>Bulk operations are tricky.</strong> When someone bulk-updates 50 accounts, 
+            each one will hit your plugin individually — which is correct — but your validation 
+            error messages need to be per-record, not per-batch. 
+            Test this scenario explicitly.
+          </div>
+        </div>
+        <div class="gotcha">
+          <div class="gotcha-num code">03</div>
+          <div class="gotcha-body">
+            <strong>Status reason vs status code.</strong> Dataverse has both <code>statecode</code> 
+            (Active/Inactive) and <code>statuscode</code> (Status Reason — your custom states). 
+            Use <code>statuscode</code> for your workflow states. Don't conflate the two. 
+            And resist the temptation to use Inactive state as "Rejected" — it prevents the 
+            record from being updated at all, breaking your resubmission path.
+          </div>
+        </div>
+        <div class="gotcha">
+          <div class="gotcha-num code">04</div>
+          <div class="gotcha-body">
+            <strong>Error messages are your documentation.</strong> When a guard fails, 
+            the exception message is what the user sees. Write them in plain language: 
+            "This account has been rejected twice and cannot be resubmitted" is infinitely 
+            better than "Guard condition 'CanResubmit' evaluated to false."
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 10 ─── -->
+      <h2 id="takeaways">Key Takeaways</h2>
+
+      <div class="takeaways-grid">
+        <div class="takeaway">
+          <div class="takeaway-icon">◈</div>
+          <h3>State belongs in Dataverse</h3>
+          <p>Your Choice column, your transition matrix, your guard plugin — this is where business logic lives. Not in flows.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-icon">◈</div>
+          <h3>Flows are notification buses</h3>
+          <p>One trigger, one switch, one email per case. If your flow has conditions about business rules, something is wrong.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-icon">◈</div>
+          <h3>Custom APIs are your surface</h3>
+          <p>Named actions (ApproveAccount, RejectAccount) decouple your UI from your data model and make the system self-documenting.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-icon">◈</div>
+          <h3>PreValidation for atomicity</h3>
+          <p>History records written in the same transaction as the status change. No orphaned records, no partial state.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-icon">◈</div>
+          <h3>Map first, build second</h3>
+          <p>Draw your state machine on paper before touching Dataverse. Every hour spent there saves three in debugging.</p>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-icon">◈</div>
+          <h3>Your audit table beats native logs</h3>
+          <p>Own your history. Query it in Canvas Apps, export it, report on it. Don't depend on platform internals.</p>
+        </div>
+      </div>
+
+      <p style="margin-top:3rem;">
+        This pattern — Dataverse as state machine, flow as orchestrator — is the single biggest 
+        architectural upgrade I've applied to approval workflows in the Microsoft ecosystem. 
+        Once you build one this way, you won't go back.
+      </p>
+
+      <p>
+        If you're implementing something similar or have questions about the consensus mechanism 
+        for multi-approver scenarios, reach out — I'd be happy to go deeper on that in a follow-up post.
+      </p>
+
+      <!-- POST FOOTER -->
+      <div class="post-footer">
+        <div class="post-footer-author">
+          <img src="../assets/photo.jpg" alt="Ahmed El-Khatib" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--sand);flex-shrink:0;" />
+          <div>
+            <strong>Ahmed El-Khatib</strong>
+            <p>Power Platform Technical Lead at Trax Group, Saudi Arabia. PL-200, PL-400, PL-600. Microsoft Power Up Champion. Writing about what actually works in enterprise delivery.</p>
+            <div class="about-links" style="margin-top:0.75rem;">
+              <a href="https://linkedin.com/in/ahmed-el-khatib" class="about-link" target="_blank"><span class="about-link-icon">in</span> LinkedIn</a>
+              <a href="../index.html#contact" class="about-link"><span class="about-link-icon">@</span> Get in touch</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-nav">
+          <a href="index.html" class="post-nav-link post-nav-link--prev">
+            <span class="code">← All posts</span>
+            <span>Back to writing</span>
+          </a>
+          <a href="#" class="post-nav-link post-nav-link--next">
+            <span class="code">Next post →</span>
+            <span>D365 F&amp;O + Power Platform: The Honest Integration Guide</span>
+          </a>
+        </div>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="../index.html" class="nav-brand">
+          <span class="brand-khatib">Khatib</span><span class="brand-365">365</span>
+        </a>
+        <p class="footer-tagline code">Craftsman. Technical Lead. Writer.</p>
+      </div>
+      <div class="footer-links">
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="index.html">Writing</a>
+        <a href="../index.html#contact">Contact</a>
+      </div>
+      <div class="footer-copy code">© 2026 Ahmed El-Khatib · khatib365.dev</div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/blog.js"></script>
+</body>
+</html>

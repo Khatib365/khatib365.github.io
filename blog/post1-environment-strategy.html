@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Environment decisions in Power Platform are irreversible. Here's what to get right before writing a single line of code — topology, security groups, URLs, and the four mistakes that haunt projects." />
+<title>Environment Strategy — Before You Write a Single Line of Code | Khatib365</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #FAF7F1;
+    --surface:   #F4EFE6;
+    --surface2:  #ECE4D5;
+    --border:    #E0D5C4;
+    --border2:   #D4C8B4;
+    --copper:    #9C5A2E;
+    --copper-l:  #C47A4A;
+    --copper-pal:#F5EBE0;
+    --ink:       #1C1812;
+    --ink-soft:  #453D31;
+    --ink-mid:   #7A6F60;
+    --ink-light: #B5A99A;
+    --code-bg:   #EDE5D8;
+    --code-fg:   #7A3E10;
+    --warn-bg:   #FDF3E8;
+    --warn-border:#E8B87A;
+    --ok-bg:     #EEF5EE;
+    --ok-border: #8AB88A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* ── Layout ── */
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 32px 120px;
+  }
+
+  /* ── Header ── */
+  .blog-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 48px;
+    margin-bottom: 56px;
+  }
+
+  .series-tag {
+    display: inline-block;
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--copper);
+    background: var(--copper-pal);
+    border: 1px solid var(--border2);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+  }
+
+  .blog-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 20px;
+    letter-spacing: -.02em;
+  }
+
+  .blog-subtitle {
+    font-size: 18px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    max-width: 640px;
+    margin-bottom: 32px;
+    font-weight: 300;
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-family: 'Fira Code', monospace;
+    font-size: 11.5px;
+    color: var(--ink-mid);
+    letter-spacing: .06em;
+  }
+
+  .meta-dot {
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--border2);
+  }
+
+  /* ── Typography ── */
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 56px 0 20px;
+    letter-spacing: -.01em;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: 'Jost', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--copper);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin: 36px 0 14px;
+  }
+
+  p { margin-bottom: 20px; color: var(--ink-soft); }
+
+  p strong { color: var(--ink); font-weight: 600; }
+
+  a { color: var(--copper); text-decoration: underline; text-underline-offset: 3px; }
+
+  code {
+    font-family: 'Fira Code', monospace;
+    font-size: 13.5px;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 2px 7px;
+    border-radius: 3px;
+  }
+
+  /* ── Callout boxes ── */
+  .callout {
+    border-left: 3px solid var(--copper);
+    background: var(--copper-pal);
+    padding: 18px 24px;
+    margin: 32px 0;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .callout.warn {
+    border-color: var(--warn-border);
+    background: var(--warn-bg);
+  }
+
+  .callout.ok {
+    border-color: var(--ok-border);
+    background: var(--ok-bg);
+  }
+
+  .callout-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 10.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .callout.warn .callout-label { color: #B87333; }
+  .callout.ok .callout-label { color: #4A7A4A; }
+
+  .callout p { margin: 0; font-size: 15.5px; line-height: 1.65; }
+
+  /* ── Section divider ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 52px 0 40px;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .divider-mark {
+    font-family: 'Fira Code', monospace;
+    font-size: 10px;
+    color: var(--ink-light);
+    letter-spacing: .15em;
+  }
+
+  /* ── Mistake card ── */
+  .mistake-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px 32px;
+    margin: 28px 0;
+    position: relative;
+  }
+
+  .mistake-number {
+    position: absolute;
+    top: -14px;
+    left: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: var(--copper);
+    background: var(--bg);
+    padding: 0 10px;
+    text-transform: uppercase;
+  }
+
+  .mistake-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .mistake-card p {
+    font-size: 15.5px;
+    margin-bottom: 14px;
+  }
+
+  .mistake-card p:last-child { margin-bottom: 0; }
+
+  .fix-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 10.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #4A7A4A;
+    margin-bottom: 6px;
+  }
+
+  /* ── Screenshot placeholder ── */
+  .screenshot-placeholder {
+    background: var(--surface2);
+    border: 1.5px dashed var(--border2);
+    border-radius: 6px;
+    padding: 36px 24px;
+    text-align: center;
+    margin: 24px 0;
+  }
+
+  .screenshot-placeholder .ph-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .screenshot-placeholder .ph-desc {
+    font-size: 14px;
+    color: var(--ink-mid);
+  }
+
+  /* ── Diagram: Environment Topology ── */
+  .diagram-wrap {
+    margin: 36px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 36px 28px 28px;
+  }
+
+  .diagram-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-mid);
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .env-topology {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    position: relative;
+  }
+
+  .env-node {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 14px;
+    text-align: center;
+    position: relative;
+  }
+
+  .env-node.highlight {
+    border-color: var(--copper-l);
+    background: var(--copper-pal);
+  }
+
+  .env-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    color: var(--ink-light);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .env-node-name {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .env-node.highlight .env-node-name { color: var(--copper); }
+
+  .env-node-desc {
+    font-size: 12px;
+    color: var(--ink-mid);
+    line-height: 1.45;
+  }
+
+  .env-badge {
+    display: inline-block;
+    font-family: 'Fira Code', monospace;
+    font-size: 9.5px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-top: 8px;
+    letter-spacing: .06em;
+  }
+
+  .badge-unmanaged { background: #E8F0FF; color: #4A6AB8; }
+  .badge-managed   { background: #E8F5E8; color: #3A7A3A; }
+
+  /* ── Security Group Diagram ── */
+  .sg-diagram {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 8px 0;
+  }
+
+  .sg-env {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+  }
+
+  .sg-env-name {
+    font-family: 'Fira Code', monospace;
+    font-size: 10.5px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 10px;
+  }
+
+  .sg-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    padding: 5px 8px;
+    background: var(--surface2);
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+
+  .sg-icon { font-size: 14px; }
+
+  .sg-no-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #B87333;
+    padding: 5px 8px;
+    background: var(--warn-bg);
+    border: 1px dashed var(--warn-border);
+    border-radius: 4px;
+  }
+
+  /* ── Decision table ── */
+  .decision-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    font-size: 14.5px;
+  }
+
+  .decision-table th {
+    font-family: 'Fira Code', monospace;
+    font-size: 10.5px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-mid);
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    background: var(--surface);
+  }
+
+  .decision-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    vertical-align: top;
+  }
+
+  .decision-table tr:last-child td { border-bottom: none; }
+
+  .decision-table tr:hover td { background: var(--surface); }
+
+  .td-env {
+    font-family: 'Fira Code', monospace;
+    font-size: 12px;
+    color: var(--copper);
+    font-weight: 500;
+  }
+
+  .check { color: #4A8A4A; font-size: 15px; }
+  .cross { color: #B85A3A; font-size: 15px; }
+
+  /* ── URL diagram ── */
+  .url-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .url-box {
+    border-radius: 6px;
+    padding: 18px 20px;
+    border: 1px solid;
+  }
+
+  .url-box.bad {
+    background: var(--warn-bg);
+    border-color: var(--warn-border);
+  }
+
+  .url-box.good {
+    background: var(--ok-bg);
+    border-color: var(--ok-border);
+  }
+
+  .url-box-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .url-box.bad .url-box-label { color: #B87333; }
+  .url-box.good .url-box-label { color: #4A7A4A; }
+
+  .url-value {
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    word-break: break-all;
+    line-height: 1.5;
+  }
+
+  .url-box.bad .url-value { color: #8B4513; }
+  .url-box.good .url-value { color: #2A5A2A; }
+
+  /* ── Checklist ── */
+  .checklist {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 28px;
+    margin: 28px 0;
+  }
+
+  .checklist-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 18px;
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .checklist-item:last-child { margin-bottom: 0; }
+
+  .check-box {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--border2);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--copper);
+  }
+
+  /* ── Series nav ── */
+  .series-nav {
+    margin-top: 72px;
+    padding-top: 36px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .series-nav-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 6px;
+  }
+
+  .series-nav-link {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--copper);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .series-nav-link:hover { text-decoration: underline; }
+
+  /* ── Author block ── */
+  .author-block {
+    margin-top: 56px;
+    padding: 28px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .author-avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--copper-pal);
+    border: 2px solid var(--border2);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--copper);
+    font-weight: 600;
+  }
+
+  .author-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .author-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    color: var(--copper);
+    letter-spacing: .08em;
+    margin-bottom: 10px;
+  }
+
+  .author-bio {
+    font-size: 14px;
+    color: var(--ink-mid);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .env-topology { flex-direction: column; }
+    .env-arrow { transform: rotate(90deg); align-self: center; }
+    .sg-diagram { grid-template-columns: 1fr; }
+    .url-compare { grid-template-columns: 1fr; }
+  }
+
+  .site-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 2.5rem;
+    background: rgba(250,247,241,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(28,24,18,0.08);
+    font-family: 'Jost', sans-serif;
+  }
+  .site-nav-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #1C1812;
+    text-decoration: none;
+  }
+  .site-nav-brand span { color: #9C5A2E; }
+  .site-nav-links { display: flex; align-items: center; gap: 2rem; }
+  .site-nav-link {
+    font-size: 0.82rem;
+    color: #7A6F60;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .site-nav-link:hover { color: #1C1812; }
+  .site-nav-link.active { color: #9C5A2E; font-weight: 500; }
+  .post-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Fira Code', monospace;
+    font-size: 11.5px;
+    color: #B5A99A;
+    letter-spacing: 0.06em;
+    padding: 88px 0 0;
+    max-width: 780px;
+    margin: 0 auto;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .post-breadcrumb a { color: #9C5A2E; text-decoration: none; }
+  .post-breadcrumb a:hover { text-decoration: underline; }
+  .bc-sep { color: #D4C8B4; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" id="siteNav">
+  <a href="../" class="site-nav-brand">Khatib<span>365</span></a>
+  <div class="site-nav-links">
+    <a href="../#about" class="site-nav-link">About</a>
+    <a href="index.html" class="site-nav-link active">Writing</a>
+    <a href="../#skills" class="site-nav-link">Skills</a>
+    <a href="../#projects" class="site-nav-link">Projects</a>
+    <a href="../#contact" class="site-nav-link">Contact</a>
+  </div>
+</nav>
+
+<div class="post-breadcrumb">
+  <a href="../">Home</a>
+  <span class="bc-sep">/</span>
+  <a href="index.html">Writing</a>
+  <span class="bc-sep">/</span>
+  <span>Post 01 — Environment Strategy</span>
+</div>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.getElementById('siteNav').style.boxShadow =
+      window.scrollY > 40 ? '0 2px 24px rgba(28,24,18,0.07)' : 'none';
+  });
+</script>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="blog-header">
+    <div class="series-tag">Power Platform Deployment · Post 01 of 12</div>
+    <h1 class="blog-title">Before You Write a Single Line of Code, Get Your Environments Right</h1>
+    <p class="blog-subtitle">Most Power Platform projects fail at deployment — not because of bad code, but because of decisions made in the first five minutes that nobody thought to question.</p>
+    <div class="meta">
+      <span class="meta-item">Ahmed El-Khatib</span>
+      <div class="meta-dot"></div>
+      <span class="meta-item">March 2026</span>
+      <div class="meta-dot"></div>
+      <span class="meta-item">12 min read</span>
+      <div class="meta-dot"></div>
+      <span class="meta-item">PL-400 · PL-600</span>
+    </div>
+  </header>
+
+  <!-- Intro -->
+  <p>I've walked into more projects than I can count where the first thing I see is <code>org32737.crm4.dynamics.com</code> in the browser tab of a production environment. No security groups. Everything built in the default environment. And a Dynamics 365 toggle that someone skipped over during setup — which means you can't install any Dynamics apps now, no matter how much you need them.</p>
+
+  <p>These aren't edge cases. They're the norm. And they're all decisions made in the first five minutes of a project — when nobody was paying attention, when the goal was just to "get started."</p>
+
+  <p>This post is about those decisions. Not the code. Not the pipelines. The stuff that happens before any of that — and that you can never fully undo once it's done.</p>
+
+  <div class="callout">
+    <div class="callout-label">What this post covers</div>
+    <p>Environment types and when to use each · The four most painful environment setup mistakes · A complete environment topology for enterprise projects · A pre-start checklist you can use right now</p>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-mark">§ 01</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <h2>Why Environments Are an Architecture Decision</h2>
+
+  <p>Most developers treat environments like parking spaces — you just grab one and start. But in Power Platform, <strong>every environment is a deployment boundary, a security boundary, and a licensing boundary all at once.</strong></p>
+
+  <p>The choices you make when creating an environment are largely irreversible. You can't move a production Dataverse database to a different environment. You can't add Dynamics 365 apps to an environment that wasn't created with that option enabled. And you can't rename the organization URL — not without Microsoft support, not without downtime, and sometimes not at all.</p>
+
+  <p>So let's talk about what these decisions actually are.</p>
+
+  <h3>The Environment Types You Need to Know</h3>
+
+  <table class="decision-table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Dataverse</th>
+        <th>D365 Apps</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td-env">Default</td>
+        <td>✅ Always</td>
+        <td><span class="cross">✗</span></td>
+        <td>Personal maker experiments only. Never for team projects.</td>
+      </tr>
+      <tr>
+        <td class="td-env">Developer</td>
+        <td>✅ Always</td>
+        <td>Optional</td>
+        <td>Individual dev sandboxes. Free per licensed user. Short-lived.</td>
+      </tr>
+      <tr>
+        <td class="td-env">Sandbox</td>
+        <td>Optional</td>
+        <td>Optional</td>
+        <td>Testing, UAT, SIT. Can be reset. Should mirror production config.</td>
+      </tr>
+      <tr>
+        <td class="td-env">Production</td>
+        <td>Optional</td>
+        <td>Optional</td>
+        <td>Live workloads only. Cannot be reset. Full backup and SLA.</td>
+      </tr>
+      <tr>
+        <td class="td-env">Trial</td>
+        <td>✅ Always</td>
+        <td>Optional</td>
+        <td>30-day POCs. Never for real projects. Expires automatically.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-mark">§ 02</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <h2>The Environment Topology That Actually Works</h2>
+
+  <p>For any serious Power Platform project, here's the minimum environment layout I recommend. Everything to the left is unmanaged — developers work there freely. Everything to the right receives only managed solutions, deployed through pipelines.</p>
+
+  <div class="diagram-wrap">
+    <div class="diagram-title">Fig. 1 — Recommended Environment Topology</div>
+    <div class="env-topology">
+      <div class="env-node highlight">
+        <div class="env-node-name">Dev</div>
+        <div class="env-node-desc">Individual developer sandbox. Unmanaged solutions. Reset freely.</div>
+        <div><span class="env-badge badge-unmanaged">Unmanaged</span></div>
+      </div>
+      <div class="env-arrow">→</div>
+      <div class="env-node">
+        <div class="env-node-name">Test / SIT</div>
+        <div class="env-node-desc">First deployment target. Validates solution import and integration.</div>
+        <div><span class="env-badge badge-managed">Managed</span></div>
+      </div>
+      <div class="env-arrow">→</div>
+      <div class="env-node">
+        <div class="env-node-name">UAT</div>
+        <div class="env-node-desc">Business user testing. Mirrors production data shape and config.</div>
+        <div><span class="env-badge badge-managed">Managed</span></div>
+      </div>
+      <div class="env-arrow">→</div>
+      <div class="env-node highlight">
+        <div class="env-node-name">Production</div>
+        <div class="env-node-desc">Live workloads only. No direct changes. Deployed only via pipeline.</div>
+        <div><span class="env-badge badge-managed">Managed</span></div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--ink-light);text-align:center;margin-top:16px;margin-bottom:0;font-family:'Fira Code',monospace;letter-spacing:.05em;">Deployment flows left → right only. No exceptions.</p>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">Important — February 2026 Update</div>
+    <p>Microsoft now automatically enables Managed Environments for any pipeline target that isn't already configured. If you're setting up a new project today, plan for Managed Environments from day one — it's no longer optional for pipeline targets.</p>
+  </div>
+
+  <p>For projects integrating with Dynamics 365 F&O, you'll also want a dedicated <strong>Integration / Staging</strong> environment between Dev and Test — a stable target for integration testing that doesn't pollute your main test environment with data sync issues. But that's a topic for a later post in this series.</p>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-mark">§ 03</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <h2>The Four Mistakes That Will Haunt You</h2>
+
+  <p>These aren't theoretical. Every one of these I've seen on real projects — some of them on projects I inherited, some on projects that started without proper guidance. I'm documenting them here so you don't have to learn them the same way.</p>
+
+  <!-- Mistake 1 -->
+  <div class="mistake-card">
+    <div class="mistake-number">Mistake 01</div>
+    <div class="mistake-title">Building in the Default Environment</div>
+    <p>The default environment is always there, always accessible, and always a trap. It's shared across your entire tenant. Everyone with a Power Platform license can see it. There are no security groups, no deployment boundaries, and no clean way to move what you build out of it later.</p>
+    <p>I've seen teams build entire applications in the default environment because it was "just a proof of concept" — and then the client loved it and wanted it in production. The migration is painful. The cleanup is worse.</p>
+    <div class="fix-label">✓ The fix</div>
+    <p>Create a dedicated environment for every project from day one. Developer environments are free per licensed user — there's no excuse to start in the default environment. Reserve the default environment for individual, personal experimentation only, and enforce this with a DLP policy.</p>
+  </div>
+
+  <!-- Mistake 2 -->
+  <div class="mistake-card">
+    <div class="mistake-number">Mistake 02</div>
+    <div class="mistake-title">No Security Group on the Environment</div>
+    <p>When you create an environment without assigning a security group, <strong>every licensed user in your tenant can access it.</strong> This isn't a hypothetical risk — it means developers can stumble into a UAT environment, users can access a test environment with incomplete configurations, and there's no clear boundary between who belongs where.</p>
+
+    <div class="diagram-wrap" style="margin:20px 0;">
+      <div class="diagram-title">Fig. 2 — Security Group Assignment Per Environment</div>
+      <div class="sg-diagram">
+        <div class="sg-env">
+          <div class="sg-env-name">✓ Dev Environment</div>
+          <div class="sg-group"><span class="sg-icon">👥</span> PP-Dev-Developers</div>
+          <div class="sg-group"><span class="sg-icon">👤</span> PP-Dev-Admins</div>
+        </div>
+        <div class="sg-env">
+          <div class="sg-env-name">✓ UAT Environment</div>
+          <div class="sg-group"><span class="sg-icon">👥</span> PP-UAT-BusinessUsers</div>
+          <div class="sg-group"><span class="sg-icon">👤</span> PP-UAT-Admins</div>
+        </div>
+        <div class="sg-env">
+          <div class="sg-env-name">✓ Production</div>
+          <div class="sg-group"><span class="sg-icon">👥</span> PP-Prod-EndUsers</div>
+          <div class="sg-group"><span class="sg-icon">👤</span> PP-Prod-Admins</div>
+        </div>
+        <div class="sg-env" style="border-color:var(--warn-border);background:var(--warn-bg)">
+          <div class="sg-env-name" style="color:#B87333">✗ No Security Group</div>
+          <div class="sg-no-group"><span class="sg-icon">⚠️</span> All tenant users can access</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fix-label">✓ The fix</div>
+    <p>Before you create the environment, create the security groups in Entra ID. Name them consistently — something like <code>PP-[Project]-[Env]-[Role]</code>. Assign them at environment creation time. This takes five extra minutes and saves hours of access cleanup later.</p>
+
+  </div>
+
+  <!-- Mistake 3 -->
+  <div class="mistake-card">
+    <div class="mistake-number">Mistake 03</div>
+    <div class="mistake-title">Skipping the "Enable Dynamics 365 Apps" Toggle</div>
+    <p>This is the irreversible one. When creating a Dataverse environment, there's a toggle to enable Dynamics 365 apps. Most people skip it because they're "just building a Power App." Then six months later, the client wants to add Dynamics 365 Sales, or integrate with F&O, or install a Dynamics-dependent solution.</p>
+    <p><strong>You cannot enable Dynamics 365 apps on an existing environment that was created without this option.</strong> You have to create a new environment, migrate everything, and update every integration. I've seen projects delayed by weeks because of this single skipped toggle.</p>
+    <div class="fix-label">✓ The fix</div>
+    <p>If there is any chance — any chance at all — that Dynamics 365 apps will be needed in the future, enable this toggle at creation time. The cost is zero. The cost of not enabling it when you need it is enormous.</p>
+
+  </div>
+
+  <!-- Mistake 4 -->
+  <div class="mistake-card">
+    <div class="mistake-number">Mistake 04</div>
+    <div class="mistake-title">Not Setting the Organization URL</div>
+    <p>When you create an environment, Power Platform auto-generates an organization URL — something like <code>org32737.crm4.dynamics.com</code>. Nobody changes it because nobody notices it. And then it ends up in production, in API calls, in documentation, in client-facing URLs, and in the browser tabs of every user on the project.</p>
+    <p>Changing it later requires a Microsoft support request, planned downtime, and updates to every integration that references the URL. On some configurations it can't be changed at all without recreating the environment.</p>
+
+    <div class="url-compare">
+      <div class="url-box bad">
+        <div class="url-box-label">✗ Auto-generated (don't use)</div>
+        <div class="url-value">org32737.crm4.dynamics.com</div>
+      </div>
+      <div class="url-box good">
+        <div class="url-box-label">✓ Set at creation (always do this)</div>
+        <div class="url-value">masheed-prod.crm4.dynamics.com</div>
+      </div>
+    </div>
+
+    <div class="fix-label">✓ The fix</div>
+    <p>Always set the URL manually at creation time. Use a consistent naming convention: <code>[client]-[env]</code> — e.g. <code>masheed-dev</code>, <code>masheed-uat</code>, <code>masheed-prod</code>. Two minutes of work, permanent benefit.</p>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-mark">§ 04</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <h2>The Pre-Start Checklist</h2>
+
+  <p>Before you create a single environment on your next project, go through this list. It takes less than 30 minutes and prevents the issues above entirely.</p>
+
+  <div class="checklist">
+    <div class="checklist-title">Environment Setup Checklist</div>
+
+    <div class="checklist-item">
+      <div class="check-box">□</div>
+      <div>Define your environment topology — Dev, Test, UAT, Prod at minimum. Add Integration/Staging if you have F&O in scope.</div>
+    </div>
+    <div class="checklist-item">
+      <div class="check-box">□</div>
+      <div>Create Entra ID security groups before creating any environment. One group per environment per role.</div>
+    </div>
+    <div class="checklist-item">
+      <div class="check-box">□</div>
+      <div>Decide on the organization URL naming convention upfront. Use <code>[client]-[env]</code> consistently.</div>
+    </div>
+    <div class="checklist-item">
+      <div class="check-box">□</div>
+      <div>Decide upfront whether Dynamics 365 apps will ever be needed. If there's any doubt — enable it.</div>
+    </div>
+    <div class="checklist-item">
+      <div class="check-box">□</div>
+      <div>Enable Managed Environments for all non-dev environments. Required for pipeline targets as of February 2026.</div>
+    </div>
+    <div class="checklist-item">
+      <div class="check-box">□</div>
+      <div>Document all environment details — URL, region, purpose, security group, Dataverse capacity — in your project wiki before development begins.</div>
+    </div>
+    <div class="checklist-item">
+      <div class="check-box">□</div>
+      <div>Never use the default environment for project work. Enforce this with a DLP policy if you're the admin.</div>
+    </div>
+  </div>
+
+  <div class="callout ok">
+    <div class="callout-label">The craft principle</div>
+    <p>A well-set environment costs you 30 minutes upfront. A poorly-set environment costs you weeks at the worst possible moment — right before go-live. This is where quality starts, before any code is written.</p>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-mark">§ 05</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <h2>What's Next</h2>
+
+  <p>Now that your environments are set up correctly, the next question is: what goes inside them? In <strong>Post 2</strong>, we cover solution architecture — one solution or many, how to segment by layer, publisher strategy, and the decisions you can't undo mid-project.</p>
+
+  <p>If you've seen environment setup go wrong in ways I haven't covered here — I'd genuinely like to hear about it. Drop a comment or find me on LinkedIn.</p>
+
+  <!-- Series Nav -->
+  <div class="series-nav">
+    <div>
+      <div class="series-nav-label">Current</div>
+      <span style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink-soft);">Post 01 — Environment Strategy</span>
+    </div>
+    <div style="text-align:right">
+      <div class="series-nav-label">Next in series</div>
+      <span class="series-nav-link" style="opacity:0.4;cursor:default;">Post 02 — Solution Architecture (coming soon)</span>
+    </div>
+  </div>
+
+  <!-- Author -->
+  <div class="author-block">
+    <img src="../assets/photo.jpg" alt="Ahmed El-Khatib" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--border2);flex-shrink:0;" />
+    <div>
+      <div class="author-name">Ahmed El-Khatib</div>
+      <div class="author-title">Power Platform Technical Lead · PL-200 · PL-400 · PL-600</div>
+      <p class="author-bio">Building production-grade Power Platform solutions at Trax Group, Saudi Arabia. Writing about ALM, integration architecture, and doing things properly the first time.</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
