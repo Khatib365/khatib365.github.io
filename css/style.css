@@ -391,6 +391,7 @@ section { padding: 7rem 3rem; }
 
 .skill-card-icon { margin-bottom: 1.1rem; line-height: 1; }
 .skill-svg-icon  { width: 28px; height: 28px; color: var(--cc); display: block; }
+i.skill-svg-icon { width: auto; height: auto; font-size: 28px; line-height: 1; }
 
 .skill-card-title {
   font-family: var(--serif); font-size: 1.25rem; font-weight: 600;
