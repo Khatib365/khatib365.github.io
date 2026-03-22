@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Khatib365 — Power Platform, ALM, integration architecture, and building enterprise solutions properly.">
+<meta name="description" content="Writing by Ahmed El-Khatib — real patterns, real mistakes, real decisions from enterprise Power Platform delivery.">
 <title>Writing — Khatib365</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 <style>
   :root {
+    --canvas:      #faf7f1;
     --parchment:   #f4efe6;
     --parchment-d: #ece4d5;
-    --canvas:      #faf7f1;
     --sand:        #e8dcc8;
     --ink:         #1c1812;
     --ink-soft:    #453d31;
@@ -21,213 +23,233 @@
     --copper-light:#c47a4a;
     --copper-pale: #f2e8dc;
     --rule:        rgba(28,24,18,0.1);
+    --rule-light:  rgba(28,24,18,0.06);
     --navy:        #070d1c;
     --serif:  'Cormorant Garamond', Georgia, serif;
     --sans:   'Jost', system-ui, sans-serif;
     --mono:   'Fira Code', 'Courier New', monospace;
-    --max-w:  1160px;
+    --max-w:  1100px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
   body { background: var(--canvas); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
   a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
 
   /* ── NAV ── */
-  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 3rem; background: rgba(250,247,241,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid transparent; transition: all 0.3s ease; }
-  .nav.scrolled { padding: 0.85rem 3rem; border-bottom-color: var(--rule); box-shadow: 0 2px 24px rgba(28,24,18,0.07); }
-  .nav-brand { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
-  .brand-khatib { color: var(--ink); } .brand-365 { color: var(--copper); }
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem max(1.5rem, calc((100% - var(--max-w)) / 2));
+    background: rgba(250,247,241,0.92); backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent; transition: all 0.3s ease;
+  }
+  .nav.scrolled { padding-top: 0.85rem; padding-bottom: 0.85rem; border-bottom-color: var(--rule); box-shadow: 0 2px 24px rgba(28,24,18,0.07); }
+  .nav-brand { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; }
+  .brand-khatib, .brand-365 { display: inline; }
+  .brand-khatib { color: var(--ink); }
+  .brand-365 { color: var(--copper); }
   .nav-links { display: flex; align-items: center; gap: 2.5rem; }
   .nav-link { font-size: 0.85rem; font-weight: 400; color: var(--ink-mid); transition: color 0.2s; position: relative; }
   .nav-link:hover { color: var(--ink); }
   .nav-link.active { color: var(--copper); font-weight: 500; }
   .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--copper); transform: scaleX(0); transform-origin: left; transition: transform 0.22s ease; }
   .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
-  .nav-toggle { display: none; }
+  .nav-toggle { display: none; background: none; border: none; font-size: 1.2rem; color: var(--ink); cursor: pointer; }
 
-  /* ── PAGE HEADER ── */
-  .blog-header {
-    padding: 120px 3rem 64px;
-    background: var(--navy);
-    position: relative; overflow: hidden;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  /* Stars / dot grid on dark header */
-  .blog-header::before {
-    content: '';
-    position: absolute; inset: 0;
-    background-image: radial-gradient(circle, rgba(196,122,74,0.12) 1px, transparent 1px);
-    background-size: 32px 32px;
-    pointer-events: none;
-  }
-  .blog-header::after {
-    content: '';
-    position: absolute; top: -100px; right: -80px;
-    width: 500px; height: 500px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,120,212,0.1) 0%, transparent 65%);
-    pointer-events: none;
-  }
-  .blog-header-inner {
-    max-width: var(--max-w); margin: 0 auto;
+  /* ── PAGE WRAPPER ── */
+  .page { max-width: var(--max-w); margin: 0 auto; padding: 0 2rem; }
+
+  /* ── MASTHEAD ── */
+  .blog-masthead {
+    padding: 110px 0 56px;
     display: flex; align-items: flex-end; justify-content: space-between;
-    gap: 40px; flex-wrap: wrap; position: relative; z-index: 1;
+    gap: 2rem; border-bottom: 1px solid var(--rule);
+    position: relative;
   }
-  .blog-eyebrow { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--copper-light); margin-bottom: 16px; }
-  .blog-page-title { font-family: var(--serif); font-size: clamp(2.6rem, 5vw, 4.2rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.025em; color: rgba(240,230,215,0.95); margin-bottom: 16px; }
-  .blog-page-title em { font-style: italic; color: var(--copper-light); font-weight: 400; }
-  .blog-page-desc { font-size: 1.05rem; color: rgba(181,169,154,0.75); max-width: 480px; line-height: 1.65; font-weight: 300; }
-  .blog-stats { display: flex; gap: 32px; flex-shrink: 0; }
-  .blog-stat { text-align: right; }
-  .blog-stat-num { font-family: var(--serif); font-size: 2.8rem; font-weight: 600; color: rgba(240,230,215,0.9); line-height: 1; display: block; }
-  .blog-stat-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(181,169,154,0.5); }
+  .masthead-text { flex: 1; }
+  .masthead-eyebrow {
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--copper); margin-bottom: 1rem;
+  }
+  .masthead-title {
+    font-family: var(--serif); font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 600; line-height: 1.05; letter-spacing: -0.02em; color: var(--ink);
+  }
+  .masthead-title em { font-style: italic; color: var(--copper); }
+  .masthead-sub {
+    margin-top: 1.2rem; font-size: 0.92rem; color: var(--ink-mid);
+    line-height: 1.65; max-width: 480px;
+  }
+  .masthead-count {
+    font-family: var(--serif); font-size: clamp(5rem, 14vw, 9rem);
+    font-weight: 700; line-height: 1; color: var(--sand);
+    letter-spacing: -0.04em; user-select: none; flex-shrink: 0;
+  }
 
-  /* ── TOOLBAR: search + filters ── */
-  .blog-toolbar {
-    max-width: var(--max-w); margin: 0 auto;
-    padding: 20px 3rem;
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  /* ── CONTROLS ── */
+  .blog-controls {
+    padding: 1.5rem 0;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
     border-bottom: 1px solid var(--rule);
   }
   .search-wrap {
-    position: relative; flex: 1; min-width: 200px; max-width: 320px;
-  }
-  .search-input {
-    width: 100%;
-    padding: 8px 12px 8px 36px;
-    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 8px;
     background: var(--parchment); border: 1px solid var(--sand);
-    border-radius: 20px; color: var(--ink); outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    border-radius: 6px; padding: 7px 14px; min-width: 200px;
+  }
+  .search-icon { color: var(--ink-light); flex-shrink: 0; }
+  .search-input {
+    background: none; border: none; outline: none;
+    font-family: var(--mono); font-size: 0.72rem; color: var(--ink);
+    width: 100%;
   }
   .search-input::placeholder { color: var(--ink-light); }
-  .search-input:focus { border-color: var(--copper-light); box-shadow: 0 0 0 3px rgba(156,90,46,0.1); }
-  .search-icon {
-    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
-    color: var(--ink-light); pointer-events: none;
+  .filter-sep { width: 1px; height: 20px; background: var(--rule); }
+  .filter-label {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-light); white-space: nowrap;
   }
-  .filter-sep { width: 1px; height: 20px; background: var(--rule); flex-shrink: 0; }
-  .filter-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); white-space: nowrap; }
-  .filter-btn { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; padding: 5px 14px; border-radius: 20px; border: 1px solid var(--sand); background: transparent; color: var(--ink-mid); cursor: pointer; transition: all 0.18s; white-space: nowrap; }
-  .filter-btn:hover { border-color: var(--copper); color: var(--copper); }
-  .filter-btn.active { background: var(--copper); border-color: var(--copper); color: white; }
-
-  /* ── MAIN LAYOUT ── */
-  .blog-main {
-    max-width: var(--max-w); margin: 0 auto;
-    padding: 48px 3rem 100px;
-    display: grid; grid-template-columns: 1fr 300px;
-    gap: 56px; align-items: start;
+  .filter-btn {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em;
+    padding: 5px 14px; border-radius: 20px; border: 1px solid var(--sand);
+    background: transparent; color: var(--ink-mid); cursor: pointer;
+    transition: all 0.18s; white-space: nowrap;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--ink); color: var(--canvas); border-color: var(--ink);
+  }
+  .results-count {
+    margin-left: auto; font-family: var(--mono); font-size: 0.62rem;
+    color: var(--ink-light); letter-spacing: 0.04em;
   }
 
-  /* ── POST CARDS ── */
-  .post-list { display: flex; flex-direction: column; gap: 20px; }
-
-  .post-item {
+  /* ── POST GRID ── */
+  .post-grid {
+    padding: 2.5rem 0 0;
     display: grid;
-    grid-template-columns: 220px 1fr;
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid var(--rule);
-    background: var(--parchment);
-    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
-    cursor: pointer;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
-  .post-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(28,24,18,0.1);
-    border-color: rgba(156,90,46,0.3);
+  .post-card {
+    background: var(--parchment); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 2rem; cursor: pointer;
+    transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+    display: flex; flex-direction: column;
   }
-  .post-item.hidden { display: none; }
-
-  /* Thumbnail */
-  .post-thumb {
-    position: relative;
-    background: var(--navy);
-    overflow: hidden;
-    min-height: 180px;
+  .post-card:hover {
+    box-shadow: 0 8px 32px rgba(28,24,18,0.1);
+    border-color: var(--copper-light); transform: translateY(-2px);
   }
-  .post-thumb svg { width: 100%; height: 100%; display: block; position: absolute; inset: 0; }
-  .post-num {
-    position: absolute; top: 14px; left: 16px; z-index: 2;
-    font-family: var(--serif); font-size: 2.8rem; font-weight: 700;
-    color: rgba(196,122,74,0.45); line-height: 1;
+  .post-card--featured {
+    grid-column: 1 / -1;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;
+    padding: 2.5rem;
   }
-  .post-live-indicator {
-    position: absolute; bottom: 12px; right: 12px; z-index: 2;
-    width: 8px; height: 8px; border-radius: 50%;
-    background: #4ade80;
-    box-shadow: 0 0 0 0 rgba(74,222,128,0.5);
-    animation: live-pulse 2.2s ease-in-out infinite;
+  .post-card--featured .post-card-right {
+    display: flex; flex-direction: column; justify-content: space-between;
   }
-  @keyframes live-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
-    50%       { box-shadow: 0 0 0 8px rgba(74,222,128,0); }
+  .post-card--featured .post-card-excerpt { font-size: 1rem; }
+  .post-card-badge {
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--copper);
+    background: var(--copper-pale); border: 1px solid rgba(156,90,46,0.18);
+    border-radius: 100px; padding: 4px 12px;
+    display: inline-block; margin-bottom: 1.25rem;
   }
-
-  /* Post content */
-  .post-content { padding: 22px 24px; display: flex; flex-direction: column; }
-  .post-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-  .post-series { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: white; background: var(--copper); padding: 2px 9px; border-radius: 3px; }
-  .post-live-badge { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: white; background: #16a34a; padding: 2px 9px 3px; border-radius: 3px; }
-  .post-tag { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--copper); background: var(--copper-pale); padding: 2px 9px; border-radius: 3px; }
-  .post-date { font-family: var(--mono); font-size: 0.63rem; color: var(--ink-light); letter-spacing: 0.06em; }
-
-  .post-title { font-family: var(--serif); font-size: 1.45rem; font-weight: 600; line-height: 1.2; letter-spacing: -0.015em; color: var(--ink); margin-bottom: 10px; transition: color 0.2s; }
-  .post-item:hover .post-title { color: var(--copper); }
-  .post-title-link { color: inherit; text-decoration: none; transition: color 0.2s; }
-  .post-item:hover .post-title-link { color: var(--copper); }
-
-  .post-excerpt { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.68; font-weight: 300; flex: 1; margin-bottom: 16px; }
-
-  .post-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-  .post-read-time { font-family: var(--mono); font-size: 0.6rem; color: var(--ink-light); letter-spacing: 0.06em; }
-  .post-link { font-family: var(--mono); font-size: 0.7rem; color: var(--copper); letter-spacing: 0.08em; display: flex; align-items: center; gap: 6px; transition: gap 0.2s; }
-  .post-item:hover .post-link { gap: 11px; }
-
-  /* Empty state */
-  .no-posts-msg { padding: 3rem 0; text-align: center; color: var(--ink-light); font-family: var(--mono); font-size: 0.8rem; display: none; }
+  .post-card-meta {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    margin-bottom: 0.85rem;
+  }
+  .post-card-tag {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em;
+    color: var(--ink-mid); background: var(--parchment-d);
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .post-card-date, .post-card-read {
+    font-family: var(--mono); font-size: 0.62rem; color: var(--ink-light);
+    letter-spacing: 0.06em;
+  }
+  .post-card-title {
+    font-family: var(--serif); font-size: 1.55rem; font-weight: 600;
+    color: var(--ink); line-height: 1.2; letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .post-card--featured .post-card-title { font-size: 2rem; }
+  .post-card-excerpt {
+    font-size: 0.9rem; color: var(--ink-soft); line-height: 1.7;
+    flex: 1; margin-bottom: 1.5rem;
+  }
+  .post-card-link {
+    font-family: var(--mono); font-size: 0.72rem; color: var(--copper);
+    letter-spacing: 0.06em; transition: letter-spacing 0.2s;
+    display: inline-block; margin-top: auto;
+  }
+  .post-card-link:hover { letter-spacing: 0.12em; }
+  .post-card.hidden { display: none; }
+  .no-posts-msg {
+    grid-column: 1 / -1; text-align: center; padding: 3rem 0;
+    font-family: var(--mono); font-size: 0.75rem; color: var(--ink-light);
+    letter-spacing: 0.06em; display: none;
+  }
   .no-posts-msg.visible { display: block; }
 
-  /* ── SIDEBAR ── */
-  .blog-sidebar { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 96px; }
-
-  .sidebar-card { background: var(--parchment); border: 1px solid var(--sand); border-radius: 14px; padding: 22px 20px; }
-  .sidebar-title { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--copper); margin-bottom: 14px; }
-
-  /* Author */
-  .author-mini-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-  .author-mini-photo { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--sand); flex-shrink: 0; }
-  .author-mini-meta { display: flex; flex-direction: column; gap: 2px; }
-  .about-mini-name { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; color: var(--ink); }
-  .about-mini-role { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--copper); }
-  .about-mini-bio { font-size: 0.84rem; color: var(--ink-mid); line-height: 1.6; font-weight: 300; margin-bottom: 12px; }
-  .about-mini-link { font-family: var(--mono); font-size: 0.7rem; color: var(--copper); letter-spacing: 0.06em; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
-  .about-mini-link:hover { gap: 10px; }
-
-  /* Topics */
-  .topic-list { display: flex; flex-direction: column; gap: 8px; }
-  .topic-item {
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 0.84rem; color: var(--ink-soft);
-    padding: 8px 10px; border-radius: 8px;
-    border: 1px solid transparent;
-    transition: all 0.18s; cursor: pointer;
+  /* ── AUTHOR STRIP ── */
+  .author-strip {
+    margin-top: 4rem; padding: 2rem; background: var(--parchment);
+    border: 1px solid var(--rule); border-radius: 10px;
+    display: flex; align-items: center; gap: 1.5rem;
   }
-  .topic-item:hover { background: var(--copper-pale); border-color: rgba(156,90,46,0.2); color: var(--copper); }
-  .topic-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .author-strip-photo {
+    width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+  }
+  .author-strip-name {
+    font-family: var(--serif); font-size: 1.15rem; font-weight: 600; color: var(--ink);
+  }
+  .author-strip-role {
+    font-size: 0.8rem; color: var(--ink-mid); margin-top: 2px;
+  }
+  .author-strip-link {
+    font-family: var(--mono); font-size: 0.7rem; color: var(--copper);
+    letter-spacing: 0.06em; margin-top: 6px; display: inline-block;
+    transition: letter-spacing 0.2s;
+  }
+  .author-strip-link:hover { letter-spacing: 0.1em; }
 
-  /* Follow card */
-  .follow-card { background: var(--navy); border-radius: 14px; padding: 22px 20px; }
-  .follow-card-eyebrow { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--copper-light); margin-bottom: 8px; display: block; }
-  .follow-card-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 600; color: rgba(232,220,200,0.9); margin-bottom: 8px; line-height: 1.3; }
-  .follow-card-body { font-size: 0.82rem; color: rgba(122,111,96,1); line-height: 1.6; font-weight: 300; margin-bottom: 16px; }
-  .follow-card-links { display: flex; flex-direction: column; gap: 8px; }
-  .follow-card-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.7rem; color: rgba(181,169,154,0.7); padding: 8px 12px; border: 1px solid rgba(255,255,255,0.07); border-radius: 7px; transition: all 0.2s; letter-spacing: 0.04em; }
-  .follow-card-link:hover { background: rgba(255,255,255,0.05); color: rgba(232,220,200,0.9); border-color: rgba(255,255,255,0.15); }
-  .follow-card-link-icon { background: rgba(255,255,255,0.07); border-radius: 3px; padding: 1px 5px; font-size: 0.6rem; }
+  /* ── LINKEDIN CTA ── */
+  .blog-cta {
+    margin-top: 2rem; padding: 2rem;
+    border: 1px solid var(--rule); border-radius: 10px;
+    text-align: center;
+  }
+  .blog-cta-eyebrow {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.75rem;
+  }
+  .blog-cta-text {
+    font-family: var(--serif); font-size: 1.25rem; font-weight: 500;
+    color: var(--ink); margin-bottom: 1.25rem;
+  }
+  .blog-cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--sans); font-size: 0.82rem; font-weight: 500;
+    background: var(--ink); color: var(--canvas);
+    padding: 0.65rem 1.5rem; border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .blog-cta-btn:hover { background: var(--copper); }
+
+  /* ── DISCLAIMER ── */
+  .blog-disclaimer {
+    margin-top: 2rem; margin-bottom: 4rem;
+    padding: 1.25rem 1.5rem;
+    border-left: 2px solid var(--sand);
+    font-size: 0.78rem; color: var(--ink-light); line-height: 1.65;
+    font-style: italic;
+  }
 
   /* ── FOOTER ── */
-  .footer { background: var(--ink); padding: 2.5rem 3rem; }
+  .footer { background: var(--ink); padding: 2.5rem max(1.5rem, calc((100% - var(--max-w)) / 2)); }
   .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
   .footer .nav-brand { font-size: 1.2rem; }
   .footer .brand-khatib { color: var(--sand); }
@@ -244,8 +266,7 @@
     border-bottom: 0.5px solid rgba(255,255,255,0.06);
   }
   .status-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #5a9e6f;
+    width: 6px; height: 6px; border-radius: 50%; background: #5a9e6f;
     animation: statusPulse 2.5s ease-in-out infinite;
   }
   @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
@@ -258,59 +279,49 @@
   }
   .footer-commit-prefix { color: var(--copper-light); margin-right: 6px; }
 
-  /* ── SARCASTIC TIP TOAST ── */
+  /* ── TIP TOAST ── */
   .tip-toast {
     position: fixed; bottom: 28px; right: 28px; z-index: 500;
-    max-width: 340px;
-    background: var(--navy);
-    border-radius: 14px; padding: 0;
-    border: 1px solid rgba(196,122,74,0.2);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
-    transform: translateY(calc(100% + 44px)); opacity: 0;
-    transition: transform 0.48s cubic-bezier(0.16,1,0.3,1), opacity 0.38s ease;
-    overflow: hidden;
+    max-width: 360px; background: var(--navy); border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06);
+    overflow: hidden; opacity: 0; pointer-events: none;
+    transform: translateY(12px) scale(0.97);
+    transition: opacity 0.35s ease, transform 0.35s ease;
   }
-  .tip-toast.visible { transform: translateY(0); opacity: 1; }
-  .tip-toast.hiding  { transform: translateY(calc(100% + 44px)); opacity: 0; }
-  .tip-progress { height: 2px; background: linear-gradient(90deg, var(--copper), var(--copper-light)); transform-origin: left; animation: tip-drain 7.5s linear forwards; }
-  @keyframes tip-drain { from { transform: scaleX(1); } to { transform: scaleX(0); } }
-  .tip-body { padding: 16px 18px 18px; }
-  .tip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .tip-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--copper-light); display: flex; align-items: center; gap: 5px; }
-  .tip-close { background: rgba(255,255,255,0.06); border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: rgba(181,169,154,0.6); cursor: pointer; font-size: 0.68rem; transition: all 0.2s; line-height: 1; }
-  .tip-close:hover { background: rgba(255,255,255,0.12); color: rgba(232,220,200,0.9); }
-  .tip-text { font-size: 0.86rem; color: rgba(228,210,186,0.82); line-height: 1.65; font-weight: 300; }
-  .tip-text strong { color: var(--copper-light); font-weight: 500; }
-
-  /* ── Disclaimer ── */
-  .disclaimer-text {
-    font-size: 0.72rem;
-    color: var(--ink-mid);
-    line-height: 1.6;
-    font-style: italic;
-    border-top: 0.5px solid var(--sand);
-    padding-top: 1rem;
-    margin-top: 1rem;
+  .tip-toast.visible { opacity: 1; pointer-events: auto; transform: none; }
+  .tip-toast.hiding { opacity: 0; transform: translateY(8px) scale(0.97); }
+  .tip-progress {
+    height: 2px; width: 100%; background: var(--copper);
+    transform-origin: left; animation: tipBar 7.8s linear forwards;
   }
+  @keyframes tipBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+  .tip-body { padding: 1rem 1.1rem 1.1rem; }
+  .tip-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+  .tip-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--copper-light); }
+  .tip-close { background: none; border: none; color: rgba(181,169,154,0.5); cursor: pointer; font-size: 0.8rem; padding: 0 2px; transition: color 0.2s; }
+  .tip-close:hover { color: var(--sand); }
+  .tip-text { font-size: 0.83rem; color: rgba(228,218,205,0.88); line-height: 1.55; }
+  .tip-text strong { color: var(--sand); font-weight: 500; }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 960px) {
-    .blog-main { grid-template-columns: 1fr; padding: 36px 1.5rem 80px; gap: 40px; }
-    .blog-sidebar { position: static; }
-  }
   @media (max-width: 760px) {
-    .nav { padding: 1rem 1.5rem; }
-    .nav.scrolled { padding: 0.8rem 1.5rem; }
+    .page { padding: 0 1.25rem; }
+    .nav { padding: 1rem 1.25rem; }
+    .nav.scrolled { padding-top: 0.8rem; padding-bottom: 0.8rem; }
     .nav-links { display: none; }
-    .nav-toggle { display: block; background: none; border: none; font-size: 1.2rem; color: var(--ink); cursor: pointer; }
-    .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(250,247,241,0.98); padding: 1rem 1.5rem 1.5rem; border-bottom: 1px solid var(--rule); gap: 1rem; }
-    .blog-header { padding: 100px 1.5rem 48px; }
-    .blog-header-inner { flex-direction: column; align-items: flex-start; }
-    .blog-toolbar { padding: 16px 1.5rem; }
-    .post-item { grid-template-columns: 1fr; }
-    .post-thumb { min-height: 140px; }
-    .footer { padding: 2rem 1.5rem; }
+    .nav-toggle { display: block; }
+    .nav-links.open {
+      display: flex; flex-direction: column; position: absolute;
+      top: 100%; left: 0; right: 0;
+      background: rgba(250,247,241,0.98); padding: 1rem 1.5rem 1.5rem;
+      border-bottom: 1px solid var(--rule); gap: 1rem;
+    }
+    .blog-masthead { flex-direction: column; align-items: flex-start; padding-top: 90px; }
+    .masthead-count { display: none; }
+    .post-grid { grid-template-columns: 1fr; }
+    .post-card--featured { grid-template-columns: 1fr; gap: 1.5rem; }
     .tip-toast { max-width: calc(100vw - 40px); right: 20px; bottom: 20px; }
+    .footer { padding: 2rem 1.25rem; }
   }
 </style>
 </head>
@@ -328,109 +339,93 @@
   <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
 </nav>
 
-<!-- HEADER (dark navy) -->
-<header class="blog-header">
-  <div class="blog-header-inner">
-    <div>
-      <div class="blog-eyebrow">Khatib365 · Writing</div>
-      <h1 class="blog-page-title">Field notes from<br><em>the trenches.</em></h1>
-      <p class="blog-page-desc">Real decisions, real mistakes, real patterns — from someone who's actually in the middle of it. Not a course. Not a certification guide. Just what I've learned the hard way.</p>
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <header class="blog-masthead">
+    <div class="masthead-text">
+      <p class="masthead-eyebrow">Khatib365 · Writing</p>
+      <h1 class="masthead-title">Field notes <em>from the trenches.</em></h1>
+      <p class="masthead-sub">Real decisions, real mistakes, real patterns — from someone who's actually in the middle of it. Not a course. Not a certification guide. Just what I've learned the hard way.</p>
     </div>
+    <div class="masthead-count" aria-hidden="true">01</div>
+  </header>
+
+  <!-- CONTROLS -->
+  <div class="blog-controls">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search posts…" aria-label="Search posts">
+    </div>
+    <div class="filter-sep"></div>
+    <span class="filter-label">Filter</span>
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="alm">ALM</button>
+    <button class="filter-btn" data-filter="integration">Integration</button>
+    <button class="filter-btn" data-filter="dataverse">Dataverse</button>
+    <button class="filter-btn" data-filter="architecture">Architecture</button>
+    <button class="filter-btn" data-filter="ai">AI</button>
+    <span class="results-count" id="resultsCount">1 post</span>
   </div>
-</header>
 
-<!-- TOOLBAR: search + filter -->
-<div class="blog-toolbar" id="toolbar">
-  <div class="search-wrap">
-    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" id="searchInput" class="search-input" placeholder="Search posts…" aria-label="Search posts" />
-  </div>
-  <div class="filter-sep"></div>
-  <span class="filter-label">Filter</span>
-  <button class="filter-btn active" data-filter="all">All</button>
-  <button class="filter-btn" data-filter="alm">ALM</button>
-  <button class="filter-btn" data-filter="integration">Integration</button>
-  <button class="filter-btn" data-filter="dataverse">Dataverse</button>
-  <button class="filter-btn" data-filter="ai">AI</button>
-</div>
+  <!-- POST GRID -->
+  <div class="post-grid" id="postGrid">
 
-<!-- MAIN -->
-<main class="blog-main">
-
-  <!-- POST LIST -->
-  <div class="post-list" id="postList">
-
-    <!-- ── Post 01: Environment Strategy — LIVE ── -->
-    <article class="post-item" data-tags="alm" data-live="true"
-      onclick="location.href='post1-environment-strategy.html'" style="cursor:pointer;">
-      <div class="post-thumb">
-        <span class="post-num">01</span>
-        <div class="post-live-indicator" title="Live"></div>
+    <!-- Post 01 — featured -->
+    <article class="post-card post-card--featured"
+      data-tags="alm,architecture"
+      data-title="Before You Write a Single Line of Code, Get Your Environments Right"
+      data-excerpt="Most Power Platform projects fail at deployment — not because of bad code, but because of decisions made in the first five minutes. The wrong URL, no security groups, a skipped toggle."
+      onclick="location.href='post1-environment-strategy.html'"
+      style="cursor:pointer">
+      <div class="post-card-left">
+        <div class="post-card-badge">Deployment Series · Post 01</div>
+        <div class="post-card-meta">
+          <span class="post-card-tag">ALM · Environments</span>
+          <span class="post-card-date">March 2026</span>
+          <span class="post-card-read">12 min read</span>
+        </div>
+        <h2 class="post-card-title">Before You Write a Single Line of Code, Get Your Environments Right</h2>
       </div>
-      <div class="post-content">
-        <div class="post-meta">
-          <span class="post-series">ALM Series</span>
-          <span class="post-tag">ALM · Environments</span>
-          <span class="post-date">March 2026</span>
-        </div>
-        <h2 class="post-title"><a href="post1-environment-strategy.html" class="post-title-link">Before You Write a Single Line of Code, Get Your Environments Right</a></h2>
-        <p class="post-excerpt">Most Power Platform projects fail at deployment — not because of bad code, but because of decisions made in the first five minutes. The wrong URL, no security groups, a skipped toggle. Here's what to get right before anything else.</p>
-        <div class="post-footer">
-          <span class="post-read-time">~12 min read</span>
-          <a href="post1-environment-strategy.html" class="post-link">Read post →</a>
-        </div>
+      <div class="post-card-right">
+        <p class="post-card-excerpt">Most Power Platform projects fail at deployment — not because of bad code, but because of decisions made in the first five minutes. The wrong URL, no security groups, a skipped toggle. Here's what to get right before anything else.</p>
+        <a href="post1-environment-strategy.html" class="post-card-link">Read post →</a>
       </div>
     </article>
 
     <div class="no-posts-msg" id="noPostsMsg">
-      No published posts match that search yet — check back soon.
+      No published posts match that filter — check back soon.
     </div>
 
   </div>
 
-  <!-- SIDEBAR -->
-  <aside class="blog-sidebar">
-
-    <!-- Author card -->
-    <div class="sidebar-card">
-      <div class="sidebar-title">The author</div>
-      <div class="author-mini-header">
-        <img src="../assets/photo.jpg" alt="Ahmed El-Khatib" class="author-mini-photo" />
-        <div class="author-mini-meta">
-          <div class="about-mini-name">Ahmed El-Khatib</div>
-          <div class="about-mini-role">Power Platform Lead</div>
-        </div>
-      </div>
-      <a href="../" class="about-mini-link">Back to home →</a>
+  <!-- AUTHOR STRIP -->
+  <div class="author-strip">
+    <img src="../assets/photo.jpg" alt="Ahmed El-Khatib" class="author-strip-photo">
+    <div>
+      <div class="author-strip-name">Ahmed El-Khatib</div>
+      <div class="author-strip-role">Power Platform Technical Lead · Trax Group</div>
+      <a href="../" class="author-strip-link">← Back to home</a>
     </div>
+  </div>
 
-    <!-- Follow / Connect -->
-    <div class="follow-card">
-      <span class="follow-card-eyebrow">Stay in the loop</span>
-      <div class="follow-card-title">New posts, when they drop.</div>
-      <p class="follow-card-body">No newsletter. Follow on LinkedIn — I post when something new goes live.</p>
-      <div class="follow-card-links">
-        <a href="https://linkedin.com/in/ahmed-el-khatib" target="_blank" rel="noopener" class="follow-card-link">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-          </svg>
-          Follow on LinkedIn
-        </a>
-      </div>
-    </div>
+  <!-- LINKEDIN CTA -->
+  <div class="blog-cta">
+    <p class="blog-cta-eyebrow">Stay in the loop</p>
+    <p class="blog-cta-text">New posts, when they drop. No newsletter.</p>
+    <a href="https://linkedin.com/in/ahmed-el-khatib" target="_blank" rel="noopener noreferrer" class="blog-cta-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      Connect on LinkedIn
+    </a>
+  </div>
 
-    <!-- Disclaimer -->
-    <div class="sidebar-disclaimer">
-      <p class="disclaimer-text">
-        Everything on this blog is my own opinion and based on my personal experience.
-        Not Microsoft's, not my employer's — mine. Take it, challenge it, build on it.
-        That's the point.
-      </p>
-    </div>
+  <!-- DISCLAIMER -->
+  <div class="blog-disclaimer">
+    Everything on this blog is my own opinion, based on personal experience.
+    Not Microsoft's, not my employer's — mine. Take it, challenge it, build on it. That's the point.
+  </div>
 
-  </aside>
-
-</main>
+</div><!-- /.page -->
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -470,7 +465,7 @@
 </div>
 
 <script>
-  // ── Nav
+  // ── Nav scroll + mobile toggle
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
   const toggle = document.getElementById('navToggle');
@@ -479,26 +474,28 @@
   navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
 
   // ── Filter + Search
-  const filterBtns    = document.querySelectorAll('.filter-btn');
-  const publishedPosts = document.querySelectorAll('.post-item[data-live="true"]');
-  const noPostsMsg    = document.getElementById('noPostsMsg');
-  const searchInput   = document.getElementById('searchInput');
-  let activeFilter    = 'all';
-  let searchQuery     = '';
+  const filterBtns  = document.querySelectorAll('.filter-btn');
+  const postCards   = document.querySelectorAll('.post-card--featured, .post-card:not(.post-card--featured)');
+  const noPostsMsg  = document.getElementById('noPostsMsg');
+  const searchInput = document.getElementById('searchInput');
+  const resultsCount = document.getElementById('resultsCount');
+  let activeFilter  = 'all';
+  let searchQuery   = '';
 
   function applyFilters() {
-    let anyVisible = false;
-    publishedPosts.forEach(post => {
-      const tags    = post.dataset.tags || '';
-      const title   = post.querySelector('.post-title')?.textContent.toLowerCase() || '';
-      const excerpt = post.querySelector('.post-excerpt')?.textContent.toLowerCase() || '';
+    let visible = 0;
+    postCards.forEach(card => {
+      const tags    = (card.dataset.tags || '').toLowerCase();
+      const title   = (card.dataset.title || '').toLowerCase();
+      const excerpt = (card.dataset.excerpt || '').toLowerCase();
       const matchFilter = activeFilter === 'all' || tags.includes(activeFilter);
       const matchSearch = !searchQuery || title.includes(searchQuery) || excerpt.includes(searchQuery);
       const show = matchFilter && matchSearch;
-      post.classList.toggle('hidden', !show);
-      if (show) anyVisible = true;
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
     });
-    noPostsMsg.classList.toggle('visible', !anyVisible);
+    noPostsMsg.classList.toggle('visible', visible === 0);
+    resultsCount.textContent = visible === 1 ? '1 post' : visible + ' posts';
   }
 
   filterBtns.forEach(btn => {
@@ -515,16 +512,6 @@
     applyFilters();
   });
 
-  // Sidebar topic click helper
-  function filterByTag(tag) {
-    activeFilter = tag;
-    filterBtns.forEach(b => {
-      b.classList.toggle('active', b.dataset.filter === tag);
-    });
-    applyFilters();
-    document.getElementById('postList').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
   // ── Sarcastic tip toast
   const sarcasticTips = [
     "<strong>Oh, you're deploying unmanaged to production again?</strong> A classic. We don't judge here. But we're judging.",
@@ -536,7 +523,7 @@
     "<strong>Three different publisher prefixes across the same org.</strong> This is permanent. This is forever. Good luck.",
     "<strong>Synchronous plugin. Ten thousand rows. Let's go.</strong> The transaction thread is crying.",
     "<strong>No DLP policies? That's called freedom.</strong> Someone just connected their personal Gmail. It's fine.",
-    "<strong>You skipped the environment variables again.</strong> The service account who's email is in 47 flows just resigned."
+    "<strong>You skipped the environment variables again.</strong> The service account whose email is in 47 flows just resigned."
   ];
 
   const toast    = document.getElementById('tipToast');
