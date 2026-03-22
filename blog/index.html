@@ -236,6 +236,27 @@
   .footer-links { display: flex; gap: 24px; }
   .footer-link { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-mid); letter-spacing: 0.06em; transition: color 0.2s; }
   .footer-link:hover { color: var(--copper-light); }
+  .footer-status {
+    width: 100%; display: flex; align-items: center; justify-content: center;
+    gap: 8px; font-size: 0.68rem; color: var(--ink-mid);
+    font-family: var(--mono); letter-spacing: 0.04em;
+    padding-bottom: 0.75rem; margin-bottom: 0.25rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #5a9e6f;
+    animation: statusPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .status-sep { color: rgba(255,255,255,0.18); }
+  .footer-commit {
+    width: 100%; text-align: center; font-family: var(--mono); font-size: 0.68rem;
+    color: var(--ink-mid); padding: 0.5rem 0;
+    border-top: 0.5px solid rgba(255,255,255,0.06);
+    margin-top: 0.5rem; letter-spacing: 0.02em;
+  }
+  .footer-commit-prefix { color: var(--copper-light); margin-right: 6px; }
 
   /* ── SARCASTIC TIP TOAST ── */
   .tip-toast {
@@ -460,12 +481,24 @@
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-inner">
+    <div class="footer-status">
+      <span class="status-dot"></span>
+      <span class="status-text">All environments managed</span>
+      <span class="status-sep">·</span>
+      <span class="status-text">No hotfixes in production today</span>
+      <span class="status-sep">·</span>
+      <span class="status-text" id="status-uptime"></span>
+    </div>
     <a href="../" class="nav-brand"><span class="brand-khatib">Khatib</span><span class="brand-365">365</span></a>
     <span class="footer-copy">© 2026 Ahmed El-Khatib</span>
     <div class="footer-links">
       <a href="../" class="footer-link">Home</a>
       <a href="../#contact" class="footer-link">Contact</a>
       <a href="https://linkedin.com/in/ahmed-el-khatib" class="footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+    <div class="footer-commit">
+      <span class="footer-commit-prefix">git ›</span>
+      <span class="footer-commit-msg" id="footer-commit-msg"></span>
     </div>
   </div>
 </footer>
@@ -573,6 +606,38 @@
   });
 
   tipClose.addEventListener('click', dismissTip);
+
+  // ── Footer commit + uptime
+  (function() {
+    const commits = [
+      "fix: fixed the fix that fixed the previous fix",
+      "hotfix: please work",
+      "temp: do not push to prod (pushing to prod)",
+      "chore: removed todo comments (left the todos)",
+      "refactor: same code, more confidence",
+      "fix: it works now (reason unknown)",
+      "wip: not wip anymore, shipping anyway",
+      "feat: added feature client didn't ask for but definitely needs",
+      "hotfix: prod is fine, this is fine, everything is fine",
+      "fix: reverted the revert of the revert",
+      "style: moved semicolon 1px to the right",
+      "docs: added comment explaining what the code does (incorrectly)",
+      "fix: null check (too late)",
+      "feat: environment variables (they were hardcoded until today)",
+      "deploy: fingers crossed",
+      "fix: works on my machine (adding my machine to prod)",
+      "chore: deleted unused code (it will be needed next week)",
+      "feat: error handling (catching and ignoring)",
+      "fix: race condition by adding setTimeout 1000",
+      "hotfix: unrelated change that somehow fixes everything"
+    ];
+    const msgEl = document.getElementById('footer-commit-msg');
+    if (msgEl) msgEl.textContent = commits[Math.floor(Math.random() * commits.length)];
+    const uptimeEl = document.getElementById('status-uptime');
+    if (uptimeEl) uptimeEl.textContent =
+      'Khatib365 up for ' +
+      Math.floor((Date.now() - new Date('2026-03-01').getTime()) / 86400000) + ' days';
+  })();
 </script>
 </body>
 </html>

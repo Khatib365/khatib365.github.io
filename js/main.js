@@ -351,62 +351,65 @@ if (navBrand) {
   const backdrop   = document.getElementById('sardonicBackdrop');
 
   const tips = [
-    {
-      emoji: '🙃',
-      title: "You're About to Deploy Unmanaged, Aren't You.",
-      body:  "It'll be fine. It won't be fine. This is a judgment-free zone — except it's not. Deploy managed, or don't deploy at all."
-    },
-    {
-      emoji: '💀',
-      title: "Bold Choice, Hardcoding That URL.",
-      body:  "That connection string you just pasted directly into 23 flows? It's wrong in every environment except the laptop you're holding right now. You know what to do."
-    },
-    {
-      emoji: '🔥',
-      title: "No Security Groups on the Environment? Love That.",
-      body:  "You invited everyone directly by email. No security group. Everyone is now effectively a System Administrator. The auditors will have opinions."
-    },
-    {
-      emoji: '😭',
-      title: "One Solution. Everything in It. Respect the Courage.",
-      body:  "The data model, the apps, the flows, the PCF controls — all in one glorious solution. Future-you is already filing the therapy paperwork."
-    },
-    {
-      emoji: '👀',
-      title: "It Works in Dev. That's Basically Done, Right?",
-      body:  "Dev passed. Test passed. Prod is a different country with different laws, different environment variables, and it has never once heard of your hardcoded service account."
-    },
-    {
-      emoji: '😬',
-      title: "Polling Every Minute? That's a Lifestyle Choice.",
-      body:  "Your scheduled flow runs 1,440 times a day and finds nothing to process 1,437 of those times. Your API provider has entered the building."
-    },
-    {
-      emoji: '🫠',
-      title: "Three Publisher Prefixes. In One Org.",
-      body:  "You mixed publisher prefixes across solutions that share the same tables. You have created something that cannot be undone. This is your legacy now."
-    },
-    {
-      emoji: '🤦',
-      title: "Synchronous Plugin on a 10,000 Row Import.",
-      body:  "You're about to block the entire transaction thread while processing ten thousand records. The waiting room is open and they are not happy."
-    },
-    {
-      emoji: '🚨',
-      title: "No DLP Policies. Living on the Edge, I See.",
-      body:  "Anyone in your org can now connect Power Automate to personal Gmail, Dropbox, and Twitter simultaneously. This is what 'minimal governance' looks like in production."
-    },
-    {
-      emoji: '⚡',
-      title: "Environment Variables Are Optional, Right?",
-      body:  "The service account email is hardcoded in 47 different flows. That person just left the company. Please update your emergency contact list immediately."
-    }
+    "🎰 Built your entire app in the Default environment? Bold strategy. Everyone in your tenant can now see it. Congratulations on the world's most public POC.",
+    "📛 org8372649.crm4.dynamics.com is not a URL. It's a cry for help. Set your org URL at creation time. It cannot be changed later. You've been warned. Twice.",
+    "🔐 No security group on your environment means every licensed user in the tenant can walk in. It's not an environment, it's a public park.",
+    "☑️ Skipped the Enable Dynamics 365 Apps toggle because you're 'just building a Canvas App'? The client will ask for D365 Sales in 3... 2... 1...",
+    "🧱 A solution named 'Default Solution' is not a solution. It's a red flag with a publisher prefix nobody set.",
+    "🚢 Shipping directly to Production because 'it's just a small change'? Bold. Unhinged. Deeply relatable. Still wrong.",
+    "💡 Power Automate is not a database. Stop storing state in flow variables across runs. Dataverse exists. Use it.",
+    "🧨 'It works in my Dev environment' is the Power Platform equivalent of 'it works on my machine.' Managed solutions exist for a reason.",
+    "📦 One solution for everything is not an architecture. It's a time bomb with a version number.",
+    "🔄 Triggering a flow on every record update without a change detection condition is not automation. It's a cloud bill waiting to happen.",
+    "👤 Using a personal account as your service account is completely fine — until that person leaves and 47 flows die overnight.",
+    "🏷️ 'New_field' is a field name. 'khatib_EnvironmentSetupStatus' is an architecture decision. Naming conventions aren't optional.",
+    "🔁 Copy-pasting the same 15 actions across 8 flows instead of building a child flow is not efficiency. It's technical debt in bulk.",
+    "🧪 Testing in Production because 'UAT takes too long to set up' is the bravest thing you can do with someone else's data.",
+    "📊 Power BI connected directly to Dataverse with no aggregation layer and 50 users refreshing simultaneously. The environment will remember this.",
+    "🔑 Hardcoding your client secret in a flow is not a secret anymore. Azure Key Vault is free. Embarrassment is not.",
+    "🌍 'We'll set up environments properly later' is developer speak for: we will migrate everything manually at 11pm before go-live.",
+    "📱 Canvas App with 47 screens, 200 variables, and zero components. It runs fine. On the device it was built on. Exclusively.",
+    "🎭 Model-Driven App with 12 custom pages and no sitemap structure. Navigation is just a suggestion at this point.",
+    "⚡ 'Let's just use the Common Data Service connector' — it's been deprecated. It was deprecated when you typed that. Dataverse connector. Always.",
+    "🏗️ Publisher prefix set to 'new_' means you accepted every default. Future you is already disappointed.",
+    "🔃 Synchronous plugin that calls an external API. In a transaction. On the Create of Account. Audacious. Incredibly audacious.",
+    "📧 Power Automate flow that sends an email on every Dataverse record change with no filter. Your users will enjoy the 3,000 emails per day.",
+    "🗄️ Storing files as base64 strings in a text column because SharePoint integration 'was complicated.' The column limit says hi.",
+    "🎯 DLP policy that blocks everything except the connectors you needed last year. Your new project is not impressed.",
+    "🧩 PCF control built as a solution component in the Default solution. ALM will find you eventually.",
+    "🔌 Logic App using a service account instead of Managed Identity. One password rotation away from a 2am incident.",
+    "🌐 'We don't need ALM, it's just an internal tool.' Famous last words, spoken approximately 4 weeks before a production incident.",
+    "📋 Business rule with 14 conditions and 3 nested ifs. Works perfectly. Nobody can explain why. Nobody will touch it.",
+    "🎪 Canvas App shared with 'Everyone' in the organization because setting up security groups 'takes too long.' Compliance says hi.",
+    "🔧 Custom connector with no error handling because 'the API never fails.' The API has already failed. It failed while you typed that.",
+    "📐 No environment variables. Connection references hardcoded to Dev. Deployment to UAT will be a spiritual experience.",
+    "🧵 Power Automate flow with 200 actions in a single flow because child flows are 'complicated.' Azure timeout is on its way.",
+    "🗺️ No sitemap customization on the Model-Driven App means users get every table ever created. It's less an app, more a museum.",
+    "💾 'We'll document it later.' Chapter one of every post-mortem ever written.",
+    "🧮 Calculated column doing real-time aggregation across 500k records. The environment is fine. It's fine. Look away.",
+    "🔒 Giving everyone System Administrator role 'temporarily.' Temporarily has been running for 14 months.",
+    "📡 Webhook with no retry logic and no dead-letter handling. Your integration works — until it doesn't, silently, at 2am.",
+    "🎲 Environment without Managed Environments enabled but you're using pipelines. Microsoft will enable it for you. Surprise.",
+    "🛸 'We'll refactor it after go-live.' Statistically, this has never happened. Not once. In the history of software.",
+    "🧯 Hotfix applied directly in Production at midnight. No documentation. No PR. No tests. Fully deployed. Probably fine.",
+    "🔂 Importing an unmanaged solution into Production. The environment will accept it. It just loses all respect for you.",
+    "🧲 Business process flow with 9 stages and no stage-gating. Users will click through all of them in 4 seconds. Guaranteed.",
+    "🌀 Circular reference in Power Automate with a 1-second delay added to 'prevent' it from looping. It's looping.",
+    "🏛️ 'Let's not use source control, it's just one developer.' One developer who will leave in 3 months with no handover.",
+    "🎸 Plugin registered on PostOperation Synchronous that queries 50,000 records. The platform would like a word.",
+    "🗝️ Admin credentials shared in a group chat 'just this once.' Security auditors screenshot group chats too.",
+    "🌋 Canvas App with OnStart loading 8 collections simultaneously. The loading screen is not a bug. It's loading. Still loading. Still loading.",
+    "🧬 'We'll use one environment for both Dev and Test to save capacity.' This is how environments get reset. Ask me how I know.",
+    "🏆 If you made it to tip 50, you've either done all of these or inherited a project where someone else did. Either way — welcome. You're in the right place."
   ];
 
   const tip = tips[Math.floor(Math.random() * tips.length)];
-  emojiEl.textContent = tip.emoji;
-  titleEl.textContent = tip.title;
-  bodyEl.textContent  = tip.body;
+  const m = tip.match(/^(\S+)\s+(.+)$/s);
+  const [, emoji, rest] = m || ['', '⚡', tip];
+  const sentM = rest.match(/^([^.?!]+[.?!])\s*(.*)/s);
+  emojiEl.textContent = emoji;
+  titleEl.textContent = sentM ? sentM[1] : rest;
+  bodyEl.textContent  = sentM ? sentM[2].trim() : '';
 
   function closeModal() {
     modal.classList.remove('visible');
@@ -421,4 +424,103 @@ if (navBrand) {
 
   // Show after short delay
   setTimeout(() => modal.classList.add('visible'), 700);
+})();
+
+// ════════════════════════════════════════════════
+// ENVIRONMENT HEALTH CHECK EASTER EGG
+// ════════════════════════════════════════════════
+(function initHealthModal() {
+  const modal      = document.getElementById('health-modal');
+  if (!modal) return;
+  const findingsEl = document.getElementById('health-findings');
+  const footerEl   = document.getElementById('health-footer');
+  const statusEl   = document.getElementById('health-status');
+
+  const findings = [
+    { icon: '❌', text: 'Default environment in active use' },
+    { icon: '❌', text: 'org7382847.crm4.dynamics.com detected in production' },
+    { icon: '❌', text: "Service account tied to a real person's email" },
+    { icon: '❌', text: 'Unmanaged solution imported to Production' },
+    { icon: '❌', text: '47 flows running without error handling' },
+    { icon: '⚠️',  text: 'Publisher prefix: new_' },
+    { icon: '⚠️',  text: 'Documentation last updated: never' },
+    { icon: '✅',  text: "At least you're reading this blog" }
+  ];
+
+  function openHealthModal() {
+    findingsEl.innerHTML = '';
+    footerEl.style.display = 'none';
+    statusEl.textContent = 'Scanning your tenant...';
+    modal.style.display = 'flex';
+    findings.forEach((f, i) => {
+      setTimeout(() => {
+        const li = document.createElement('li');
+        li.className = 'health-finding';
+        li.innerHTML = `<span class="health-finding-icon">${f.icon}</span><span>${f.text}</span>`;
+        findingsEl.appendChild(li);
+        if (i === findings.length - 1) {
+          setTimeout(() => {
+            statusEl.textContent = 'Scan complete.';
+            footerEl.style.display = 'block';
+          }, 300);
+        }
+      }, i * 400);
+    });
+  }
+
+  window.closeHealthModal = function() { modal.style.display = 'none'; };
+  modal.addEventListener('click', e => { if (e.target === modal) window.closeHealthModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modal.style.display === 'flex') window.closeHealthModal();
+  });
+
+  // Triple-click Easter egg on nav brand
+  const navBrand = document.getElementById('navBrand');
+  if (!navBrand) return;
+  let clickCount = 0, clickTimer = null;
+  navBrand.addEventListener('click', () => {
+    clickCount++;
+    if (clickCount === 1) clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
+    if (clickCount >= 3) {
+      clearTimeout(clickTimer);
+      clickCount = 0;
+      openHealthModal();
+    }
+  });
+})();
+
+// ════════════════════════════════════════════════
+// FOOTER — COMMIT MESSAGE + UPTIME
+// ════════════════════════════════════════════════
+(function initFooterEggs() {
+  const commits = [
+    "fix: fixed the fix that fixed the previous fix",
+    "hotfix: please work",
+    "temp: do not push to prod (pushing to prod)",
+    "chore: removed todo comments (left the todos)",
+    "refactor: same code, more confidence",
+    "fix: it works now (reason unknown)",
+    "wip: not wip anymore, shipping anyway",
+    "feat: added feature client didn't ask for but definitely needs",
+    "hotfix: prod is fine, this is fine, everything is fine",
+    "fix: reverted the revert of the revert",
+    "style: moved semicolon 1px to the right",
+    "docs: added comment explaining what the code does (incorrectly)",
+    "fix: null check (too late)",
+    "feat: environment variables (they were hardcoded until today)",
+    "deploy: fingers crossed",
+    "fix: works on my machine (adding my machine to prod)",
+    "chore: deleted unused code (it will be needed next week)",
+    "feat: error handling (catching and ignoring)",
+    "fix: race condition by adding setTimeout 1000",
+    "hotfix: unrelated change that somehow fixes everything"
+  ];
+
+  const msgEl = document.getElementById('footer-commit-msg');
+  if (msgEl) msgEl.textContent = commits[Math.floor(Math.random() * commits.length)];
+
+  const uptimeEl = document.getElementById('status-uptime');
+  if (uptimeEl) uptimeEl.textContent =
+    'Khatib365 up for ' +
+    Math.floor((Date.now() - new Date('2026-03-01').getTime()) / 86400000) + ' days';
 })();

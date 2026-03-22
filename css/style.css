@@ -904,6 +904,72 @@ i.skill-svg-icon { width: auto; height: auto; font-size: 28px; line-height: 1; }
 .sardonic-btn:hover { background: #875024; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(156,90,46,0.4); }
 .sardonic-hint { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-light); letter-spacing: 0.04em; }
 
+/* ═══════════════════ HEALTH MODAL ═══════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 800;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(7,13,28,0.88);
+  backdrop-filter: blur(8px);
+}
+.modal-box {
+  position: relative; z-index: 1;
+  background: var(--parchment);
+  border-radius: 16px;
+  padding: 2.5rem 3rem;
+  width: calc(100% - 40px);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(156,90,46,0.15);
+}
+.health-modal-box { max-width: 460px; text-align: left; }
+.health-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 1.25rem; padding-bottom: 1rem;
+  border-bottom: 0.5px solid var(--rule);
+}
+.health-icon { font-size: 1.1rem; }
+.health-title { font-weight: 500; font-size: 0.95rem; color: var(--ink); flex: 1; font-family: var(--sans); }
+.health-scanning { font-size: 0.72rem; color: var(--ink-mid); font-style: italic; font-family: var(--mono); }
+.health-findings { list-style: none; display: flex; flex-direction: column; gap: 8px; min-height: 180px; }
+.health-finding {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.82rem; color: var(--ink); font-family: var(--sans);
+  opacity: 0; transform: translateY(6px);
+  animation: findingIn 0.3s ease forwards;
+}
+@keyframes findingIn { to { opacity: 1; transform: translateY(0); } }
+.health-finding-icon { font-size: 0.9rem; min-width: 18px; }
+.health-footer { margin-top: 1.25rem; padding-top: 1rem; border-top: 0.5px solid var(--rule); }
+.health-result { font-size: 0.83rem; color: var(--ink-mid); margin-bottom: 1rem; line-height: 1.6; }
+.health-dismiss {
+  font-family: var(--sans); font-size: 0.78rem; color: var(--ink);
+  background: transparent; border: 0.5px solid var(--rule);
+  padding: 8px 18px; border-radius: 2px; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.health-dismiss:hover { border-color: var(--copper); color: var(--copper); }
+
+/* ═══════════════════ FOOTER EXTRAS ═══════════════════ */
+.footer-status {
+  width: 100%; display: flex; align-items: center; justify-content: center;
+  gap: 8px; font-size: 0.68rem; color: var(--ink-mid);
+  font-family: var(--mono); letter-spacing: 0.04em;
+  padding-bottom: 0.75rem; margin-bottom: 0.25rem;
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+}
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #5a9e6f;
+  animation: statusPulse 2.5s ease-in-out infinite;
+}
+@keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.status-sep { color: rgba(255,255,255,0.18); }
+.footer-commit {
+  width: 100%; text-align: center; font-family: var(--mono); font-size: 0.68rem;
+  color: var(--ink-mid); padding: 0.5rem 0;
+  border-top: 0.5px solid rgba(255,255,255,0.06);
+  margin-top: 0.5rem; letter-spacing: 0.02em;
+}
+.footer-commit-prefix { color: var(--copper-light); margin-right: 6px; }
+
 /* ═══════════════════ RESPONSIVE ═══════════════════ */
 @media (max-width: 1024px) {
   .skills-grid { grid-template-columns: repeat(2, 1fr); }

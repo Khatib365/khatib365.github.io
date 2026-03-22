@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Environment Not Found · Khatib365</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Jost:wght@300;400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --canvas:        #faf7f1;
+      --parchment:     #f4efe6;
+      --sand:          #e8dcc8;
+      --ink:           #1c1812;
+      --ink-soft:      #453d31;
+      --ink-mid:       #7a6f60;
+      --ink-light:     #b5a99a;
+      --copper:        #9c5a2e;
+      --copper-light:  #c47a4a;
+      --copper-pale:   #f2e8dc;
+      --rule:          rgba(28,24,18,0.1);
+      --serif:  'Cormorant Garamond', Georgia, serif;
+      --sans:   'Jost', system-ui, sans-serif;
+      --mono:   'Fira Code', 'Courier New', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100vh;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 64px;
+      background: transparent;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .nav.scrolled {
+      background: rgba(250,247,241,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-brand { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; letter-spacing: -0.02em; }
+    .brand-khatib { color: var(--ink); }
+    .brand-365 { color: var(--copper); }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mid); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--copper); }
+
+    /* ── MAIN ── */
+    .page {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+    }
+    .err-code {
+      font-family: var(--serif);
+      font-size: clamp(5rem, 18vw, 9rem);
+      font-weight: 600;
+      color: var(--sand);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.25rem;
+    }
+    .err-heading {
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.85rem;
+    }
+    .err-sub {
+      font-size: 0.9rem;
+      color: var(--ink-mid);
+      line-height: 1.65;
+      max-width: 420px;
+      margin: 0 auto 2.5rem;
+    }
+    .err-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      justify-content: center; margin-bottom: 2rem;
+    }
+    .btn-err {
+      display: inline-block;
+      font-family: var(--sans); font-size: 0.82rem; font-weight: 500;
+      padding: 0.7rem 1.6rem; border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .btn-err-primary {
+      background: var(--copper); color: #fff;
+      box-shadow: 0 2px 12px rgba(156,90,46,0.25);
+    }
+    .btn-err-primary:hover { background: #875024; transform: translateY(-2px); }
+    .btn-err-ghost {
+      background: transparent; color: var(--ink-mid);
+      border: 1px solid var(--rule);
+    }
+    .btn-err-ghost:hover { border-color: var(--copper); color: var(--copper); }
+    .err-note {
+      font-size: 0.72rem; color: var(--ink-light);
+      font-style: italic; max-width: 360px; line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    .footer { background: var(--ink); padding: 2.5rem 3rem; }
+    .footer-inner {
+      max-width: 1160px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px;
+    }
+    .footer .nav-brand { font-size: 1.2rem; }
+    .footer .brand-khatib { color: var(--sand); }
+    .footer .brand-365 { color: var(--copper-light); }
+    .footer-copy { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-mid); letter-spacing: 0.06em; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-link { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-mid); letter-spacing: 0.06em; transition: color 0.2s; }
+    .footer-link:hover { color: var(--copper-light); }
+    .footer-status {
+      width: 100%; display: flex; align-items: center; justify-content: center;
+      gap: 8px; font-size: 0.68rem; color: var(--ink-mid);
+      font-family: var(--mono); letter-spacing: 0.04em;
+      padding-bottom: 0.75rem; margin-bottom: 0.25rem;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #5a9e6f;
+      animation: statusPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes statusPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .status-sep { color: rgba(255,255,255,0.18); }
+    .footer-commit {
+      width: 100%; text-align: center; font-family: var(--mono); font-size: 0.68rem;
+      color: var(--ink-mid); padding: 0.5rem 0;
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+      margin-top: 0.5rem; letter-spacing: 0.02em;
+    }
+    .footer-commit-prefix { color: var(--copper-light); margin-right: 6px; }
+
+    @media (max-width: 600px) {
+      .nav { padding: 0 1.5rem; }
+      .nav-links { display: none; }
+      .footer { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="/" class="nav-brand">
+      <span class="brand-khatib">Khatib</span><span class="brand-365">365</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#skills">Skills</a>
+      <a href="/blog/">Writing</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- 404 CONTENT -->
+  <main class="page">
+    <div class="err-code">404</div>
+    <h1 class="err-heading">Environment not found.</h1>
+    <p class="err-sub">It's probably still deploying. Or someone pushed directly to prod.</p>
+    <div class="err-actions">
+      <a href="/" class="btn-err btn-err-primary">← Back to home</a>
+      <a href="/blog/" class="btn-err btn-err-ghost">Read something useful</a>
+    </div>
+    <p class="err-note">If you were looking for a specific post and can't find it, it may have moved. Try the blog index.</p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-status">
+        <span class="status-dot"></span>
+        <span class="status-text">All environments managed</span>
+        <span class="status-sep">·</span>
+        <span class="status-text">No hotfixes in production today</span>
+        <span class="status-sep">·</span>
+        <span class="status-text" id="status-uptime"></span>
+      </div>
+      <a href="/" class="nav-brand"><span class="brand-khatib">Khatib</span><span class="brand-365">365</span></a>
+      <div class="footer-links">
+        <a href="/#about" class="footer-link">About</a>
+        <a href="/#skills" class="footer-link">Skills</a>
+        <a href="/blog/" class="footer-link">Writing</a>
+        <a href="/#contact" class="footer-link">Contact</a>
+      </div>
+      <div class="footer-copy">© 2026 Ahmed El-Khatib · khatib365.dev</div>
+      <div class="footer-commit">
+        <span class="footer-commit-prefix">git ›</span>
+        <span class="footer-commit-msg" id="footer-commit-msg"></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll
+    window.addEventListener('scroll', () =>
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40)
+    );
+
+    // Footer commit + uptime
+    (function() {
+      const commits = [
+        "fix: fixed the fix that fixed the previous fix",
+        "hotfix: please work",
+        "temp: do not push to prod (pushing to prod)",
+        "chore: removed todo comments (left the todos)",
+        "refactor: same code, more confidence",
+        "fix: it works now (reason unknown)",
+        "wip: not wip anymore, shipping anyway",
+        "feat: added feature client didn't ask for but definitely needs",
+        "hotfix: prod is fine, this is fine, everything is fine",
+        "fix: reverted the revert of the revert",
+        "style: moved semicolon 1px to the right",
+        "docs: added comment explaining what the code does (incorrectly)",
+        "fix: null check (too late)",
+        "feat: environment variables (they were hardcoded until today)",
+        "deploy: fingers crossed",
+        "fix: works on my machine (adding my machine to prod)",
+        "chore: deleted unused code (it will be needed next week)",
+        "feat: error handling (catching and ignoring)",
+        "fix: race condition by adding setTimeout 1000",
+        "hotfix: unrelated change that somehow fixes everything"
+      ];
+      const msgEl = document.getElementById('footer-commit-msg');
+      if (msgEl) msgEl.textContent = commits[Math.floor(Math.random() * commits.length)];
+      const uptimeEl = document.getElementById('status-uptime');
+      if (uptimeEl) uptimeEl.textContent =
+        'Khatib365 up for ' +
+        Math.floor((Date.now() - new Date('2026-03-01').getTime()) / 86400000) + ' days';
+    })();
+  </script>
+</body>
+</html>
