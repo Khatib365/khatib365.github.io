@@ -1012,22 +1012,36 @@ i.skill-svg-icon { width: auto; height: auto; font-size: 28px; line-height: 1; }
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 14px;
   justify-content: center;
 }
-
-.cert-badge-small {
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
+.cert-badge-link {
+  display: block;
   border-radius: 6px;
-  opacity: 0.9;
-  transition: opacity 0.2s, transform 0.2s;
+  opacity: 0.88;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.cert-badge-link:hover {
+  opacity: 1;
+  transform: scale(1.1) translateY(-2px);
+}
+.cert-badge-sm {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  display: block;
+  border-radius: 4px;
 }
 
-.cert-badge-small:hover {
-  opacity: 1;
-  transform: scale(1.08);
+.skill-icon-cluster {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.skill-icon-cluster img {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
 }
 
 /* ═══════════════════ SKILL GRID (new) ═══════════════════ */
