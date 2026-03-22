@@ -612,6 +612,22 @@
     margin: 0;
   }
 
+  /* ── Post disclaimer ── */
+  .post-disclaimer {
+    margin-top: 3rem;
+    padding: 1.25rem 1.5rem;
+    border-left: 2px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--ink-mid);
+    line-height: 1.7;
+    font-style: italic;
+  }
+  .post-disclaimer a {
+    color: var(--copper);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--copper-l);
+  }
+
   @media (max-width: 600px) {
     .env-topology { flex-direction: column; }
     .env-arrow { transform: rotate(90deg); align-self: center; }
@@ -743,8 +759,6 @@
       <span class="meta-item">March 2026</span>
       <div class="meta-dot"></div>
       <span class="meta-item">12 min read</span>
-      <div class="meta-dot"></div>
-      <span class="meta-item">PL-400 · PL-600</span>
     </div>
   </header>
 
@@ -1089,13 +1103,24 @@
     </div>
   </div>
 
+  <!-- Disclaimer -->
+  <div class="post-disclaimer">
+    <p>
+      Everything in this post reflects my own experience and opinions.
+      Not my employer's, not Microsoft's — mine.
+      If something's changed, if you disagree, or if you've seen it go differently:
+      find me on <a href="https://linkedin.com/in/ahmed-el-khatib" target="_blank" rel="noopener">LinkedIn</a>.
+      I'm genuinely curious.
+    </p>
+  </div>
+
   <!-- Author -->
   <div class="author-block">
     <img src="../assets/photo.jpg" alt="Ahmed El-Khatib" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--border2);flex-shrink:0;" />
     <div>
       <div class="author-name">Ahmed El-Khatib</div>
-      <div class="author-title">Power Platform Technical Lead · PL-200 · PL-400 · PL-600</div>
-      <p class="author-bio">Building production-grade Power Platform solutions at Trax Group, Saudi Arabia. Writing about ALM, integration architecture, and doing things properly the first time.</p>
+      <div class="author-title">Power Platform Lead</div>
+      <p class="author-bio">Sharing what I know from the field — because I wish someone had written this down when I needed it.</p>
     </div>
   </div>
 
