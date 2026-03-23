@@ -330,6 +330,24 @@
 
   .code-comment { color: var(--ink-light); }
 
+  /* ── Post figures / screenshots ── */
+  .post-figure { margin: 2rem 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .post-figure--screenshot { margin: 1.5rem 0; }
+  .post-screenshot {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .figure-caption {
+    font-family: 'Fira Code', monospace;
+    font-size: 11.5px;
+    color: var(--ink-light);
+    letter-spacing: .04em;
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+
   /* ── CTA button ── */
   .post-cta {
     display: inline-block;
@@ -571,6 +589,26 @@
 
   <p>Mr. YOLO's answer to all of these is technically honest: <em>it works. Don't touch it.</em></p>
 
+  <figure class="post-figure post-figure--screenshot">
+    <img
+      src="../assets/screenshots/post00/meet-mr-yolo.png"
+      alt="Mr. YOLO character card — Speed 8/10, Confidence 10/10, Testing 2/10, Documentation 1/10, YOLO Factor 10/10"
+      class="post-screenshot"
+      loading="lazy"
+    />
+    <p class="figure-caption">Mr. YOLO — Speed 8/10. Confidence 10/10. Testing 2/10. Documentation 1/10. YOLO Factor 10/10.</p>
+  </figure>
+
+  <figure class="post-figure post-figure--screenshot">
+    <img
+      src="../assets/screenshots/post00/the-story-begins.png"
+      alt="Two timestamps: 4:44 PM — '5 minutes. Easy.' and 4:53 PM — APPLICATION DOWN, ERROR 500"
+      class="post-screenshot"
+      loading="lazy"
+    />
+    <p class="figure-caption">4:44 PM — "5 minutes. Easy." · 4:53 PM — APPLICATION DOWN, ERROR 500.</p>
+  </figure>
+
   <h3>The Mr. YOLO trait inventory</h3>
 
   <div class="trait-list">
@@ -727,6 +765,16 @@
     </tbody>
   </table>
 
+  <figure class="post-figure post-figure--screenshot">
+    <img
+      src="../assets/screenshots/post00/three-pillars-deployment-success.png"
+      alt="Three pillars of Power Platform deployment success: Environments, Solutions, Automation"
+      class="post-screenshot"
+      loading="lazy"
+    />
+    <p class="figure-caption">Environments. Solutions. Automation. Get these three right and deployment becomes something you trust any day of the week.</p>
+  </figure>
+
   <div class="callout">
     <div class="callout-label">Publishing cadence</div>
     <p>Posts are published as they're ready — no fixed schedule. Follow on <a href="https://linkedin.com/in/ahmed-el-khatib" target="_blank" rel="noopener">LinkedIn</a> to be notified when each one drops.</p>
@@ -798,6 +846,16 @@
   <p>The first real post in this series is about the decision Mr. YOLO made at 4:47 PM on Thursday — the one that put him in the Default environment and kept him there for six months. Post 01 covers what environments actually are as architecture decisions, why the choices made at creation time are permanent, the four mistakes that haunt every project that gets them wrong, and the checklist that prevents all of them.</p>
 
   <p>If you're starting a new project — or inheriting one that already has these problems — Post 01 is where to begin.</p>
+
+  <figure class="post-figure post-figure--screenshot">
+    <img
+      src="../assets/screenshots/post00/kingdom-of-environments.png"
+      alt="The Kingdom of Environments — a visual preview of the environment strategy covered in Post 01"
+      class="post-screenshot"
+      loading="lazy"
+    />
+    <p class="figure-caption">Continued in Post 01 — Environment Strategy: the topology decisions that determine whether your project survives go-live.</p>
+  </figure>
 
   <p style="margin-top: 28px;">
     <a href="post01-environment-strategy.html" class="post-cta">Read Post 01 — Environment Strategy →</a>
