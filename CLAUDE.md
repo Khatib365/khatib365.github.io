@@ -13,16 +13,75 @@ The quality of this work directly reflects Ahmed's professional reputation. Trea
 - **Stack**: Static HTML + CSS only. No frameworks, no build tools, no npm, no bundlers.
 - **Hosting**: GitHub Pages — everything must work as plain files in the browser.
 - **Repo**: You have full access. Read the existing files before writing anything new.
-- **Structure**:
-  ```
-  /                        → homepage (index.html)
-  /blog/index.html         → blog listing page
-  /blog/post0-mr-yolo.html → Post 00 (to be created)
-  /blog/post1-environment-strategy.html → Post 01 (exists, needs fixes)
-  /assets/css/             → stylesheets
-  /assets/photo.jpg        → Ahmed's photo (used in post footers)
-  /assets/badges/          → certification badge images
-  ```
+
+---
+
+## Folder Structure — Source of Truth
+
+This is the complete, canonical folder structure for the repo. Follow it exactly. Do not create folders outside this structure without asking first.
+
+```
+khatib365.github.io/
+│
+├── index.html                          → Homepage / portfolio
+├── 404.html                            → Custom 404 page
+├── CLAUDE.md                           → This file
+├── README.md                           → Repo readme
+│
+├── blog/                               → All blog posts
+│   ├── index.html                      → Blog listing page
+│   ├── post00-mr-yolo.html             → Post 00 — Meet Mr. YOLO
+│   ├── post01-environment-strategy.html → Post 01 — Environment Strategy
+│   ├── post02-dlp-policies.html        → Post 02 (future)
+│   ├── post03-solutions-101.html       → Post 03 (future)
+│   └── ...                             → Follow same naming pattern
+│
+├── assets/
+│   ├── photo.jpg                       → Ahmed's profile photo (used site-wide)
+│   ├── favicon.svg                     → Site favicon
+│   │
+│   ├── badges/                         → Microsoft certification badge images
+│   │   └── *.png
+│   │
+│   ├── icons/                          → UI icons used across the site
+│   │   └── *.svg
+│   │
+│   └── screenshots/                    → All blog post images, organized by post
+│       ├── post00/                     → Images for Post 00
+│       │   ├── yolo-character-card.png
+│       │   ├── yolo-story-begins.png
+│       │   └── yolo-three-pillars.png
+│       ├── post01/                     → Images for Post 01
+│       │   ├── enable-dynamics-apps.png
+│       │   ├── org-url.png
+│       │   └── security-group.png
+│       └── post02/                     → Images for Post 02 (create when needed)
+│
+├── css/                                → Global stylesheets
+│   └── *.css
+│
+└── js/                                 → Global JavaScript
+    └── *.js
+```
+
+---
+
+### File Naming Rules
+
+- All filenames are **kebab-case** — no spaces, no underscores, no camelCase
+- Blog posts: `post00-slug.html`, `post01-slug.html` — zero-padded number + short descriptive slug
+- Screenshots: always inside `assets/screenshots/postXX/` — never in the root screenshots folder
+- Never use generic names like `image1.png`, `screenshot.png`, `final.png`
+
+### Immediate Housekeeping Required
+
+The existing `assets/screenshots/` folder has three loose files that belong in `post01/`:
+```
+assets/screenshots/enable-dynamics-apps.png  → move to assets/screenshots/post01/
+assets/screenshots/org-url.png               → move to assets/screenshots/post01/
+assets/screenshots/security-group.png        → move to assets/screenshots/post01/
+```
+Move these files and update all references in `post01-environment-strategy.html` accordingly before doing anything else. Commit this as a separate housekeeping commit: `Reorganise screenshots into post01/ subfolder`
 
 ---
 
@@ -156,26 +215,26 @@ Mr. YOLO is the recurring character throughout the series. He appears in every p
 Three images must be embedded in Post 00. They are located at:
 
 ```
-/assets/blog/post00/yolo-character-card.png
-/assets/blog/post00/yolo-story-begins.png
-/assets/blog/post00/yolo-three-pillars.png
+/assets/screenshots/post00/yolo-character-card.png
+/assets/screenshots/post00/yolo-story-begins.png
+/assets/screenshots/post00/yolo-three-pillars.png
 ```
 
 **Do not reference the ALM session or any speaking event in the captions.** The session has not happened yet. Treat these as standalone post illustrations only.
 
 ### Placement & captions
 
-**Image 1 — `yolo-character-card.png`**
+**Image 1 — `assets/screenshots/post00/yolo-character-card.png`**
 - Place in **§ 01 — Who Is Mr. YOLO?** immediately after the opening character description paragraph
 - Caption: *Mr. YOLO — Speed 8/10. Confidence 10/10. Testing 2/10. Documentation 1/10. YOLO Factor 10/10.*
 - Display at full content width with subtle border-radius matching the site style
 
-**Image 2 — `yolo-story-begins.png`**
+**Image 2 — `assets/screenshots/post00/yolo-story-begins.png`**
 - Place in **§ 01** immediately after Image 1
 - Caption: *4:44 PM — "5 minutes. Easy." · 4:53 PM — APPLICATION DOWN, ERROR 500.*
 - Display at full content width
 
-**Image 3 — `yolo-three-pillars.png`**
+**Image 3 — `assets/screenshots/post00/yolo-three-pillars.png`**
 - Place in **§ 02 — What This Series Covers** after the series roadmap table
 - Caption: *Environments. Solutions. Automation. Get these three right and deployment becomes something you trust any day of the week.*
 - Display at full content width
