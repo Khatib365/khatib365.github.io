@@ -73,21 +73,11 @@ khatib365.github.io/
 - Screenshots: always inside `assets/screenshots/postXX/` — never in the root screenshots folder
 - Never use generic names like `image1.png`, `screenshot.png`, `final.png`
 
-### Immediate Housekeeping Required
-
-The existing `assets/screenshots/` folder has three loose files that belong in `post01/`:
-```
-assets/screenshots/enable-dynamics-apps.png  → move to assets/screenshots/post01/
-assets/screenshots/org-url.png               → move to assets/screenshots/post01/
-assets/screenshots/security-group.png        → move to assets/screenshots/post01/
-```
-Move these files and update all references in `post01-environment-strategy.html` accordingly before doing anything else. Commit this as a separate housekeeping commit: `Reorganise screenshots into post01/ subfolder`
-
 ---
 
 ## Visual Identity — Non-Negotiable
 
-Before writing a single line of HTML, read the existing `post1-environment-strategy.html` and the homepage `index.html` in full. The visual identity is:
+Before writing a single line of HTML, read the existing `post01-environment-strategy.html` and the homepage `index.html` in full. The visual identity is:
 
 - **Fonts**: Cormorant Garamond (display/headings) + Jost (body) + JetBrains Mono (code)
 - **Colors**:
