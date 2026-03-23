@@ -782,54 +782,6 @@
 
   <div class="divider">
     <div class="divider-line"></div>
-    <div class="divider-mark">★</div>
-    <div class="divider-line"></div>
-  </div>
-
-  <h2 id="inside-the-zip">A First Look Inside the ZIP</h2>
-
-  <p>Mr. YOLO has never opened a solution ZIP file. He exports it, downloads it, and imports it somewhere else. The file between those two events is a black box — goes in one end, solution comes out the other. Most Power Platform developers have never read a single line of what's inside.</p>
-
-  <p>The ZIP is a structured archive of XML files. The root is <code>solution.xml</code> — a manifest that defines the solution's identity, publisher, version, and every component it contains. Here's what one looks like:</p>
-
-  <div class="code-block-wrap">
-    <div class="code-block-header">solution.xml — extracted from a managed solution export</div>
-    <pre class="code-block">&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;ImportExportXml version="9.0.0.0"
-  SolutionPackageVersion="9.0"
-  languagecode="1033"
-  generatedBy="CrmExport"&gt;
-  &lt;SolutionManifest&gt;
-    &lt;UniqueName&gt;ContosoCore&lt;/UniqueName&gt;
-    &lt;LocalizedNames&gt;
-      &lt;LocalizedName description="Contoso Core" languagecode="1033" /&gt;
-    &lt;/LocalizedNames&gt;
-    &lt;Version&gt;1.2.0.47&lt;/Version&gt;
-    &lt;Managed&gt;1&lt;/Managed&gt;
-    &lt;Publisher&gt;
-      &lt;UniqueName&gt;contoso&lt;/UniqueName&gt;
-      &lt;CustomizationPrefix&gt;con&lt;/CustomizationPrefix&gt;
-      &lt;CustomizationOptionValuePrefix&gt;10000&lt;/CustomizationOptionValuePrefix&gt;
-    &lt;/Publisher&gt;
-    &lt;RootComponents&gt;
-      &lt;RootComponent type="1"  id="{4a5f2b3c-8e1d-4f9a-b7c2-1e3d5a9f8b7c}" behavior="0" /&gt;
-      &lt;RootComponent type="61" id="{e8d1c9a7-3f2b-4e5d-a6c1-9b8f7e2d1c4a}" behavior="0" /&gt;
-      &lt;RootComponent type="29" id="{f3c1d8b2-7a4e-4f9c-b5d3-2e6a8c1f9d7b}" behavior="0" /&gt;
-      &lt;RootComponent type="91" id="{b7d4e9a1-2c6f-4b8d-a3e5-9f1c7b4d2e8a}" behavior="0" /&gt;
-      <span class="code-comment">&lt;!-- ...43 more components... --&gt;</span>
-    &lt;/RootComponents&gt;
-  &lt;/SolutionManifest&gt;
-&lt;/ImportExportXml&gt;</pre>
-  </div>
-
-  <p>Each <code>RootComponent</code> is one component. The <code>type</code> number maps to a component type — <code>1</code> is an Entity (Table), <code>29</code> is a Saved Query, <code>61</code> is a Form, <code>91</code> is a Plugin Assembly. Every component type has a corresponding folder in the ZIP with its own XML file.</p>
-
-  <p>This is the file that encodes your publisher prefix permanently. This is where merge conflicts live. And the difference between <code>&lt;Managed&gt;0&lt;/Managed&gt;</code> and <code>&lt;Managed&gt;1&lt;/Managed&gt;</code> determines what a receiving environment can edit.</p>
-
-  <p>The bonus post covers the full anatomy: component types, the customizations folder, managed vs unmanaged at the file level, and what's actually inside the ZIP when a conflict occurs.</p>
-
-  <div class="divider">
-    <div class="divider-line"></div>
     <div class="divider-mark">§ 04</div>
     <div class="divider-line"></div>
   </div>
