@@ -809,19 +809,19 @@
         <td class="td-env">Developer</td>
         <td>✅ Always</td>
         <td>Optional</td>
-        <td>Individual dev sandboxes. Free per licensed user. Short-lived.</td>
+        <td>Personal dev sandbox. One per maker. Building and previewing is free — running assets requires premium licensing. Never use as a shared team environment.</td>
       </tr>
       <tr>
         <td class="td-env">Sandbox</td>
         <td>Optional</td>
         <td>Optional</td>
-        <td>Testing, UAT, SIT. Can be reset. Should mirror production config.</td>
+        <td>The correct choice for shared team testing. Can be reset — which wipes everything, including data your UAT users are actively entering. Should mirror production config.</td>
       </tr>
       <tr>
         <td class="td-env">Production</td>
         <td>Optional</td>
         <td>Optional</td>
-        <td>Live workloads only. Cannot be reset. Full backup and SLA.</td>
+        <td>Live workloads only. Cannot be reset. Full backup and SLA. Note: for any serious solution, Dataverse is effectively required — "optional" only applies to simple automation-only workloads.</td>
       </tr>
       <tr>
         <td class="td-env">Trial</td>
@@ -831,6 +831,11 @@
       </tr>
     </tbody>
   </table>
+
+  <div class="callout">
+    <div class="callout-label">A note on environment types for ALM</div>
+    <p>Your Dev, Test, UAT, and integration environments should all be provisioned as production-type environments — not Sandbox. Sandbox environments can be reset and have no SLA. Use production-type environments for any environment that holds team work or is part of your deployment pipeline. Sandbox type is fine for short-lived spike or experiment environments.</p>
+  </div>
 
   <div class="divider">
     <div class="divider-line"></div>
@@ -884,17 +889,26 @@
     <text x="245" y="226" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#a06800" font-family="inherit">F&amp;O projects only</text>
     <path d="M245 152 L245 188" fill="none" stroke="#e6a830" stroke-width="0.5" stroke-dasharray="4 3" marker-end="url(#arr-topo)"/>
     <text x="60" y="290" font-size="11" fill="#a89880" font-family="inherit">Deployment flows left to right only — no exceptions</text>
-    <text x="60" y="308" font-size="11" fill="#a89880" font-family="inherit">Amber = optional, only needed when F&amp;O integration is in scope</text>
+    <text x="60" y="308" font-size="11" fill="#a89880" font-family="inherit">Amber = optional, only needed when external system integrations are in scope</text>
   </svg>
   <p class="figure-caption">Fig. 1 — Recommended environment topology. Arrows animate left to right to reinforce the one-way deployment rule.</p>
   </div>
 
   <div class="callout warn">
-    <div class="callout-label">Important — February 2026 Update</div>
-    <p>Microsoft now automatically enables Managed Environments for any pipeline target that isn't already configured. If you're setting up a new project today, plan for Managed Environments from day one — it's no longer optional for pipeline targets.</p>
+    <div class="callout-label">Managed Environments — What It Is and Why It Matters</div>
+    <p>Managed Environments is a premium governance capability that unlocks features you need for any serious project: solution checker enforcement as a deployment gate, sharing limits on canvas apps, maker welcome content, environment-level analytics, and — critically — the ability to use Power Platform Pipelines.</p>
+    <p>As of early 2026, Pipelines require all target environments to be Managed Environments. This isn't a soft recommendation — if your Test, UAT, or Production environments aren't managed, you can't use pipelines to deploy to them. Plan for this upfront.</p>
+    <p>What Managed Environments does NOT automatically do: it doesn't turn itself on across all your environments. You enable it per environment, in the Power Platform Admin Center, under each environment's settings. The cost is covered by your existing Power Apps/Power Automate premium licenses for users running assets in those environments.</p>
+    <p>If you're using Environment Groups, all environments assigned to a group inherit the group's Managed Environments rules automatically. This is the cleanest way to ensure consistent governance without configuring each environment by hand.</p>
   </div>
 
-  <p>For projects integrating with Dynamics 365 F&O, you'll also want a dedicated <strong>Integration / Staging</strong> environment between Dev and Test — a stable target for integration testing that doesn't pollute your main test environment with data sync issues. But that's a topic for a later post in this series.</p>
+  <p>For projects that integrate with external systems — Dynamics 365 F&O, third-party ERPs, legacy APIs, Azure services — you'll also want a dedicated <strong>Integration / Staging</strong> environment between Dev and Test. This gives you a stable, isolated target for integration testing that doesn't pollute your main test environment with data sync noise, incomplete reference data, or webhook misfires. F&O is the most common case, but it's not the only one. If your project has any external system dependency that runs its own test environment, plan for an Integration environment.</p>
+
+  <h3>Environment Groups</h3>
+
+  <p>One more thing to plan before you create anything: how your environments will be governed together. Environment Groups — now generally available — let you group related environments and apply a consistent set of governance rules across all of them in one place: sharing limits, solution checker enforcement, AI-generated summaries, and more. Every environment in the group inherits the same baseline configuration automatically, with no manual setup per environment.</p>
+
+  <p>For a typical project, create one group covering your Test, UAT, and Production environments. Your Dev environments can live in a separate group with relaxed rules, or be individually managed. Plan the group structure before you create the environments — moving environments between groups later is possible, but retrofitting governance to environments that have already been in active use is painful.</p>
 
   <div class="divider">
     <div class="divider-line"></div>
@@ -913,7 +927,10 @@
     <p>The default environment is always there, always accessible, and always a trap. It's shared across your entire tenant. Everyone with a Power Platform license can see it. There are no security groups, no deployment boundaries, and no clean way to move what you build out of it later.</p>
     <p>I've seen teams build entire applications in the default environment because it was "just a proof of concept" — and then the client loved it and wanted it in production. The migration is painful. The cleanup is worse.</p>
     <div class="fix-label">✓ The fix</div>
-    <p>Create a dedicated environment for every project from day one. Developer environments are free per licensed user — there's no excuse to start in the default environment. Reserve the default environment for individual, personal experimentation only, and enforce this with a DLP policy.</p>
+    <p>Create a dedicated environment for every project from day one. Reserve the default environment for individual, personal experimentation only, and enforce what can and cannot be built there with a DLP policy.</p>
+    <p>If you're managing a team or a whole tenant — not just a single project — there's now a better answer: Environment Routing. This is a tenant-level setting that automatically redirects any maker who visits the Power Apps or Power Automate portal into their own personal developer environment, instead of the default. The default environment stops being a dumping ground by default, without relying on everyone reading a governance policy and doing the right thing.</p>
+    <p>Environment Routing is generally available and is enabled in the Power Platform Admin Center under Tenant Settings. You can scope it to all makers or to specific security groups. Newly created developer environments through routing are Managed Environments by default and can be automatically assigned to an Environment Group. For teams with more than a handful of makers, this is the right answer to Mistake 01 — not just a policy reminder.</p>
+    <p>One important note: developer environments created through routing require premium licensing to run assets, even without premium connectors. Make sure your licensing plan accounts for this before you enable it broadly.</p>
   </div>
 
   <!-- Mistake 2 -->
@@ -1032,6 +1049,38 @@
 
   <div class="divider">
     <div class="divider-line"></div>
+    <div class="divider-mark">§ 03.5</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <h2>The Fifth Mistake Nobody Talks About: No DLP Policy</h2>
+
+  <p>I said four mistakes. There's a fifth one I left off the numbered list because it doesn't happen at environment creation time — it happens in the two hours after. And by then, makers are already inside the environment, building things, connecting things, and moving data in directions you haven't thought about yet.</p>
+
+  <p>Data Loss Prevention policies are as foundational as the environment itself. A DLP policy defines which connectors are available in an environment, which ones can work together, and which ones are blocked entirely. No DLP policy means makers can build flows that send your Dataverse customer records to a personal Gmail account, pull data into a public-facing HTTP endpoint, or connect internal systems to consumer services that have no place near your data.</p>
+
+  <p>This isn't hypothetical. It's the most common governance gap I see on projects that got the environments right but skipped the policies.</p>
+
+  <h3>How DLP policies work</h3>
+
+  <p>Every connector gets assigned to one of three buckets: Business, Non-Business, or Blocked. The rule is simple: connectors from different buckets can't be used together in the same app or flow. You configure policies at two levels:</p>
+
+  <p><strong>Tenant-level policy</strong> — applies to all environments in your tenant. Use this for universal high-risk blocks (personal email, social media, consumer storage). This is your wall.</p>
+
+  <p><strong>Environment-level policy</strong> — applies to a specific environment only. Use this to restrict further or to allow specific connectors for a project's needs.</p>
+
+  <p>Environment-level policies can only make things more restrictive than the tenant policy — they cannot grant permissions the tenant policy has blocked.</p>
+
+  <h3>What to do before you hand the environment to a maker</h3>
+
+  <p>Define your DLP policy before a single maker has access to the environment. For most project environments the starting position is: put all Microsoft/Dataverse connectors in Business, move all third-party and consumer connectors to Blocked, then work with your integration requirements to move specific connectors to Business as needed. Lock the default group to Blocked so any new connector added by Microsoft lands in the restricted bucket until you explicitly approve it.</p>
+
+  <p>The default environment needs its own strict DLP policy — the most restrictive one in your tenant. It's accessible to everyone, has no security group, and is exactly where an untrained maker will go if Environment Routing isn't enabled.</p>
+
+  <p>DLP is a continuous process, not a setup-and-forget step. New connectors are added to the platform regularly. Make reviewing your DLP policies part of your project governance cadence.</p>
+
+  <div class="divider">
+    <div class="divider-line"></div>
     <div class="divider-mark">§ 04</div>
     <div class="divider-line"></div>
   </div>
@@ -1043,14 +1092,14 @@
   <div class="interactive-checklist">
     <div class="cl-progress-row">
       <div class="cl-bar-wrap"><div class="cl-bar" id="cl-bar" style="width:0%"></div></div>
-      <div class="cl-count" id="cl-count">0 / 7</div>
+      <div class="cl-count" id="cl-count">0 / 11</div>
     </div>
 
     <div class="cl-phase">
-      <div class="cl-phase-label">Planning</div>
+      <div class="cl-phase-label">Planning — Owner: Solution Architect / PP Lead</div>
       <div class="cl-item" onclick="clToggle(this)">
         <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div><div class="cl-text">Define your environment topology before any work starts</div><div class="cl-note">Dev, Test, UAT, Prod at minimum — add Integration/Staging if F&amp;O is in scope</div></div>
+        <div><div class="cl-text">Define your environment topology before any work starts</div><div class="cl-note">Dev, Test, UAT, Prod at minimum — add Integration/Staging for any project with external system dependencies</div></div>
       </div>
       <div class="cl-item" onclick="clToggle(this)">
         <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -1060,40 +1109,56 @@
         <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div><div class="cl-text">Agree on the org URL naming convention before creating anything</div><div class="cl-note">Use [client]-[env] — e.g. masheed-dev, masheed-uat, masheed-prod</div></div>
       </div>
-    </div>
-
-    <div class="cl-phase">
-      <div class="cl-phase-label">Security — do this before creating any environment</div>
       <div class="cl-item" onclick="clToggle(this)">
         <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div><div class="cl-text">Create Entra ID security groups — one per environment per role</div><div class="cl-note">Naming: PP-[Project]-[Env]-[Role] — e.g. PP-Masheed-Prod-Admins</div></div>
+        <div><div class="cl-text">Select your deployment region deliberately</div><div class="cl-note">Affects data residency, compliance (GDPR, NCA in KSA), latency, and F&amp;O co-location. Cannot be changed after creation.</div></div>
+      </div>
+      <div class="cl-item" onclick="clToggle(this)">
+        <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="cl-text">Plan your Environment Group structure</div><div class="cl-note">Which environments belong together? Test + UAT + Prod in one group, Dev environments in another. Define this before creating anything.</div></div>
+      </div>
+      <div class="cl-item" onclick="clToggle(this)">
+        <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="cl-text">Decide whether to enable Environment Routing at the tenant level</div><div class="cl-note">Recommended for any tenant with multiple makers. Requires Managed Environments.</div></div>
       </div>
     </div>
 
     <div class="cl-phase">
-      <div class="cl-phase-label">Configuration — at environment creation time</div>
+      <div class="cl-phase-label">Security — Owner: Entra ID Admin + PP Admin</div>
+      <div class="cl-item" onclick="clToggle(this)">
+        <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="cl-text">Create Entra ID security groups — one per environment per role, before creating any environment</div><div class="cl-note">Naming: PP-[Project]-[Env]-[Role] — e.g. PP-Masheed-Prod-Admins</div></div>
+      </div>
+    </div>
+
+    <div class="cl-phase">
+      <div class="cl-phase-label">Configuration — Owner: PP Admin, at environment creation time</div>
       <div class="cl-item" onclick="clToggle(this)">
         <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div><div class="cl-text">Assign the security group at environment creation — not after</div><div class="cl-note">No security group means every licensed tenant user can access the environment</div></div>
       </div>
       <div class="cl-item" onclick="clToggle(this)">
         <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div><div class="cl-text">Enable Managed Environments for all non-dev environments</div><div class="cl-note">Required for pipeline targets as of February 2026 — plan for it from day one</div></div>
+        <div><div class="cl-text">Enable Managed Environments for all non-dev environments</div><div class="cl-note">Required for pipeline targets — also unlocks solution checker enforcement, sharing limits, and environment group membership</div></div>
+      </div>
+      <div class="cl-item" onclick="clToggle(this)">
+        <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="cl-text">Create and assign DLP policies before handing the environment to any maker</div><div class="cl-note">Tenant-level policy first, then environment-level restrictions as needed. No DLP means no connector governance.</div></div>
       </div>
     </div>
 
     <div class="cl-phase">
-      <div class="cl-phase-label">Documentation — before development begins</div>
+      <div class="cl-phase-label">Documentation — Owner: PP Lead, before development begins</div>
       <div class="cl-item" onclick="clToggle(this)">
         <div class="cl-box"><svg class="cl-check" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div><div class="cl-text">Document all environment details in your project wiki</div><div class="cl-note">URL, region, purpose, security group, Dataverse capacity — all of it, before a line of code</div></div>
+        <div><div class="cl-text">Document all environment details in your project wiki</div><div class="cl-note">URL, region, purpose, security group, Dataverse capacity, DLP policies in effect — all of it, before a line of code</div></div>
       </div>
     </div>
   </div>
 
   <div class="callout ok">
     <div class="callout-label">The craft principle</div>
-    <p>A well-set environment costs you 30 minutes upfront. A poorly-set environment costs you weeks at the worst possible moment — right before go-live. This is where quality starts, before any code is written.</p>
+    <p>A well-configured environment takes a few hours of deliberate work across a few people — architect, Entra admin, Power Platform admin. The decisions made in that window are largely permanent. A poorly-set environment doesn't just cost you time at go-live. It costs you credibility, client trust, and sometimes the project. This is where quality starts.</p>
   </div>
 
   <div class="divider">
