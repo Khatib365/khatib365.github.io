@@ -348,7 +348,7 @@
       <h1 class="masthead-title">Field notes <em>from the trenches.</em></h1>
       <p class="masthead-sub">Real decisions, real mistakes, real patterns — from someone who's actually in the middle of it. Not a course. Not a certification guide. Just what I've learned the hard way.</p>
     </div>
-    <div class="masthead-count" aria-hidden="true">02</div>
+    <div class="masthead-count" aria-hidden="true">01</div>
   </header>
 
   <!-- CONTROLS -->
@@ -366,49 +366,43 @@
     <button class="filter-btn" data-filter="architecture">Architecture</button>
     <button class="filter-btn" data-filter="ai">AI</button>
     <span class="results-count" id="resultsCount">1 post</span>
+
   </div>
 
   <!-- POST GRID -->
   <div class="post-grid" id="postGrid">
 
-    <!-- Post 01 — featured -->
+    <!-- Post 00 — featured -->
     <article class="post-card post-card--featured"
       data-tags="alm,architecture"
-      data-title="Before You Write a Single Line of Code, Get Your Environments Right"
-      data-excerpt="Most Power Platform projects fail at deployment — not because of bad code, but because of decisions made in the first five minutes. The wrong URL, no security groups, a skipped toggle."
-      onclick="location.href='post1-environment-strategy.html'"
+      data-title="Meet Mr. YOLO — Power Platform Deployment Series"
+      data-excerpt="Before environments, pipelines, and solutions — meet the developer who ships first and asks questions never. The story of how good intentions build unmaintainable systems, and why this series exists."
+      onclick="location.href='post0-mr-yolo.html'"
       style="cursor:pointer">
       <div class="post-card-left">
-        <div class="post-card-badge">Deployment Series · Post 01</div>
+        <div class="post-card-badge">Deployment Series · Post 00</div>
         <div class="post-card-meta">
-          <span class="post-card-tag">ALM · Environments</span>
+          <span class="post-card-tag">ALM · Series Intro</span>
           <span class="post-card-date">March 2026</span>
-          <span class="post-card-read">12 min read</span>
+          <span class="post-card-read">8 min read</span>
         </div>
-        <h2 class="post-card-title">Before You Write a Single Line of Code, Get Your Environments Right</h2>
+        <h2 class="post-card-title">Meet Mr. YOLO</h2>
       </div>
       <div class="post-card-right">
-        <p class="post-card-excerpt">Most Power Platform projects fail at deployment — not because of bad code, but because of decisions made in the first five minutes. The wrong URL, no security groups, a skipped toggle. Here's what to get right before anything else.</p>
-        <a href="post1-environment-strategy.html" class="post-card-link">Read post →</a>
+        <p class="post-card-excerpt">Before environments, pipelines, and solutions — meet the developer who ships first and asks questions never. The story of how good intentions build unmaintainable systems, and why this series exists.</p>
+        <a href="post0-mr-yolo.html" class="post-card-link">Read post →</a>
       </div>
     </article>
 
-    <!-- Post 02 — Dataverse State Machine -->
-    <article class="post-card"
-      data-tags="dataverse,architecture"
-      data-title="Dataverse as a State Machine: Approval Workflows That Scale"
-      data-excerpt="Stop putting approval logic in Power Automate flows. Here's how Dataverse holds state and Power Automate acts as a dumb orchestrator — and why it matters at scale."
-      onclick="location.href='dataverse-state-machine.html'"
-      style="cursor:pointer">
-      <div class="post-card-badge">Architecture</div>
-      <div class="post-card-meta">
-        <span class="post-card-tag">Dataverse · Power Automate</span>
-        <span class="post-card-date">February 2025</span>
-        <span class="post-card-read">14 min read</span>
+    <!-- Post 01 — coming soon -->
+    <article class="post-card-soon" style="background:var(--parchment);border:1px dashed var(--sand);border-radius:10px;padding:2rem;opacity:0.6;">
+      <div class="post-card-badge" style="display:inline-block;margin-bottom:1.25rem;">Deployment Series · Post 01</div>
+      <div class="post-card-meta" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:0.85rem;">
+        <span class="post-card-tag">ALM · Environments</span>
       </div>
-      <h2 class="post-card-title">Dataverse as a State Machine: <em>Approval Workflows That Scale</em></h2>
-      <p class="post-card-excerpt">Stop putting your approval logic in Power Automate flows. Here's the pattern that separates systems that last from ones that quietly break at 3am.</p>
-      <a href="dataverse-state-machine.html" class="post-card-link">Read post →</a>
+      <h2 class="post-card-title" style="font-family:var(--serif);font-size:1.55rem;font-weight:600;color:var(--ink);line-height:1.2;letter-spacing:-0.02em;margin-bottom:1rem;">Before You Write a Single Line of Code, Get Your Environments Right</h2>
+      <p class="post-card-excerpt" style="font-size:0.9rem;color:var(--ink-soft);line-height:1.7;margin-bottom:1.5rem;">Environment decisions in Power Platform are irreversible. Here's what to get right before writing a single line of code — topology, security groups, URLs, and the four mistakes that haunt projects.</p>
+      <span style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-light);">Coming soon</span>
     </article>
 
     <div class="no-posts-msg" id="noPostsMsg">
