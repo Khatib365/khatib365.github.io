@@ -352,68 +352,83 @@ if (navBrand) {
 
   const tips = [
     // Canvas Apps
-    "Use With() instead of Set() for local variables — your OnStart isn't a variable dump.",
-    "Wrap parallel data calls in Concurrent() — sequential loading is just suffering with extra steps.",
-    "Never put logic in OnVisible. It runs every time the screen loads. Yes, including the back button.",
-    "Use Select() to trigger another control's OnSelect — stop duplicating logic across buttons.",
-    "Named formulas in App.Formulas recalculate automatically. Set() is for state, not derived values.",
-    "Patch only the columns you're changing, not the entire record.",
-    "Set DelayOutput to true on search inputs — every keystroke shouldn't hit your database.",
-    "Use IsMatch() for validation. Nested If() chains are not a substitute for regex.",
-    "Non-delegable functions in Filter() run client-side on 500 rows. Pre-filter with a delegable condition first.",
-    "Components that set global variables to talk to the parent app aren't components — they're accidents.",
+    { tip: "Use With() instead of Set() for local variables — your OnStart isn't a variable dump.", explanation: "With() scopes variables to a single expression without touching global state. OnStart runs once — filling it with Set() calls makes it the bottleneck for every cold load." },
+    { tip: "Wrap parallel data calls in Concurrent() — sequential loading is just suffering with extra steps.", explanation: "Concurrent() fires all data calls simultaneously. Three sequential calls at 300ms each = 900ms. Concurrent() makes it 300ms. The math is uncomfortable." },
+    { tip: "Never put logic in OnVisible. It runs every time the screen loads. Yes, including the back button.", explanation: "Back navigation re-triggers OnVisible, causing duplicate loads and flickering. Initialization belongs in OnStart or behind a guard variable." },
+    { tip: "Use Select() to trigger another control's OnSelect — stop duplicating logic across buttons.", explanation: "Select() simulates a user tapping a control, firing its OnSelect handler. One source of truth. No copy-paste drift when the logic changes." },
+    { tip: "Named formulas in App.Formulas recalculate automatically. Set() is for state, not derived values.", explanation: "Named formulas are lazy — they recalculate only when their dependencies change. Replacing Set() with them eliminates an entire class of stale-state bugs." },
+    { tip: "Patch only the columns you're changing, not the entire record.", explanation: "Patching a full record on a shared table invites concurrency conflicts and sends unnecessary data over the wire. Minimal Patch calls reduce both." },
+    { tip: "Set DelayOutput to true on search inputs — every keystroke shouldn't hit your database.", explanation: "DelayOutput adds a 200ms pause before the input value updates. Without it, every character triggers a full data source query." },
+    { tip: "Use IsMatch() for validation. Nested If() chains are not a substitute for regex.", explanation: "IsMatch() handles email, phone, and custom patterns in one call. A six-level If() chain has six places to introduce a bug." },
+    { tip: "Non-delegable functions in Filter() run client-side on 500 rows. Pre-filter with a delegable condition first.", explanation: "Delegation pushes filtering to the server. A non-delegable function silently caps results at your delegation limit — usually 500 records — with no warning shown to the user." },
+    { tip: "Components that set global variables to talk to the parent app aren't components — they're accidents.", explanation: "Custom output properties are the correct channel between a component and its host. Global variables as an API surface create invisible coupling and side effects nobody can trace." },
     // Power Automate
-    "Use Select action to reshape arrays before looping — transform once, not inside every iteration.",
-    "Execute Multiple batches up to 1000 Dataverse operations in one request. Stop creating records one by one.",
-    "Enable concurrency on Apply to Each when order doesn't matter. Sequential is just slow by default.",
-    "Never nest Apply to Each loops. 100×100 = 10,000 actions. The run history will haunt you.",
-    "Child flows exist for a reason. Same logic in three flows belongs in one child flow.",
-    "Set a timeout on every HTTP action. A hanging API holds your run open for an hour by default.",
-    "Connection references live in the solution. Hardcoded connections die at the first deployment.",
-    "Do Until needs a run count limit. An infinite loop runs until your action quota is gone.",
+    { tip: "Use Select action to reshape arrays before looping — transform once, not inside every iteration.", explanation: "Every action inside Apply to Each multiplies your run cost. Select transforms the whole array in a single step, so the loop only touches clean, shaped data." },
+    { tip: "Execute Multiple batches up to 1000 Dataverse operations in one request. Stop creating records one by one.", explanation: "One API call per record is O(n) overhead. Execute Multiple pushes up to 1000 operations in a single roundtrip — the difference is measurable in seconds." },
+    { tip: "Enable concurrency on Apply to Each when order doesn't matter. Sequential is just slow by default.", explanation: "Sequential Apply to Each processes one item at a time. With concurrency enabled (up to 50 parallel branches), throughput scales linearly with the item count." },
+    { tip: "Never nest Apply to Each loops. 100×100 = 10,000 actions. The run history will haunt you.", explanation: "Power Automate bills by action execution and enforces daily limits. Nested loops multiply costs exponentially and hit throttle limits faster than any single bug you'll ship." },
+    { tip: "Child flows exist for a reason. Same logic in three flows belongs in one child flow.", explanation: "Duplicated logic drifts — fix a bug in one and forget the others. A child flow gives you a single callsite that all parent flows reach through." },
+    { tip: "Set a timeout on every HTTP action. A hanging API holds your run open for an hour by default.", explanation: "A stuck HTTP call blocks the entire run from completing. Explicit timeouts let you handle the failure path instead of waiting for the platform's one-hour ceiling." },
+    { tip: "Connection references live in the solution. Hardcoded connections die at the first deployment.", explanation: "Hardcoded connections are bound to whoever created them. Connection references decouple the connection from the flow, enabling service accounts and per-environment credentials." },
+    { tip: "Do Until needs a run count limit. An infinite loop runs until your action quota is gone.", explanation: "Without a count ceiling, a misconfigured Do Until silently burns your daily action quota. Set the limit. Add the exit condition. Then trust neither." },
     // Dataverse
-    "Always use $select in Dataverse queries. Fetching 80 columns to display 2 is not a query — it's a hostage situation.",
-    "Define alternate keys on natural identifiers and query by them instead of always scanning by GUID.",
-    "Never edit an OOB form directly. Duplicate it, rename it, modify the copy. Microsoft updates the original.",
-    "Use calculated columns for values derived from the same record. Don't recompute the same thing in every flow and plugin.",
-    "Rollup columns aggregate child records natively. Stop writing flows that sum children and stamp the parent.",
-    "Enable auditing selectively. Every column on every table is a storage bill waiting to happen.",
-    "Managed solutions are read-only in target environments by design. That's not a bug — that's the point.",
+    { tip: "Always use $select in Dataverse queries. Fetching 80 columns to display 2 is not a query — it's a hostage situation.", explanation: "$select restricts the payload to only the columns you need. Full-row fetches multiply response size by every column on the table, including the ones you never opened." },
+    { tip: "Define alternate keys on natural identifiers and query by them instead of always scanning by GUID.", explanation: "GUIDs are synthetic. If your data has a natural key — contract number, employee ID — make it an alternate key and retrieve directly. No scan, no lookup overhead." },
+    { tip: "Never edit an OOB form directly. Duplicate it, rename it, modify the copy. Microsoft updates the original.", explanation: "Microsoft's updates can overwrite OOB forms silently. Any customization you made directly is gone with the next wave. Always work on a form you own." },
+    { tip: "Use calculated columns for values derived from the same record. Don't recompute the same thing in every flow and plugin.", explanation: "Calculated columns run once at write time and are indexed. Recomputing in flows and plugins means N operations instead of one — with drift risk if any formula diverges." },
+    { tip: "Rollup columns aggregate child records natively. Stop writing flows that sum children and stamp the parent.", explanation: "Rollup columns are maintained by the platform — they recalculate on demand and on a schedule. A flow doing the same job has race conditions, runs on every record, and fails silently." },
+    { tip: "Enable auditing selectively. Every column on every table is a storage bill waiting to happen.", explanation: "Dataverse stores an audit record for every change to every audited column. Auditing everything by default scales your storage costs linearly with data volume." },
+    { tip: "Managed solutions are read-only in target environments by design. That's not a bug — that's the point.", explanation: "The managed layer protects your component definitions from ad-hoc edits in UAT and Prod. If something needs changing, change it in Dev and redeploy — that is the process." },
     // Plugins & Custom APIs
-    "Plugins run synchronously in the transaction pipeline. A slow plugin is a slow operation for every user, every time.",
-    "Always get IOrganizationService from the execution context — never instantiate your own inside a plugin.",
-    "Pre-operation to modify incoming data. Post-operation when you need the record ID. Not negotiable.",
-    "Throw InvalidPluginExecutionException for user errors. Generic exceptions produce dialogs nobody understands.",
-    "Use SharedVariables to pass data between pre and post operation plugins. Stop re-querying data you already had.",
-    "Custom APIs are the modern replacement for custom actions. Still creating custom actions in 2025? Ask yourself why.",
+    { tip: "Plugins run synchronously in the transaction pipeline. A slow plugin is a slow operation for every user, every time.", explanation: "A 2-second plugin on record Save means every user waits 2 seconds on every save. There is no async escape hatch for synchronous pre/post operations — keep them fast." },
+    { tip: "Always get IOrganizationService from the execution context — never instantiate your own inside a plugin.", explanation: "The context service runs inside the platform transaction and carries the caller's identity. A manually instantiated service bypasses both, breaking audit trails and rollback guarantees." },
+    { tip: "Pre-operation to modify incoming data. Post-operation when you need the record ID. Not negotiable.", explanation: "Pre-operation runs before the database write — input values can still be changed. Post-operation runs after — the GUID exists and child records can be created. The stages exist for a reason." },
+    { tip: "Throw InvalidPluginExecutionException for user errors. Generic exceptions produce dialogs nobody understands.", explanation: "InvalidPluginExecutionException surfaces the message to the user cleanly. Any other exception shows a cryptic system dialog and adds noise to the plugin trace log." },
+    { tip: "Use SharedVariables to pass data between pre and post operation plugins. Stop re-querying data you already had.", explanation: "SharedVariables persist through the entire pipeline execution. Pre-operation fetches the data; post-operation consumes it. No second roundtrip, no stale read." },
+    { tip: "Custom APIs are the modern replacement for custom actions. Still creating custom actions in 2025? Ask yourself why.", explanation: "Custom APIs have strict contracts, better versioning, and first-class solution support. Custom actions were the previous approach — Custom APIs are what Microsoft recommends for all new development." },
     // Model-Driven Apps
-    "Never modify an OOB form directly. Copy it, prefix it, assign it to security roles, modify the copy.",
-    "Use business rules before reaching for JavaScript on forms. Business rules don't need a developer to change.",
-    "Security roles are additive. Design them around job functions, not individual users.",
+    { tip: "Never modify an OOB form directly. Copy it, prefix it, assign it to security roles, modify the copy.", explanation: "OOB forms are owned by Microsoft and can be reset by platform updates. Your customizations need to live in forms you control, assigned to the roles that need them." },
+    { tip: "Use business rules before reaching for JavaScript on forms. Business rules don't need a developer to change.", explanation: "Business rules handle show/hide, required, and default values without code. They're editable by admins and run server-side too — JavaScript only runs in the browser." },
+    { tip: "Security roles are additive. Design them around job functions, not individual users.", explanation: "Additive means the most permissive role wins across all assigned roles. Design for job functions so permissions are predictable — one role per profile, not one role per person." },
     // Azure & Logic Apps
-    "Use Managed Identity for Logic Apps authentication. No secrets, no rotation, no 3 AM expiry surprises.",
-    "Logic Apps Standard = dedicated compute. Consumption = shared. Know the difference before you quote an SLA.",
-    "Set explicit timeouts on all HTTP actions. Default is one hour. That's one hour of open run per hanging call.",
-    "Use Logic Apps parameters for environment-specific values. Same discipline as environment variables. Same consequences for ignoring it.",
+    { tip: "Use Managed Identity for Logic Apps authentication. No secrets, no rotation, no 3 AM expiry surprises.", explanation: "Managed Identity delegates credential management to Azure AD entirely. There is no secret to store, rotate, or forget — and no certificate expiry creating an incident at 3 AM." },
+    { tip: "Logic Apps Standard = dedicated compute. Consumption = shared. Know the difference before you quote an SLA.", explanation: "Consumption runs on shared infrastructure with cold-start latency and no VNet integration. Standard runs on a dedicated App Service plan. The pricing and reliability profile are fundamentally different." },
+    { tip: "Set explicit timeouts on all HTTP actions. Default is one hour. That's one hour of open run per hanging call.", explanation: "A hanging HTTP call holds a Logic Apps run open and consumes a concurrent execution slot until it hits the platform limit. One hour is the default, not a sensible SLA." },
+    { tip: "Use Logic Apps parameters for environment-specific values. Same discipline as environment variables. Same consequences for ignoring it.", explanation: "Hardcoded URLs and endpoints in Logic Apps become manual edits at every deployment. Parameters are resolved per environment — the same principle as Power Platform environment variables." },
     // ALM
-    "The publisher prefix is permanent. new_ in production is a timestamp of the day nobody thought to set it up.",
-    "Environment variables are not optional. Every hardcoded URL is a manual fix waiting for go-live.",
-    "Source control is not exporting a ZIP every Friday. That's a backup with no history and no merge capability.",
-    "Run pac solution check before every deployment. Two minutes now or two hours debugging a failed import later.",
-    "Connection References must exist in the target environment before first deployment — under a service account, not yours.",
-    "A solution that fails in UAT is not a UAT problem. It's a missing environment variable or a Dev assumption.",
-    // Jokes
-    "It works on my machine is not a deployment strategy. Neither is I'll sort environments out later.",
-    "The default environment is the shared office kitchen. Don't build production workloads in the office kitchen.",
-    "Two types of Power Platform developers: those who've deployed to production by accident, and those who haven't set up environments yet.",
-    "If your deployment process includes the words 'just quickly' — it's not a process. It's a prayer.",
-    "Your solution isn't done when it works in Dev. It's done when it works in Prod, under a service account, after a clean import, without you in the room.",
+    { tip: "The publisher prefix is permanent. new_ in production is a timestamp of the day nobody thought to set it up.", explanation: "Publisher prefixes cannot be changed after components are created with them. new_ is the default for the lazy path — every new_ column in production is a permanent record of skipped setup." },
+    { tip: "Environment variables are not optional. Every hardcoded URL is a manual fix waiting for go-live.", explanation: "Hardcoded values travel with the solution and break in every new environment. Environment variables are the contract between your solution and its deployment target." },
+    { tip: "Source control is not exporting a ZIP every Friday. That's a backup with no history and no merge capability.", explanation: "A ZIP on SharePoint has no branch, no diff, no conflict resolution, and no way for two developers to work simultaneously. Source control gives you all of those — and auditability." },
+    { tip: "Run pac solution check before every deployment. Two minutes now or two hours debugging a failed import later.", explanation: "Solution Checker catches unmanaged layer conflicts, missing dependencies, and deprecated API usage before they cause a silent import failure in a client's production environment." },
+    { tip: "Connection References must exist in the target environment before first deployment — under a service account, not yours.", explanation: "A missing Connection Reference blocks the entire solution import. A connection under your personal account means the flow breaks the day you leave the project." },
+    { tip: "A solution that fails in UAT is not a UAT problem. It's a missing environment variable or a Dev assumption.", explanation: "Failures in UAT are almost always caused by something that exists in Dev by coincidence — a connection, a variable, a hardcoded URL. UAT is doing its job. Dev wasn't designed properly." },
+    // Perspective
+    { tip: "It works on my machine is not a deployment strategy. Neither is I'll sort environments out later.", explanation: "Later never comes. The project goes live, the client goes live, the technical debt calcifies, and the architecture becomes someone else's emergency three years from now." },
+    { tip: "The default environment is the shared office kitchen. Don't build production workloads in the office kitchen.", explanation: "The default environment has no security boundary, no isolation, and no separation from every other tenant user experimenting. It exists for exploration, not delivery." },
+    { tip: "Two types of Power Platform developers: those who've deployed to production by accident, and those who haven't set up environments yet.", explanation: "Without environment separation, every test is also a production test. The difference between these two groups is measured in incident reports." },
+    { tip: "If your deployment process includes the words 'just quickly' — it's not a process. It's a prayer.", explanation: "Every manual deployment step is a step that can be skipped, done out of order, or forgotten under pressure. Automate or document — 'just quickly' is neither." },
+    { tip: "Your solution isn't done when it works in Dev. It's done when it works in Prod, under a service account, after a clean import, without you in the room.", explanation: "Dev is where solutions are built. Prod is where they're proven. The distance between those two environments is where most Power Platform projects quietly go wrong." },
   ];
 
-  const tip = tips[Math.floor(Math.random() * tips.length)];
+  const picked = tips[Math.floor(Math.random() * tips.length)];
   emojiEl.textContent = '';
-  titleEl.textContent = tip;
+  titleEl.textContent = picked.tip;
   bodyEl.textContent  = '';
+
+  const infoBtn      = document.getElementById('sardonicInfoBtn');
+  const explanation  = document.getElementById('sardonicExplanation');
+  const explanText   = document.getElementById('sardonicExplanationText');
+  explanText.textContent = picked.explanation;
+  infoBtn.addEventListener('click', () => {
+    const isHidden = explanation.hasAttribute('hidden');
+    if (isHidden) {
+      explanation.removeAttribute('hidden');
+      infoBtn.setAttribute('aria-pressed', 'true');
+    } else {
+      explanation.setAttribute('hidden', '');
+      infoBtn.setAttribute('aria-pressed', 'false');
+    }
+  });
 
   function closeModal() {
     modal.classList.remove('visible');

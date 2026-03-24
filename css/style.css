@@ -903,6 +903,24 @@ i.skill-svg-icon { width: auto; height: auto; font-size: 28px; line-height: 1; }
 }
 .sardonic-btn:hover { background: #875024; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(156,90,46,0.4); }
 .sardonic-hint { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-light); letter-spacing: 0.04em; }
+.sardonic-title-wrap { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.75rem; }
+.sardonic-title-wrap .sardonic-title { margin-bottom: 0; }
+.sardonic-info-btn {
+  flex-shrink: 0; margin-top: 0.2rem;
+  background: none; border: 1px solid rgba(156,90,46,0.35); border-radius: 50%;
+  width: 26px; height: 26px; color: var(--copper); font-size: 0.78rem;
+  cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  display: flex; align-items: center; justify-content: center; line-height: 1;
+}
+.sardonic-info-btn:hover { background: rgba(156,90,46,0.14); border-color: var(--copper); }
+.sardonic-explanation {
+  background: rgba(156,90,46,0.09); border: 1px solid rgba(156,90,46,0.22);
+  border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem;
+}
+.sardonic-explanation-text {
+  font-size: 0.84rem; color: rgba(228,218,205,0.78); line-height: 1.6;
+  margin: 0; font-style: italic;
+}
 
 /* ═══════════════════ HEALTH MODAL ═══════════════════ */
 .modal-overlay {

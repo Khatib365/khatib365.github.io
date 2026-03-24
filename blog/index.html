@@ -127,15 +127,14 @@
   /* ── POST GRID ── */
   .post-grid {
     padding: 2.5rem 0 0;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex; flex-direction: column;
     gap: 1.5rem;
   }
   .post-card {
     background: var(--parchment); border: 1px solid var(--rule);
-    border-radius: 10px; padding: 2rem; cursor: pointer;
+    border-radius: 10px; cursor: pointer; overflow: hidden;
     transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
-    display: flex; flex-direction: column;
+    display: flex; flex-direction: row;
   }
   .post-card:hover {
     box-shadow: 0 8px 32px rgba(28,24,18,0.1);
@@ -143,12 +142,32 @@
   }
   .post-card--featured {
     grid-column: 1 / -1;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;
-    padding: 2.5rem;
   }
-  .post-card--featured .post-card-right {
-    display: flex; flex-direction: column; justify-content: space-between;
+  /* ── CARD THUMBNAIL ── */
+  .post-card-thumb {
+    flex-shrink: 0; width: 300px;
+    overflow: hidden; position: relative;
   }
+  .post-card--featured .post-card-thumb { width: 340px; }
+  .post-card-thumb-img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.4s ease;
+  }
+  .post-card:hover .post-card-thumb-img { transform: scale(1.04); }
+  .post-card-thumb-placeholder {
+    width: 100%; height: 100%; min-height: 200px;
+    background: linear-gradient(145deg, var(--copper-pale) 0%, var(--parchment-d) 70%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .post-card-thumb-glyph {
+    font-family: var(--serif); font-size: 5rem; line-height: 1;
+    color: rgba(156,90,46,0.2); user-select: none;
+  }
+  /* ── CARD CONTENT ── */
+  .post-card-content {
+    flex: 1; padding: 2rem; display: flex; flex-direction: column;
+  }
+  .post-card--featured .post-card-content { padding: 2.5rem; }
   .post-card--featured .post-card-excerpt { font-size: 1rem; }
   .post-card-badge {
     font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em;
@@ -318,8 +337,9 @@
     }
     .blog-masthead { flex-direction: column; align-items: flex-start; padding-top: 90px; }
     .masthead-count { display: none; }
-    .post-grid { grid-template-columns: 1fr; }
-    .post-card--featured { grid-template-columns: 1fr; gap: 1.5rem; }
+    .post-card { flex-direction: column; }
+    .post-card-thumb { width: 100%; height: 220px; }
+    .post-card--featured .post-card-thumb { width: 100%; height: 240px; }
     .tip-toast { max-width: calc(100vw - 40px); right: 20px; bottom: 20px; }
     .footer { padding: 2rem 1.25rem; }
   }
@@ -379,7 +399,10 @@
       data-excerpt="Before environments, pipelines, and solutions — meet the developer who ships first and asks questions never. The story of how good intentions build unmaintainable systems, and why this series exists."
       onclick="location.href='post00-mr-yolo.html'"
       style="cursor:pointer">
-      <div class="post-card-left">
+      <div class="post-card-thumb">
+        <img src="../assets/screenshots/post00/from_yolo_to_alm_v3.png" alt="From YOLO to ALM — Power Platform Deployment Series" class="post-card-thumb-img" loading="lazy">
+      </div>
+      <div class="post-card-content">
         <div class="post-card-badge">Deployment Series · Post 00</div>
         <div class="post-card-meta">
           <span class="post-card-tag">ALM · Series Intro</span>
@@ -387,22 +410,27 @@
           <span class="post-card-read">8 min read</span>
         </div>
         <h2 class="post-card-title">Meet Mr. YOLO</h2>
-      </div>
-      <div class="post-card-right">
         <p class="post-card-excerpt">Before environments, pipelines, and solutions — meet the developer who ships first and asks questions never. The story of how good intentions build unmaintainable systems, and why this series exists.</p>
         <a href="post00-mr-yolo.html" class="post-card-link">Read post →</a>
       </div>
     </article>
 
     <!-- Post 01 — coming soon -->
-    <article class="post-card-soon" style="background:var(--parchment);border:1px dashed var(--sand);border-radius:10px;padding:2rem;opacity:0.6;">
-      <div class="post-card-badge" style="display:inline-block;margin-bottom:1.25rem;">Deployment Series · Post 01</div>
-      <div class="post-card-meta" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:0.85rem;">
-        <span class="post-card-tag">ALM · Environments</span>
+    <article class="post-card" style="opacity:0.6;border-style:dashed;" data-tags="alm,architecture">
+      <div class="post-card-thumb">
+        <div class="post-card-thumb-placeholder">
+          <span class="post-card-thumb-glyph">§</span>
+        </div>
       </div>
-      <h2 class="post-card-title" style="font-family:var(--serif);font-size:1.55rem;font-weight:600;color:var(--ink);line-height:1.2;letter-spacing:-0.02em;margin-bottom:1rem;">Before You Write a Single Line of Code, Get Your Environments Right</h2>
-      <p class="post-card-excerpt" style="font-size:0.9rem;color:var(--ink-soft);line-height:1.7;margin-bottom:1.5rem;">Environment decisions in Power Platform are irreversible. Here's what to get right before writing a single line of code — topology, security groups, URLs, and the four mistakes that haunt projects.</p>
-      <span style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-light);">Coming soon</span>
+      <div class="post-card-content">
+        <div class="post-card-badge">Deployment Series · Post 01</div>
+        <div class="post-card-meta">
+          <span class="post-card-tag">ALM · Environments</span>
+        </div>
+        <h2 class="post-card-title">Before You Write a Single Line of Code, Get Your Environments Right</h2>
+        <p class="post-card-excerpt">Environment decisions in Power Platform are irreversible. Here's what to get right before writing a single line of code — topology, security groups, URLs, and the four mistakes that haunt projects.</p>
+        <span class="post-card-link" style="pointer-events:none;">Coming soon</span>
+      </div>
     </article>
 
     <div class="no-posts-msg" id="noPostsMsg">
@@ -416,7 +444,7 @@
     <img src="../assets/photo.jpg" alt="Ahmed El-Khatib" class="author-strip-photo">
     <div>
       <div class="author-strip-name">Ahmed El-Khatib</div>
-      <div class="author-strip-role">Power Platform Technical Lead · Trax Group</div>
+      <div class="author-strip-role">Power Platform Technical Lead · one of the leading Microsoft Partners in the Middle East</div>
       <a href="../" class="author-strip-link">← Back to home</a>
     </div>
   </div>
