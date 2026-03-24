@@ -560,15 +560,15 @@
   <!-- Cinematic opening -->
   <p>4:47 PM. Thursday. Two days before the client demo.</p>
 
-  <p>Mr. YOLO opens the Power Apps maker portal. In the top-right corner, it says <code>Default environment</code>. He notices this the way you notice a speed limit sign on the motorway — registers it, files it under <em>not relevant right now</em>. He thinks: <em>it's just a prototype. I'll move it later.</em></p>
+  <p>You get a requirement. Could be a flow, a table, a model-driven app — doesn't matter. You open make.powerapps.com. Top-right corner says <code>Default environment</code>. It's just a prototype. You'll sort the environment stuff later.</p>
 
-  <p>He doesn't move it later.</p>
+  <p>You build the tables. You build the flows. You wire up the canvas app. It works. You send the URL to the business users so they can start testing.</p>
 
-  <p>Six months pass. The prototype is in production. There are forty-three users. There are three cloud flows. There is a canvas app with nineteen screens, a patch formula inside a timer control that runs every sixty seconds, and a SharePoint list being used as a relational database because it was faster to set up. There are no environment variables. The service account email is hardcoded in eleven flows. Nobody knows the publisher prefix — or what a publisher prefix is. The word "solution" on this project refers to a ZIP file that one developer keeps on their desktop, updated manually, emailed to the client, and imported through a browser window whenever something needs to be "deployed."</p>
+  <p>That's it. That's the moment. You just made the Default environment your dev, your test, and your production — all in one. Nobody decided this. There was no architecture meeting. No discussion. It happened the way most bad decisions happen on delivery projects: because nobody stopped to ask the question.</p>
 
-  <p>And somewhere in a Jira board that nobody opens, there is a ticket that says: <em>TODO: move to proper environment.</em></p>
+  <p>Six months later: forty-three users, three cloud flows, a canvas app with nineteen screens, a patch formula inside a timer control that runs every sixty seconds, and a SharePoint list doing the job of a relational database. No environment variables. The service account email is hardcoded in eleven flows. Nobody remembers the publisher prefix. The word "solution" on this project means a ZIP file sitting on someone's desktop, exported manually, emailed to the client, imported through a browser whenever something needs to be "deployed."</p>
 
-  <p>It was created six months ago. It has never been touched. It is assigned to Mr. YOLO.</p>
+  <p>And somewhere in Azure DevOps: <em>F#*@# APPLY A PROPER ALM.</em> Created six months ago. Never touched. Assigned to Mr. YOLO.</p>
 
   <div class="callout">
     <div class="callout-label">What this post covers</div>
@@ -583,71 +583,9 @@
 
   <h2 id="who-is-mr-yolo">Who Is Mr. YOLO?</h2>
 
-  <p>Mr. YOLO is not a villain. He is not incompetent. He is — in every measurable short-term sense — effective. He delivers. When the business needs a form-to-SharePoint flow by Friday, he has it running by Thursday afternoon. When a manager asks for a dashboard, he builds one before the manager has finished explaining what they want. He doesn't slow things down with process. He doesn't open tickets for every decision. He ships.</p>
+  <p>Mr. YOLO is a fictional character. We're using him to put a face on the persona behind these mistakes — the dev defects we've all committed at some point. No judgment. Just a name for the pattern.</p>
 
-  <p>The problems start when someone else inherits his work. When the business decides the prototype was actually production-ready. When the project grows from one developer to five. When the client asks for a second environment. When an auditor asks which version is currently deployed. When the senior developer who joins in month three asks: <em>where is source control? What is the publisher prefix? Is there a deployment pipeline?</em></p>
-
-  <p>Mr. YOLO's answer to all of these is technically honest: <em>it works. Don't touch it.</em></p>
-
-  <figure class="post-figure post-figure--screenshot">
-    <img
-      src="../assets/screenshots/post00/meet-mr-yolo.png"
-      alt="Mr. YOLO character card — Speed 8/10, Confidence 10/10, Testing 2/10, Documentation 1/10, YOLO Factor 10/10"
-      class="post-screenshot"
-      loading="lazy"
-    />
-    <p class="figure-caption">Mr. YOLO — Speed 8/10. Confidence 10/10. Testing 2/10. Documentation 1/10. YOLO Factor 10/10.</p>
-  </figure>
-
-  <figure class="post-figure post-figure--screenshot">
-    <img
-      src="../assets/screenshots/post00/the-story-begins.png"
-      alt="Two timestamps: 4:44 PM — '5 minutes. Easy.' and 4:53 PM — APPLICATION DOWN, ERROR 500"
-      class="post-screenshot"
-      loading="lazy"
-    />
-    <p class="figure-caption">4:44 PM — "5 minutes. Easy." · 4:53 PM — APPLICATION DOWN, ERROR 500.</p>
-  </figure>
-
-  <h3>The Mr. YOLO trait inventory</h3>
-
-  <div class="trait-list">
-    <div class="trait-item">
-      <span class="trait-mark">01</span>
-      <div><strong>Works exclusively in the Default environment.</strong> It's always there. It already has Dataverse. Nobody told him not to. The default environment is the path of least resistance, and Mr. YOLO is efficient.</div>
-    </div>
-    <div class="trait-item">
-      <span class="trait-mark">02</span>
-      <div><strong>Has never opened a solution ZIP file.</strong> He exports it as a black box. He imports it as a black box. The file between those two actions is someone else's concern.</div>
-    </div>
-    <div class="trait-item">
-      <span class="trait-mark">03</span>
-      <div><strong>Deploys by dragging exports between browser windows.</strong> Admin Center tab on the left, source environment on the right. Export, download, switch tabs, import. This is his pipeline. It works until it doesn't.</div>
-    </div>
-    <div class="trait-item">
-      <span class="trait-mark">04</span>
-      <div><strong>Uses one solution for everything.</strong> The data model, the flows, the canvas apps, the security roles, the dashboards, the PCF components — all in one solution named <code>ProjectName_v3_FINAL_real.zip</code>.</div>
-    </div>
-    <div class="trait-item">
-      <span class="trait-mark">05</span>
-      <div><strong>Hardcodes everything that could be an environment variable.</strong> The API endpoint. The SharePoint site URL. The service account email. The lookup GUID he copy-pasted from the browser URL bar eight months ago. It's fine.</div>
-    </div>
-    <div class="trait-item">
-      <span class="trait-mark">06</span>
-      <div><strong>Has no DLP policy.</strong> There was never a right time to set one up. The connectors that shouldn't be in this environment are in this environment. Nobody has looked. It's probably fine.</div>
-    </div>
-    <div class="trait-item">
-      <span class="trait-mark">07</span>
-      <div><strong>Thinks ALM is something large enterprises do.</strong> This project has six users. ALM is overkill right now. He'll add governance later, when it matters. It will matter in two months. He will add it never.</div>
-    </div>
-  </div>
-
-  <p>If you have worked on any Power Platform project with more than one developer and more than one environment, you have met Mr. YOLO. You may have been him at some point. I know I was — earlier in my career, when the platform was new to me and the path of least resistance looked a lot like the right path.</p>
-
-  <div class="callout warn">
-    <div class="callout-label">A note on the character</div>
-    <p>Mr. YOLO is a composite — every mistake in this series is one I've seen on real projects, including ones I was responsible for.</p>
-  </div>
+  <p>Remember him well. He'll be with us throughout the entire journey.</p>
 
   <div class="divider">
     <div class="divider-line"></div>
@@ -657,21 +595,15 @@
 
   <h2 id="why-this-series">Why This Series Exists</h2>
 
-  <p>The Power Platform makes it fast to build things. That's the pitch. It's also why ALM on the platform is such a mess.</p>
+  <p>Throughout my experience I've worked with great engineers and architects — people who design solid solutions, build clean data models, and deliver. But almost all of them had the same blind spot: ALM.</p>
 
-  <p>Because it's fast to start, teams start without deciding how they'll finish. Because it's visual and approachable, projects grow past the point where informal processes hold — and nobody notices until go-live. Because Microsoft's documentation covers individual features without connecting the decisions: what to configure, in what order, and what breaks permanently when you get it wrong.</p>
+  <p>And I get it. Before you can apply ALM on Power Platform, you need to take a step back and understand what ALM actually means from a software and DevOps perspective first. Where does it come from? What problem does it solve? Then — and only then — does it make sense to look at where Power Platform lands in that space. Build the mindset first, then everything else follows. That's exactly how this series is structured.</p>
 
-  <p>This series is the document I wished existed when I started. Not a cert prep guide. Not a feature walkthrough. Just the decisions — in the order you'll actually face them — with enough context to get them right the first time.</p>
+  <p>I'll be covering everything — from the software principle itself all the way to how it's applied in Power Platform. So this is not a walk in the park. The posts will get harder as we move forward. What I promise is I'll make it as simple as possible without cutting corners on the details.</p>
 
-  <h3>Who this is for</h3>
+  <p>One more thing worth saying: ALM is one of the areas AI hasn't fully taken over yet. And I don't mean the exporting and importing — that's just the operational side. I'm talking about applying the full ALM methodology on a real project and actually maintaining it. That requires judgment, experience, and context. Not a prompt.</p>
 
-  <p>If you've shipped Power Platform solutions but still dread deployments — the platform knowledge is there, the process isn't. This series fills that gap.</p>
-
-  <p>If you're walking into a project Mr. YOLO already started: the first thing you need is a map of the decisions already made, what they cost to reverse, and what to untangle first. The early posts will orient you.</p>
-
-  <p><strong>Power Platform admins</strong> trying to establish governance on a tenant that already has loose apps and flows everywhere — the DLP and environment strategy posts are where you start.</p>
-
-  <p>And if you're starting something new and want to avoid being the cautionary tale in someone else's post: start at Post 01 and work forward.</p>
+  <p>This series is for developers at all levels and consultants working in the business applications space — Dynamics 365 CE and Power Platform.</p>
 
   <div class="divider">
     <div class="divider-line"></div>
