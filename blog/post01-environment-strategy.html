@@ -581,6 +581,21 @@
 
   <p>But the tooling was still primitive. Solutions existed but ALM around them was entirely manual. No pipelines. No environment variables. No deployment gates. Most teams still deployed by hand — export, import, cross your fingers. The topology existed on a whiteboard. In practice, half the team was still deploying directly to production "just this once."</p>
 
+  <figure class="post-figure post-figure--screenshot">
+    <img src="../assets/post01/maturity-level-0.jpg" alt="Maturity Level 0 — one environment, everyone develops here, no deployment boundary" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. — Maturity Level 0. One environment. Everyone develops here. Chaos reigns.</p>
+  </figure>
+
+  <figure class="post-figure post-figure--screenshot">
+    <img src="../assets/post01/maturity-level-1.jpg" alt="Maturity Level 1 — manual export/import between environments" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. — Maturity Level 1. Manual export/import. Bridge is made of hope and prayer.</p>
+  </figure>
+
+  <figure class="post-figure post-figure--screenshot">
+    <img src="../assets/post01/maturity-level-2.jpg" alt="Maturity Level 2 — changes always move upward through environments, never backwards" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. — Maturity Level 2. Changes always move up. Never backwards.</p>
+  </figure>
+
   <h3>Era 4 — Power Platform: The Framework Exists, Nobody Uses It (2019–2022)</h3>
 
   <div class="era-label">What "environment" meant then</div>
@@ -702,64 +717,15 @@
 
   <p>Every software project — regardless of language, stack, or platform — moves through the same lifecycle. It doesn't matter if you're building a nuclear plant control system in C++ or a canvas app in Power Platform. The phases are the same.</p>
 
-  <!-- SDLC diagram -->
-  <div class="post-figure">
-    <svg width="100%" viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <marker id="arr-sdlc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M2 1L8 5L2 9" fill="none" stroke="#c8bfb0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </marker>
-      </defs>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="../assets/post01/sdlc-how-it-should-work.jpg" alt="The SDLC — Plan, Build, Test, Deploy, Maintain phases in sequence" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. — The SDLC as it should work. Clean. Logical. Everyone agrees this is how it works.</p>
+  </figure>
 
-      <!-- Phase boxes -->
-      <!-- Plan -->
-      <rect x="20" y="60" width="100" height="56" rx="8" fill="#f1eeea" stroke="#c8bfb0" stroke-width="0.5"/>
-      <text x="70" y="85" text-anchor="middle" font-size="13" font-weight="500" fill="#4a3d30" font-family="inherit">Plan</text>
-      <text x="70" y="103" text-anchor="middle" font-size="10" fill="#7a6f60" font-family="inherit">Architecture</text>
-      <text x="70" y="115" text-anchor="middle" font-size="10" fill="#7a6f60" font-family="inherit">Environments</text>
-
-      <!-- Arrow -->
-      <line class="flow-arrow" x1="122" y1="88" x2="140" y2="88" stroke="#c8bfb0" stroke-width="1.5" marker-end="url(#arr-sdlc)" fill="none"/>
-
-      <!-- Build -->
-      <rect x="142" y="60" width="100" height="56" rx="8" fill="#f1eeea" stroke="#c8bfb0" stroke-width="0.5"/>
-      <text x="192" y="85" text-anchor="middle" font-size="13" font-weight="500" fill="#4a3d30" font-family="inherit">Build</text>
-      <text x="192" y="103" text-anchor="middle" font-size="10" fill="#7a6f60" font-family="inherit">Dev environment</text>
-      <text x="192" y="115" text-anchor="middle" font-size="10" fill="#7a6f60" font-family="inherit">Sprints · Reviews</text>
-
-      <!-- Arrow -->
-      <line class="flow-arrow" x1="244" y1="88" x2="262" y2="88" stroke="#c8bfb0" stroke-width="1.5" marker-end="url(#arr-sdlc)" fill="none"/>
-
-      <!-- Test -->
-      <rect x="264" y="60" width="100" height="56" rx="8" fill="#f1eeea" stroke="#c8bfb0" stroke-width="0.5"/>
-      <text x="314" y="85" text-anchor="middle" font-size="13" font-weight="500" fill="#4a3d30" font-family="inherit">Test</text>
-      <text x="314" y="103" text-anchor="middle" font-size="10" fill="#7a6f60" font-family="inherit">SIT · UAT</text>
-      <text x="314" y="115" text-anchor="middle" font-size="10" fill="#7a6f60" font-family="inherit">Sign-off</text>
-
-      <!-- Arrow -->
-      <line class="flow-arrow" x1="366" y1="88" x2="384" y2="88" stroke="#9c5a2e" stroke-width="1.5" marker-end="url(#arr-sdlc)" fill="none"/>
-
-      <!-- Deploy — highlighted -->
-      <rect x="386" y="48" width="110" height="80" rx="8" fill="#f5ebe0" stroke="#9c5a2e" stroke-width="1.5"/>
-      <text x="441" y="76" text-anchor="middle" font-size="13" font-weight="600" fill="#7a3e10" font-family="inherit">Deploy</text>
-      <text x="441" y="96" text-anchor="middle" font-size="10" fill="#9c5a2e" font-family="inherit">Pre-Prod · Prod</text>
-      <text x="441" y="110" text-anchor="middle" font-size="10" fill="#c47a4a" font-family="inherit">← We are here</text>
-      <text x="441" y="122" text-anchor="middle" font-size="9" fill="#c47a4a" font-family="inherit">(where it breaks)</text>
-
-      <!-- Arrow -->
-      <line class="flow-arrow" x1="498" y1="88" x2="516" y2="88" stroke="#c8bfb0" stroke-width="1.5" marker-end="url(#arr-sdlc)" fill="none"/>
-
-      <!-- Maintain -->
-      <rect x="518" y="60" width="110" height="56" rx="8" fill="#f1eeea" stroke="#c8bfb0" stroke-width="0.5"/>
-      <text x="573" y="85" text-anchor="middle" font-size="13" font-weight="500" fill="#4a3d30" font-family="inherit">Maintain</text>
-      <text x="573" y="103" text-anchor="middle" font-size="10" fill="#7a6f60" font-family="inherit">Monitor · Patch</text>
-      <text x="573" y="115" text-anchor="middle" font-size="10" fill="#7a6f60" font-family="inherit">Iterate</text>
-
-      <!-- Bottom note -->
-      <text x="340" y="170" text-anchor="middle" font-size="11" fill="#a89880" font-family="inherit">Environments exist in every phase — but the decisions about them must happen in Plan</text>
-    </svg>
-    <p class="figure-caption">Fig. 3 — The SDLC. Deploy is where projects break. But the decisions that break it were made in Plan.</p>
-  </div>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="../assets/post01/mr-yolo-sdlc.jpg" alt="Mr. YOLO's version of the SDLC — deployment is where well-built solutions go to die" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. — Mr. YOLO's version. Deployment is where well-built solutions go to die.</p>
+  </figure>
 
   <p><strong>Plan</strong> — Requirements, architecture, decisions. This is where environment strategy belongs. Not after the first sprint. Not "once we know what we're building." Before anything else. The decisions made here are largely irreversible.</p>
 
@@ -1078,13 +1044,24 @@
     <p>If you're using Environment Groups, all environments assigned to a group inherit the group's Managed Environments rules automatically. This is the cleanest way to ensure consistent governance without configuring each environment by hand.</p>
   </div>
 
+  <figure class="post-figure post-figure--screenshot">
+    <img src="../assets/post01/managed-vs-unmanaged-environments.jpg" alt="Managed vs Unmanaged Environments comparison — governance controls and restrictions" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. — Managed vs Unmanaged. Microsoft doesn't trust you either. And that's actually a good thing.</p>
+  </figure>
+
+  <figure class="post-figure post-figure--screenshot">
+    <img src="../assets/post01/managed-environments-benefits.jpg" alt="Managed Environments benefits — solution checker enforcement, sharing limits, pipelines, analytics" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. — What Managed Environments actually give you.</p>
+  </figure>
+
   <p>For projects that integrate with external systems — Dynamics 365 F&O, third-party ERPs, legacy APIs, Azure services — you'll also want a dedicated <strong>Integration / Staging</strong> environment between Dev and Test. This gives you a stable, isolated target for integration testing that doesn't pollute your main test environment with data sync noise, incomplete reference data, or webhook misfires.</p>
 
   <h3>Environment Groups</h3>
 
-  <p>Plan your Environment Group structure before you create anything. Environment Groups let you group related environments and apply consistent governance rules across all of them in one place — sharing limits, solution checker enforcement, and more. Every environment in the group inherits the same baseline configuration automatically.</p>
-
-  <p>For a typical project, create one group covering your Test, UAT, Pre-Prod, and Production environments. Dev environments can live in a separate group with relaxed rules. Plan the group structure before you create the environments — retrofitting governance to environments already in active use is painful.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="../assets/post01/environment-groups.jpg" alt="Environment Groups in the Power Platform Admin Center — folder-like grouping for governance inheritance" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. — Environment Groups. Folders for your tenant.</p>
+  </figure>
 
 
   <!-- ═══════════════════════════════════════════════ -->
@@ -1258,6 +1235,11 @@
   <h2>The Pre-Start Checklist</h2>
 
   <p>Before you create a single environment on your next project, go through this list. It takes less than 30 minutes and prevents all of the above entirely.</p>
+
+  <figure class="post-figure post-figure--screenshot">
+    <img src="../assets/post01/disaster-recovery.jpg" alt="The 7-Day Rule — take a manual backup before every production deployment" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. — The 7-Day Rule. Take a manual backup before every production deployment.</p>
+  </figure>
 
   <div class="interactive-checklist">
     <div class="cl-progress-row">
