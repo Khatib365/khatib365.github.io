@@ -830,7 +830,7 @@
 
   <p>A <strong>licensing boundary</strong> — what capabilities are available and what they cost to run. Managed Environments, Dataverse capacity, premium connectors — all scoped to the environment.</p>
 
-  <p>And the critical part: <strong>most of the decisions that define these three boundaries are made at environment creation time and cannot be changed later.</strong> You can't add Dataverse to an environment that was created without it. You can't enable Dynamics 365 apps on an environment that was created without that toggle. You can't change the region. These aren't settings — they're architecture choices baked into the environment at birth.</p>
+  <p>And the critical part: <strong>most of the decisions that define these three boundaries are made at environment creation time and cannot be changed later.</strong> You can add Dataverse to an existing environment after the fact — but you cannot enable Dynamics 365 apps if that toggle wasn't set when the database was first provisioned. You can't change the region. These aren't settings — they're architecture choices baked into the environment at birth.</p>
 
   <p>This is why environment strategy is an architecture decision. Not a configuration task. Not something you sort out in the first sprint. An architecture decision — made before anything else.</p>
 
@@ -1075,7 +1075,7 @@
     <div class="callout-label">Managed Environments — What It Is and Why It Matters</div>
     <p>Managed Environments is a premium governance capability that unlocks features you need for any serious project: solution checker enforcement as a deployment gate, sharing limits on canvas apps, maker welcome content, environment-level analytics, and — critically — the ability to use Power Platform Pipelines.</p>
     <p>As of 2026, Pipelines require all target environments to be Managed Environments. This isn't a soft recommendation — if your Test, UAT, Pre-Prod, or Production environments aren't managed, you can't use pipelines to deploy to them. Plan for this upfront.</p>
-    <p>What Managed Environments does NOT automatically do: it doesn't turn itself on. You enable it per environment, in the Power Platform Admin Center, under each environment's settings. The cost is covered by your existing Power Apps/Power Automate premium licenses for users running assets in those environments.</p>
+    <p>What Managed Environments does NOT automatically do: it doesn't turn itself on. You enable it per environment, in the Power Platform Admin Center, under each environment's settings. Users running apps or flows in Managed Environments must hold premium licenses — Power Apps Premium, Power Automate Premium, or qualifying Dynamics 365 licenses. This is enforced per user and is not automatically covered by standard or developer licenses. Microsoft began enforcement in June 2026.</p>
     <p>If you're using Environment Groups, all environments assigned to a group inherit the group's Managed Environments rules automatically. This is the cleanest way to ensure consistent governance without configuring each environment by hand.</p>
   </div>
 
