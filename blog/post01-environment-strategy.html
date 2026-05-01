@@ -398,8 +398,48 @@
     .era-appear { opacity: 1; }
   }
 
+  /* ── Env access diagram ── */
+  .env-access-diagram {
+    display: flex; align-items: stretch; gap: 0;
+    margin: 28px 0; overflow-x: auto;
+  }
+  .ead-step {
+    flex: 1; min-width: 130px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 14px; text-align: center;
+  }
+  .ead-step.highlight { background: var(--copper-pal); border-color: var(--border2); }
+  .ead-icon { font-size: 22px; margin-bottom: 8px; }
+  .ead-label { font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .ead-sub { font-size: 12px; color: var(--ink-mid); line-height: 1.5; }
+  .ead-arrow { display: flex; align-items: center; padding: 0 10px; font-size: 18px; color: var(--border2); flex-shrink: 0; }
+
+  /* ── License capability table ── */
+  .license-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13.5px; }
+  .license-table th { font-family: 'Fira Code', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-mid); padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); background: var(--surface); }
+  .license-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--ink-soft); vertical-align: top; }
+  .license-table tr:last-child td { border-bottom: none; }
+  .lt-name { font-family: 'Fira Code', monospace; font-size: 12px; color: var(--copper); font-weight: 500; }
+
+  /* ── Screenshot placeholder ── */
+  .screenshot-placeholder {
+    border: 1.5px dashed var(--border2);
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin: 1.5rem 0;
+  }
+  .ph-label { font-family: 'Fira Code', monospace; font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 10px; }
+  .ph-filename { font-family: 'Fira Code', monospace; font-size: 13px; font-weight: 500; color: var(--copper); margin-bottom: 4px; }
+  .ph-path { font-family: 'Fira Code', monospace; font-size: 11px; color: var(--ink-mid); margin-bottom: 10px; }
+  .ph-instruction { font-size: 13px; color: var(--ink-soft); margin-bottom: 6px; }
+  .ph-dims { font-family: 'Fira Code', monospace; font-size: 10.5px; color: var(--ink-light); }
+  .ph-caption { font-family: 'Fira Code', monospace; font-size: 11.5px; color: var(--ink-light); letter-spacing: .04em; margin-top: 10px; }
+
   @media (max-width: 900px) {
     .toc-nav { grid-template-columns: 1fr; }
+    .env-access-diagram { flex-direction: column; }
+    .ead-arrow { transform: rotate(90deg); align-self: center; padding: 6px 0; }
   }
 
   @media (max-width: 600px) {
@@ -747,12 +787,6 @@
     <p class="figure-caption">Fig. 2 — The three cloud layers. Power Platform sits at SaaS — Microsoft owns the infrastructure, platform, and runtime. You own the solution on top of it.</p>
   </div>
 
-  <p><strong>IaaS (Infrastructure as a Service)</strong> — You rent the raw compute. Microsoft gives you virtual machines. You install the OS, the runtime, the middleware, everything. Maximum control, maximum responsibility. This is where on-premise CRM lived when it moved to the cloud.</p>
-
-  <p><strong>PaaS (Platform as a Service)</strong> — Microsoft manages the infrastructure and the platform. You bring your application and your data. Azure Logic Apps, Azure Functions, Azure App Service — these are PaaS. You don't think about servers or OS patches. You think about your code.</p>
-
-  <p><strong>SaaS (Software as a Service)</strong> — Microsoft manages everything: infrastructure, platform, runtime, and the application itself. You configure it, extend it, and build on top of it. Power Platform — Power Apps, Power Automate, Dataverse, Dynamics 365 — is SaaS. You don't install it. You don't patch it. You don't manage the servers it runs on.</p>
-
   <p>Here's what SaaS doesn't mean: it doesn't mean "no discipline required." It means the discipline <em>shifts</em>. You're no longer responsible for the infrastructure. You're entirely responsible for the solution you build on top of it — how it's structured, how it's governed, how it moves from development to production. That responsibility doesn't disappear. It just looks different.</p>
 
   <p>And in Power Platform, that discipline starts with environments.</p>
@@ -761,15 +795,23 @@
 
   <p>Every software project — regardless of language, stack, or platform — moves through the same lifecycle. It doesn't matter if you're building a nuclear plant control system in C++ or a canvas app in Power Platform. The phases are the same.</p>
 
-  <figure class="post-figure post-figure--screenshot">
-    <img src="/assets/screenshots/post01/sdlc-how-it-should-work.jpg" alt="The SDLC — Plan, Build, Test, Deploy, Maintain phases in sequence" class="post-screenshot" loading="lazy"/>
-    <p class="figure-caption">Fig. 3 — The SDLC as it should work. Clean. Logical. Everyone agrees this is how it works.</p>
-  </figure>
+  <div class="screenshot-placeholder">
+    <div class="ph-label">Screenshot placeholder — Fig. 3</div>
+    <div class="ph-filename">sdlc-how-it-should-work.png</div>
+    <div class="ph-path">/assets/screenshots/post01/sdlc-how-it-should-work.png</div>
+    <div class="ph-instruction">Your own SDLC diagram — Plan → Build → Test → Deploy → Maintain, presented cleanly (whiteboard, slide, or diagram tool)</div>
+    <div class="ph-dims">Suggested: 1200 × 480 px</div>
+  </div>
+  <p class="figure-caption">Fig. 3 — The SDLC as it should work. Clean. Logical. Everyone agrees this is how it works.</p>
 
-  <figure class="post-figure post-figure--screenshot">
-    <img src="/assets/screenshots/post01/mr-yolo-sdlc.jpg" alt="Mr. YOLO's version of the SDLC — deployment is where well-built solutions go to die" class="post-screenshot" loading="lazy"/>
-    <p class="figure-caption">Fig. 4 — Mr. YOLO's version. Deployment is where well-built solutions go to die.</p>
-  </figure>
+  <div class="screenshot-placeholder">
+    <div class="ph-label">Screenshot placeholder — Fig. 4</div>
+    <div class="ph-filename">mr-yolo-sdlc.png</div>
+    <div class="ph-path">/assets/screenshots/post01/mr-yolo-sdlc.png</div>
+    <div class="ph-instruction">Mr. YOLO's version — same diagram with Deploy highlighted or broken, showing where things go wrong</div>
+    <div class="ph-dims">Suggested: 1200 × 480 px</div>
+  </div>
+  <p class="figure-caption">Fig. 4 — Mr. YOLO's version. Deployment is where well-built solutions go to die.</p>
 
   <p><strong>Plan</strong> — Requirements, architecture, decisions. This is where environment strategy belongs. Not after the first sprint. Not "once we know what we're building." Before anything else. The decisions made here are largely irreversible.</p>
 
@@ -833,11 +875,97 @@
     <p class="figure-caption">Fig. 5 — A Power Platform environment is three boundaries in one: security, deployment, and licensing — all decisions made at creation time.</p>
   </div>
 
-  <p>A <strong>security boundary</strong> — who can access this environment, what they can do, and what data they can see. Controlled by security groups and Dataverse security roles.</p>
+  <h3>Security Boundary</h3>
+  <p>Access to a Power Platform environment is controlled in three layers, each answering a different question.</p>
 
-  <p>A <strong>deployment boundary</strong> — what solutions live here, how they got here, and how changes move in and out. Every environment in your topology has a specific role in the deployment chain.</p>
+  <div class="env-access-diagram">
+    <div class="ead-step">
+      <div class="ead-icon">🏢</div>
+      <div class="ead-label">Entra ID Security Group</div>
+      <div class="ead-sub">Who can enter the environment at all — created in Entra ID, assigned at environment creation</div>
+    </div>
+    <div class="ead-arrow">→</div>
+    <div class="ead-step highlight">
+      <div class="ead-icon">🔒</div>
+      <div class="ead-label">Dataverse Security Roles</div>
+      <div class="ead-sub">What they can do inside — System Admin, Basic User, or custom roles with fine-grained table permissions</div>
+    </div>
+    <div class="ead-arrow">→</div>
+    <div class="ead-step">
+      <div class="ead-icon">🗂️</div>
+      <div class="ead-label">Row &amp; Column Security</div>
+      <div class="ead-sub">What data they see — field-level security profiles and row ownership rules within Dataverse tables</div>
+    </div>
+  </div>
 
-  <p>A <strong>licensing boundary</strong> — what capabilities are available and what they cost to run. Managed Environments, Dataverse capacity, premium connectors — all scoped to the environment.</p>
+  <div class="callout">
+    <div class="callout-label">VNet integration — advanced data isolation</div>
+    <p><strong>VNet integration via Managed Environments</strong> locks outbound Power Platform traffic to your own Azure Virtual Network instead of shared Microsoft infrastructure. You need this in regulated industries, when handling sensitive data, or when enterprise clients won't accept shared egress. A full breakdown of VNet setup and network security hardening is coming in a dedicated post in this series.</p>
+  </div>
+
+  <h3>Licensing Boundary</h3>
+  <p>What an environment can do — and what it costs — depends on the licenses of the users and the environment's own settings.</p>
+
+  <table class="license-table">
+    <thead>
+      <tr>
+        <th>License</th>
+        <th>Build</th>
+        <th>Run apps &amp; flows</th>
+        <th>Premium connectors</th>
+        <th>Managed Env</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="lt-name">Developer Plan</td>
+        <td>✅ Yes</td>
+        <td>Dev environments only</td>
+        <td>✅ In dev envs</td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td class="lt-name">Power Apps Premium</td>
+        <td>✅ Yes</td>
+        <td>✅ Any environment</td>
+        <td>✅ Yes</td>
+        <td>✅ Yes</td>
+      </tr>
+      <tr>
+        <td class="lt-name">Power Automate Premium</td>
+        <td>✅ Yes</td>
+        <td>✅ Any environment</td>
+        <td>✅ Yes</td>
+        <td>✅ Yes</td>
+      </tr>
+      <tr>
+        <td class="lt-name">Dynamics 365 (qualifying)</td>
+        <td>✅ Yes</td>
+        <td>✅ Within D365 scope</td>
+        <td>✅ Yes</td>
+        <td>✅ Yes</td>
+      </tr>
+      <tr>
+        <td class="lt-name">Microsoft 365 only</td>
+        <td>Limited (standard connectors)</td>
+        <td>Standard connectors only</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Deployment Boundary</h3>
+  <p>Every environment has a specific role in the deployment chain. Solutions flow in one direction only — left to right — and every environment in the pipeline receives only managed solutions imported through Power Platform Pipelines, never manual changes.</p>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-label">Screenshot placeholder</div>
+    <div class="ph-filename">ppac-pipeline-stages.png</div>
+    <div class="ph-path">/assets/screenshots/post01/ppac-pipeline-stages.png</div>
+    <div class="ph-instruction">Power Platform Admin Center → Pipelines → open your pipeline → show the stage list (Dev → Test → UAT → Prod) with deployment status</div>
+    <div class="ph-dims">Suggested: 1200 × 640 px</div>
+  </div>
+  <p class="figure-caption">Fig. 5b — A pipeline in the Admin Center. Each stage is an environment. Deployment only flows forward.</p>
 
   <p>And the critical part: <strong>most of the decisions that define these three boundaries are made at environment creation time and cannot be changed later.</strong> You can add Dataverse to an existing environment after the fact — but you cannot enable Dynamics 365 apps if that toggle wasn't set when the database was first provisioned. You can't change the region. These aren't settings — they're architecture choices baked into the environment at birth.</p>
 
@@ -856,11 +984,16 @@
 
   <h2 id="section-04">Single vs. Multiple Dev Environments — When Does It Matter?</h2>
 
-  <p>The first environment question every project needs to answer is: how many dev environments do we actually need?</p>
+  <p>The first environment question every project needs to answer is: how many dev environments do we actually need? There are three models, and which one you pick depends on team size, governance maturity, and whether your workstreams can safely share a space.</p>
 
-  <p>The default answer — and the right answer for most projects — is one. One shared dev environment, where the team works together, and solutions are the mechanism for isolating individual workstreams. This is what Power Platform is designed for. It's clean, it's simple, and it's manageable.</p>
+  <h3>Model 1 — Shared dev environment</h3>
+  <p>One environment, all developers inside it, solutions as the isolation mechanism. This is the default and the right answer for most projects. Small team, clear ownership of components, low risk of developers breaking each other's work. Everything converges at Test/SIT for the first time before moving up the pipeline.</p>
 
-  <p>But there are real situations where a single dev environment becomes a collision zone. And when that happens, the right answer is multiple dev environments — each with their own lifecycle — converging at a single Test/SIT environment where integration is validated for the first time.</p>
+  <h3>Model 2 — Personal Developer Environments (PDEs)</h3>
+  <p>Microsoft's newer governance model: each maker gets their own private developer environment, provisioned automatically, locked to their identity. Makers work in isolation, then promote through the shared pipeline when ready. PDEs don't consume tenant capacity — they're provisioned from the Power Apps Developer Plan and governed centrally via Managed Environments. This is the right choice for tenants with many makers, mixed skill levels, or strict governance requirements where shared dev environments create too much noise.</p>
+
+  <h3>Model 3 — Multiple shared dev environments</h3>
+  <p>Two or more team-scoped dev environments, each owned by a distinct workstream, all converging at a shared Test/SIT. Use this when two teams are moving at genuinely different speeds on genuinely independent work that cannot safely share a dev environment without breaking each other.</p>
 
   <!-- Single vs Multiple diagram -->
   <div class="post-figure">
@@ -904,7 +1037,7 @@
 
       <rect x="520" y="50" width="140" height="56" rx="8" fill="#ede8f5" stroke="#9b84cc" stroke-width="0.5"/>
       <text x="590" y="74" text-anchor="middle" font-size="12" font-weight="500" fill="#4a3580" font-family="inherit">Dev — Team B</text>
-      <text x="590" y="92" text-anchor="middle" font-size="10" fill="#7a68aa" font-family="inherit">F&amp;O Integration</text>
+      <text x="590" y="92" text-anchor="middle" font-size="10" fill="#7a68aa" font-family="inherit">Parallel workstream</text>
 
       <line class="flow-arrow" x1="430" y1="108" x2="490" y2="154" stroke="#9b84cc" stroke-width="1.5" marker-end="url(#arr-devenv)" fill="none"/>
       <line class="flow-arrow" x1="590" y1="108" x2="530" y2="154" stroke="#9b84cc" stroke-width="1.5" marker-end="url(#arr-devenv)" fill="none"/>
@@ -918,20 +1051,18 @@
       <rect x="430" y="246" width="160" height="28" rx="6" fill="#1e5c35"/>
       <text x="510" y="264" text-anchor="middle" font-size="11" font-weight="500" fill="#fff" font-family="inherit">Production →</text>
     </svg>
-    <p class="figure-caption">Fig. 6 — Single vs. multiple dev environments. Both converge at Test/SIT — that's where integration is validated for the first time, regardless of how many dev environments feed into it.</p>
+    <p class="figure-caption">Fig. 6 — Single vs. multiple shared dev environments. Both converge at Test/SIT — that's where integration is validated for the first time.</p>
   </div>
 
-  <h3>When multiple dev environments are actually justified</h3>
+  <h3>When multiple shared dev environments are actually justified</h3>
 
-  <p><strong>Parallel workstreams with different rhythms.</strong> You have two teams moving at genuinely different speeds on genuinely independent pieces of work. Team A owns the Canvas App and Dataverse model. Team B owns the F&O integration layer — Logic Apps, custom APIs, data sync. Team B's half-wired integrations are constantly breaking Team A's app testing in a shared environment. Two dev environments, each team works clean, they converge at Test/SIT where the full solution is assembled and validated for the first time.</p>
+  <p><strong>Parallel workstreams with different rhythms.</strong> Two teams moving at genuinely different speeds on genuinely independent pieces of work. Team A owns the canvas app and Dataverse model. Team B owns an integration layer — external APIs, data sync, event-driven flows. Team B's half-wired integrations constantly break Team A's app testing in a shared environment. Give each team their own dev environment; they converge at Test/SIT where the full solution is assembled and validated for the first time.</p>
 
-  <p><strong>Base product + consumer project built simultaneously.</strong> You're building a reusable managed solution — a framework other projects will consume. A second team is building the first project on top of it at the same time. They can't share dev because the base layer is actively changing under the consuming layer. The base has its own dev environment. The consumer has their own. They meet at Test where the import chain — base first, consumer second — is validated end to end.</p>
+  <p><strong>Base product + consumer project built simultaneously.</strong> You're building a reusable managed solution that other projects will consume. A second team is building the first consuming project on top of it at the same time. They can't share dev because the base layer is actively changing under the consuming layer. The base gets its own dev environment, the consumer gets theirs, and they meet at Test where the import chain — base first, consumer second — is validated end to end.</p>
 
-  <p><strong>Hotfix in production while feature development is in flight.</strong> Production breaks. You need to patch it. But your dev environment has three half-finished features in it that can't go to production yet. If you only have one dev environment, you're stuck — you can't build a clean hotfix without contaminating it with incomplete work. A second environment — a hotfix track — is the only clean answer. This isn't always planned upfront, but it's a scenario worth anticipating on long-running projects.</p>
+  <p><strong>Hotfix while feature development is in flight.</strong> Production breaks. You need a clean patch. But your dev environment has half-finished features that can't ship yet. If you only have one dev environment you're stuck — you can't build a clean hotfix without contaminating it with incomplete work. A hotfix track environment is the only clean answer. Not always planned upfront, but worth anticipating on long-running projects.</p>
 
-  <p>The pattern across all three: <strong>multiple dev environments exist to protect different lifecycles from each other.</strong> They're not about team size. They're about isolation when two workstreams genuinely can't share the same space without breaking each other.</p>
-
-  <p>If you don't have that problem — and most projects don't — one dev environment is the right answer. Don't add complexity you don't need.</p>
+  <p>The pattern across all three: <strong>multiple dev environments exist to protect different lifecycles from each other.</strong> They're not about team size. They're about isolation when two workstreams genuinely can't share the same space without breaking each other. If that problem doesn't exist — and on most projects it doesn't — one shared dev environment is the right answer.</p>
 
 
   <!-- ═══════════════════════════════════════════════ -->
@@ -982,7 +1113,9 @@
         <th>Type</th>
         <th>Dataverse</th>
         <th>D365 Apps</th>
-        <th>Purpose</th>
+        <th>Resettable</th>
+        <th>SLA</th>
+        <th>Use for</th>
       </tr>
     </thead>
     <tbody>
@@ -990,31 +1123,41 @@
         <td class="td-env">Default</td>
         <td>✅ Always</td>
         <td><span class="cross">✗</span></td>
-        <td>Personal maker experiments only. Never for team projects.</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td>Personal maker experiments only. Shared across your entire tenant — never use for any team project.</td>
       </tr>
       <tr>
         <td class="td-env">Developer</td>
         <td>✅ Always</td>
         <td>Optional</td>
-        <td>Personal dev sandbox. One per maker. Building and previewing is free — running assets requires premium licensing. Never use as a shared team environment.</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td>Personal sandbox per maker — backed by the Power Apps Developer Plan. Does not consume tenant capacity. Building and previewing is free; running apps and flows in other environments requires a premium license. Never use as a shared team environment.</td>
       </tr>
       <tr>
         <td class="td-env">Sandbox</td>
         <td>Optional</td>
         <td>Optional</td>
-        <td>The correct choice for short-lived spike or experiment environments. Can be reset — which wipes everything. Should not be used for team dev, Test, UAT, or anything in your deployment pipeline.</td>
+        <td>✅ Yes — wipes everything</td>
+        <td><span class="cross">✗</span></td>
+        <td>Short-lived spikes and experiments only. The reset capability is a trap — it destroys all data and customizations with no recovery path. Do not use for Dev, Test, UAT, or anything in your deployment pipeline.</td>
       </tr>
       <tr>
         <td class="td-env">Production</td>
         <td>Optional</td>
         <td>Optional</td>
-        <td>The right type for Dev, Test, UAT, Pre-Prod, and Production environments in your ALM topology. Cannot be reset. Full backup and SLA.</td>
+        <td><span class="cross">✗</span></td>
+        <td>✅ Full SLA</td>
+        <td>The correct type for every environment in your ALM pipeline — Dev, Test, UAT, Pre-Prod, and Production alike. Cannot be reset. Full backup, point-in-time restore, and Microsoft SLA.</td>
       </tr>
       <tr>
         <td class="td-env">Trial</td>
         <td>✅ Always</td>
         <td>Optional</td>
-        <td>30-day POCs. Never for real projects. Expires automatically.</td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td>30-day POCs only. Expires automatically, no extensions. Never use for real projects.</td>
       </tr>
     </tbody>
   </table>
@@ -1072,12 +1215,17 @@
     <line x1="330" y1="72" x2="330" y2="248" stroke="#c8bfb0" stroke-width="0.5" stroke-dasharray="3 3"/>
     <rect x="185" y="190" width="120" height="48" rx="8" fill="#fef3e2" stroke="#e6a830" stroke-width="0.5"/>
     <text x="245" y="208" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#7a4f00" font-family="inherit">Integration</text>
-    <text x="245" y="226" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#a06800" font-family="inherit">F&amp;O projects only</text>
+    <text x="245" y="226" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#a06800" font-family="inherit">External integrations</text>
     <path d="M245 152 L245 188" fill="none" stroke="#e6a830" stroke-width="0.5" stroke-dasharray="4 3" marker-end="url(#arr-topo)"/>
     <text x="60" y="285" font-size="11" fill="#a89880" font-family="inherit">Deployment flows left to right only — no exceptions</text>
-    <text x="60" y="303" font-size="11" fill="#a89880" font-family="inherit">Amber = optional, only needed when external system integrations are in scope</text>
+    <text x="60" y="303" font-size="11" fill="#a89880" font-family="inherit">Amber = optional, only add when external system integrations are in scope</text>
   </svg>
   <p class="figure-caption">Fig. 7 — Recommended environment topology. Dev → Test → UAT → Pre-Prod → Production. Arrows flow left to right only.</p>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">If you're connecting to Dynamics 365 F&amp;O</div>
+    <p>Finance &amp; Operations integration adds three hard constraints that must be decided before any environment is created. First, the Power Platform environment must be a <strong>Linked Environment</strong> — configured from the F&amp;O side, this binds a single Power Platform environment to a specific F&amp;O instance. Second, a Linked Environment must be a <strong>Managed Environment</strong> — not a recommendation, a prerequisite. Third, any environment used for F&amp;O-connected development must have the <strong>Dynamics 365 apps toggle enabled at creation time</strong> — this is irreversible. Miss it and you are recreating the environment from scratch, migrating everything, and updating every integration.</p>
   </div>
 
   <div class="callout warn">
@@ -1088,24 +1236,38 @@
     <p>If you're using Environment Groups, all environments assigned to a group inherit the group's Managed Environments rules automatically. This is the cleanest way to ensure consistent governance without configuring each environment by hand.</p>
   </div>
 
-  <figure class="post-figure post-figure--screenshot">
-    <img src="/assets/screenshots/post01/managed-vs-unmanaged-environments.jpg" alt="Managed vs Unmanaged Environments comparison — governance controls and restrictions" class="post-screenshot" loading="lazy"/>
-    <p class="figure-caption">Fig. 8 — Managed vs Unmanaged. Microsoft doesn't trust you either. And that's actually a good thing.</p>
-  </figure>
+  <div class="screenshot-placeholder">
+    <div class="ph-label">Screenshot placeholder — Fig. 8</div>
+    <div class="ph-filename">ppac-managed-vs-unmanaged.png</div>
+    <div class="ph-path">/assets/screenshots/post01/ppac-managed-vs-unmanaged.png</div>
+    <div class="ph-instruction">PPAC → Environments list → show a Managed environment (with the shield badge) alongside an unmanaged one, or open the Managed Environments settings toggle panel</div>
+    <div class="ph-dims">Suggested: 1200 × 680 px</div>
+  </div>
+  <p class="figure-caption">Fig. 8 — Managed vs Unmanaged. Microsoft doesn't trust you either. And that's actually a good thing.</p>
 
-  <figure class="post-figure post-figure--screenshot">
-    <img src="/assets/screenshots/post01/managed-environments-benefits.jpg" alt="Managed Environments benefits — solution checker enforcement, sharing limits, pipelines, analytics" class="post-screenshot" loading="lazy"/>
-    <p class="figure-caption">Fig. 9 — What Managed Environments actually give you.</p>
-  </figure>
+  <div class="screenshot-placeholder">
+    <div class="ph-label">Screenshot placeholder — Fig. 9</div>
+    <div class="ph-filename">ppac-managed-env-benefits.png</div>
+    <div class="ph-path">/assets/screenshots/post01/ppac-managed-env-benefits.png</div>
+    <div class="ph-instruction">PPAC → open a Managed Environment → the Settings panel showing solution checker enforcement, canvas app sharing limits, maker welcome content, and analytics toggles</div>
+    <div class="ph-dims">Suggested: 1200 × 700 px</div>
+  </div>
+  <p class="figure-caption">Fig. 9 — What Managed Environments actually give you.</p>
 
-  <p>For projects that integrate with external systems — Dynamics 365 F&O, third-party ERPs, legacy APIs, Azure services — you'll also want a dedicated <strong>Integration / Staging</strong> environment between Dev and Test. This gives you a stable, isolated target for integration testing that doesn't pollute your main test environment with data sync noise, incomplete reference data, or webhook misfires.</p>
+  <p>For projects that integrate with external systems — third-party ERPs, legacy APIs, Azure services, or Dynamics 365 apps — consider adding a dedicated <strong>Integration / Staging</strong> environment between Dev and Test. This gives you a stable, isolated target for integration testing that doesn't pollute your main test environment with data sync noise, incomplete reference data, or webhook misfires.</p>
 
   <h3>Environment Groups</h3>
 
-  <figure class="post-figure post-figure--screenshot">
-    <img src="/assets/screenshots/post01/environment-groups.jpg" alt="Environment Groups in the Power Platform Admin Center — folder-like grouping for governance inheritance" class="post-screenshot" loading="lazy"/>
-    <p class="figure-caption">Fig. 10 — Environment Groups. Folders for your tenant.</p>
-  </figure>
+  <p>Environment Groups let you assign multiple environments to a shared governance container. Managed Environments rules defined at the group level are inherited by every member environment automatically — no per-environment configuration required. The recommended split: one group for your delivery pipeline (Test + UAT + Pre-Prod + Prod), one for your development environments.</p>
+
+  <div class="screenshot-placeholder">
+    <div class="ph-label">Screenshot placeholder — Fig. 10</div>
+    <div class="ph-filename">ppac-environment-groups.png</div>
+    <div class="ph-path">/assets/screenshots/post01/ppac-environment-groups.png</div>
+    <div class="ph-instruction">PPAC → Environment Groups → show your groups with the member environments listed underneath, including the Managed badge on pipeline environments</div>
+    <div class="ph-dims">Suggested: 1200 × 640 px</div>
+  </div>
+  <p class="figure-caption">Fig. 10 — Environment Groups. Folders for your tenant. Governance rules set once, inherited everywhere.</p>
 
 
   <!-- ═══════════════════════════════════════════════ -->
@@ -1124,20 +1286,32 @@
 
   <p>Before we get into the specific mistakes, here's what bad looks like at different maturity levels — so you can recognize where you or your team currently sits.</p>
 
-  <figure class="post-figure post-figure--screenshot">
-    <img src="/assets/screenshots/post01/maturity-level-0.jpg" alt="Maturity Level 0 — one environment, everyone develops here, no deployment boundary" class="post-screenshot" loading="lazy"/>
-    <p class="figure-caption">Fig. 11 — Maturity Level 0 — The Wild West. One environment. Everyone develops here. Chaos reigns.</p>
-  </figure>
+  <div class="screenshot-placeholder">
+    <div class="ph-label">Screenshot placeholder — Fig. 11</div>
+    <div class="ph-filename">maturity-level-0.png</div>
+    <div class="ph-path">/assets/screenshots/post01/maturity-level-0.png</div>
+    <div class="ph-instruction">Your own diagram or slide — Maturity Level 0: single environment, all users, no deployment boundary, no governance</div>
+    <div class="ph-dims">Suggested: 1200 × 500 px</div>
+  </div>
+  <p class="figure-caption">Fig. 11 — Maturity Level 0 — The Wild West. One environment. Everyone develops here. Chaos reigns.</p>
 
-  <figure class="post-figure post-figure--screenshot">
-    <img src="/assets/screenshots/post01/maturity-level-1.jpg" alt="Maturity Level 1 — manual export/import between environments, no pipeline" class="post-screenshot" loading="lazy"/>
-    <p class="figure-caption">Fig. 12 — Maturity Level 1 — The Awakening. Manual export/import. Bridge is made of hope and prayer.</p>
-  </figure>
+  <div class="screenshot-placeholder">
+    <div class="ph-label">Screenshot placeholder — Fig. 12</div>
+    <div class="ph-filename">maturity-level-1.png</div>
+    <div class="ph-path">/assets/screenshots/post01/maturity-level-1.png</div>
+    <div class="ph-instruction">Your own diagram — Maturity Level 1: Dev + Prod exist, but deployment is manual export/import with no automation</div>
+    <div class="ph-dims">Suggested: 1200 × 500 px</div>
+  </div>
+  <p class="figure-caption">Fig. 12 — Maturity Level 1 — The Awakening. Manual export/import. Bridge is made of hope and prayer.</p>
 
-  <figure class="post-figure post-figure--screenshot">
-    <img src="/assets/screenshots/post01/maturity-level-2.jpg" alt="Maturity Level 2 — changes always move upward through environments, never backwards" class="post-screenshot" loading="lazy"/>
-    <p class="figure-caption">Fig. 13 — Maturity Level 2 — Getting Serious. Changes always move up. Never backwards. This is the minimum acceptable baseline.</p>
-  </figure>
+  <div class="screenshot-placeholder">
+    <div class="ph-label">Screenshot placeholder — Fig. 13</div>
+    <div class="ph-filename">maturity-level-2.png</div>
+    <div class="ph-path">/assets/screenshots/post01/maturity-level-2.png</div>
+    <div class="ph-instruction">Your own diagram — Maturity Level 2: full Dev → Test → UAT → Prod pipeline, changes always move forward, never backward</div>
+    <div class="ph-dims">Suggested: 1200 × 500 px</div>
+  </div>
+  <p class="figure-caption">Fig. 13 — Maturity Level 2 — Getting Serious. Changes always move up. Never backwards. This is the minimum acceptable baseline.</p>
 
   <!-- Mistake 1 -->
   <div class="mistake-card">
@@ -1182,10 +1356,14 @@
     <p class="figure-caption">Fig. 14 — Without a security group, the environment has no access boundary. Every licensed user in the tenant can walk in.</p>
     </div>
 
-    <figure class="post-figure post-figure--screenshot">
-      <img src="/assets/screenshots/post01/security-group.png" alt="Power Platform Admin Center — Security group field during environment creation" class="post-screenshot" loading="lazy"/>
-      <p class="figure-caption">Fig. 15 — The security group field in Admin Center. Create the group in Entra ID first, then assign it here at creation time.</p>
-    </figure>
+    <div class="screenshot-placeholder">
+      <div class="ph-label">Screenshot placeholder — Fig. 15</div>
+      <div class="ph-filename">ppac-security-group-field.png</div>
+      <div class="ph-path">/assets/screenshots/post01/ppac-security-group-field.png</div>
+      <div class="ph-instruction">PPAC → Create environment → show the "Security group" field in the environment creation panel with a group already selected</div>
+      <div class="ph-dims">Suggested: 900 × 560 px</div>
+    </div>
+    <p class="figure-caption">Fig. 15 — The security group field in Admin Center. Create the group in Entra ID first, then assign it here at creation time.</p>
 
     <div class="callout ok">
       <div class="callout-label">The fix — 5 minutes upfront, hours saved at go-live</div>
@@ -1200,10 +1378,14 @@
     <p>This is the irreversible one. When creating a Dataverse environment, there's a toggle to enable Dynamics 365 apps. Most people skip it because they're "just building a Power App." Then six months later, the client wants to add Dynamics 365 Sales, or integrate with F&O, or install a Dynamics-dependent solution.</p>
     <p><strong>You cannot enable Dynamics 365 apps on an existing environment that was created without this option.</strong> You have to create a new environment, migrate everything, and update every integration. I've seen projects delayed by weeks because of this single skipped toggle.</p>
 
-    <figure class="post-figure post-figure--screenshot">
-      <img src="/assets/screenshots/post01/enable-dynamics-apps.png" alt="Power Platform Admin Center — Enable Dynamics 365 apps toggle during environment creation" class="post-screenshot" loading="lazy"/>
-      <p class="figure-caption">Fig. 16 — The toggle is off by default and cannot be changed after environment creation.</p>
-    </figure>
+    <div class="screenshot-placeholder">
+      <div class="ph-label">Screenshot placeholder — Fig. 16</div>
+      <div class="ph-filename">ppac-enable-d365-apps-toggle.png</div>
+      <div class="ph-path">/assets/screenshots/post01/ppac-enable-d365-apps-toggle.png</div>
+      <div class="ph-instruction">PPAC → Create environment → "Enable Dynamics 365 apps" toggle — show it in the OFF state so readers can see exactly what to look for and enable</div>
+      <div class="ph-dims">Suggested: 900 × 400 px</div>
+    </div>
+    <p class="figure-caption">Fig. 16 — The toggle is off by default and cannot be changed after environment creation.</p>
 
     <div class="callout warn">
       <div class="callout-label">What I saw on a real project</div>
@@ -1231,10 +1413,14 @@
       </div>
     </div>
 
-    <figure class="post-figure post-figure--screenshot">
-      <img src="/assets/screenshots/post01/org-url.png" alt="Power Platform Admin Center — Organization URL field during environment creation" class="post-screenshot" loading="lazy"/>
-      <p class="figure-caption">Fig. 17 — The org URL field in Admin Center. Set it manually at creation time.</p>
-    </figure>
+    <div class="screenshot-placeholder">
+      <div class="ph-label">Screenshot placeholder — Fig. 17</div>
+      <div class="ph-filename">ppac-org-url-field.png</div>
+      <div class="ph-path">/assets/screenshots/post01/ppac-org-url-field.png</div>
+      <div class="ph-instruction">PPAC → Create environment → the URL field showing a clean manually-set name (e.g. "contoso-prod") rather than the auto-generated org ID</div>
+      <div class="ph-dims">Suggested: 900 × 400 px</div>
+    </div>
+    <p class="figure-caption">Fig. 17 — The org URL field in Admin Center. Set it manually at creation time.</p>
 
     <div class="fix-label">✓ The fix</div>
     <p>Always set the URL manually at creation time. Use a consistent naming convention: <code>[client]-[env]</code> — e.g. <code>contoso-dev</code>, <code>contoso-uat</code>, <code>contoso-prod</code>. Two minutes of work, permanent benefit.</p>
@@ -1273,6 +1459,11 @@
   <p>The default environment needs the most restrictive DLP policy in your tenant — it's accessible to everyone and is exactly where an untrained maker will go if Environment Routing isn't enabled.</p>
 
   <p>DLP is a continuous process, not a setup-and-forget step. New connectors are added to the platform regularly. Make reviewing your DLP policies part of your project governance cadence.</p>
+
+  <div class="callout">
+    <div class="callout-label">Beyond DLP — VNet integration</div>
+    <p>DLP governs which connectors makers can use. <strong>VNet integration via Managed Environments</strong> goes further: it locks outbound Power Platform traffic to your own Azure Virtual Network instead of shared Microsoft infrastructure. You need this in regulated industries, when handling sensitive data, or when enterprise clients won't accept shared egress. A full breakdown of VNet setup and network security hardening is coming in a dedicated post in this series.</p>
+  </div>
 
 
   <!-- ═══════════════════════════════════════════════ -->
