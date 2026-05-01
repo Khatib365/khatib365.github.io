@@ -67,7 +67,7 @@
     display: flex; align-items: center; gap: 8px;
     font-family: 'Fira Code', monospace; font-size: 11.5px;
     color: #B5A99A; letter-spacing: 0.06em;
-    max-width: 780px; margin: 0 auto;
+    max-width: 740px; margin: 0 auto;
     padding: 88px 32px 0;
   }
   .post-breadcrumb a { color: #9C5A2E; text-decoration: none; }
@@ -76,38 +76,48 @@
 
   /* ── Layout ── */
   .page {
-    max-width: 1060px;
+    max-width: 740px;
     margin: 0 auto;
     padding: 40px 32px 120px;
   }
 
-  .content-layout {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 60px;
-    align-items: start;
+  /* ── Progress bar ── */
+  #reading-progress {
+    position: fixed; top: 0; left: 0; z-index: 200;
+    height: 3px; width: 0%;
+    background: var(--copper);
+    transition: width 0.1s linear;
+    pointer-events: none;
   }
 
-  /* ── TOC Sidebar ── */
-  .toc-inner {
-    position: sticky;
-    top: 80px;
+  .content-layout {
+    display: block;
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  /* ── Inline TOC card ── */
+  .toc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 28px;
+    margin-bottom: 52px;
   }
   .toc-label {
     font-family: 'Fira Code', monospace;
     font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
     color: var(--ink-light); margin-bottom: 14px;
   }
-  .toc-nav { display: flex; flex-direction: column; gap: 0; }
+  .toc-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
   .toc-link {
-    font-family: 'Fira Code', monospace; font-size: 11px;
+    font-family: 'Fira Code', monospace; font-size: 11.5px;
     color: var(--ink-mid); text-decoration: none; line-height: 1.5;
-    padding: 5px 0 5px 10px;
-    border-left: 2px solid transparent;
-    transition: color 0.15s, border-color 0.15s;
+    padding: 5px 8px 5px 0;
+    transition: color 0.15s;
     display: block;
   }
-  .toc-link:hover { color: var(--copper); border-left-color: var(--copper-l); }
+  .toc-link:hover { color: var(--copper); }
 
   /* ── Header ── */
   .blog-header {
@@ -389,12 +399,7 @@
   }
 
   @media (max-width: 900px) {
-    .content-layout { grid-template-columns: 1fr; }
-    .toc-inner {
-      position: static;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 6px; padding: 16px 20px; margin-bottom: 36px;
-    }
+    .toc-nav { grid-template-columns: 1fr; }
   }
 
   @media (max-width: 600px) {
@@ -407,6 +412,8 @@
 </style>
 </head>
 <body>
+
+<div id="reading-progress"></div>
 
 <nav class="site-nav" id="siteNav">
   <a href="/index.html" class="site-nav-brand">Khatib<span>365</span></a>
@@ -428,8 +435,12 @@
 
 <script>
   window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
     document.getElementById('siteNav').style.boxShadow =
-      window.scrollY > 40 ? '0 2px 24px rgba(28,24,18,0.07)' : 'none';
+      scrollY > 40 ? '0 2px 24px rgba(28,24,18,0.07)' : 'none';
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+    document.getElementById('reading-progress').style.width = pct + '%';
   });
 </script>
 
@@ -454,8 +465,9 @@
 
   <div class="content-layout">
 
-    <aside class="toc-sidebar">
-      <div class="toc-inner">
+    <article class="post-body">
+
+      <div class="toc-card">
         <div class="toc-label">In this post</div>
         <nav class="toc-nav">
           <a href="#section-01" class="toc-link">§ 01 — A History of Environments</a>
@@ -471,9 +483,6 @@
           <a href="#section-11" class="toc-link">§ 11 — What's Next</a>
         </nav>
       </div>
-    </aside>
-
-    <article class="post-body">
 
   <!-- ═══════════════════════════════════════════════ -->
   <!-- OPENING PROVOCATION                             -->
