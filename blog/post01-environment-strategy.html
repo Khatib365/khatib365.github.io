@@ -795,23 +795,15 @@
 
   <p>Every software project — regardless of language, stack, or platform — moves through the same lifecycle. It doesn't matter if you're building a nuclear plant control system in C++ or a canvas app in Power Platform. The phases are the same.</p>
 
-  <div class="screenshot-placeholder">
-    <div class="ph-label">Screenshot placeholder — Fig. 3</div>
-    <div class="ph-filename">sdlc-how-it-should-work.png</div>
-    <div class="ph-path">/assets/screenshots/post01/sdlc-how-it-should-work.png</div>
-    <div class="ph-instruction">Your own SDLC diagram — Plan → Build → Test → Deploy → Maintain, presented cleanly (whiteboard, slide, or diagram tool)</div>
-    <div class="ph-dims">Suggested: 1200 × 480 px</div>
-  </div>
-  <p class="figure-caption">Fig. 3 — The SDLC as it should work. Clean. Logical. Everyone agrees this is how it works.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="/assets/screenshots/post01/sdlc-how-it-should-work.jpg" alt="The SDLC — Plan, Build, Test, Deploy, Maintain phases in sequence" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. 3 — The SDLC as it should work. Clean. Logical. Everyone agrees this is how it works.</p>
+  </figure>
 
-  <div class="screenshot-placeholder">
-    <div class="ph-label">Screenshot placeholder — Fig. 4</div>
-    <div class="ph-filename">mr-yolo-sdlc.png</div>
-    <div class="ph-path">/assets/screenshots/post01/mr-yolo-sdlc.png</div>
-    <div class="ph-instruction">Mr. YOLO's version — same diagram with Deploy highlighted or broken, showing where things go wrong</div>
-    <div class="ph-dims">Suggested: 1200 × 480 px</div>
-  </div>
-  <p class="figure-caption">Fig. 4 — Mr. YOLO's version. Deployment is where well-built solutions go to die.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="/assets/screenshots/post01/mr-yolo-sdlc.jpg" alt="Mr. YOLO's version of the SDLC — deployment is where well-built solutions go to die" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. 4 — Mr. YOLO's version. Deployment is where well-built solutions go to die.</p>
+  </figure>
 
   <p><strong>Plan</strong> — Requirements, architecture, decisions. This is where environment strategy belongs. Not after the first sprint. Not "once we know what we're building." Before anything else. The decisions made here are largely irreversible.</p>
 
@@ -898,11 +890,6 @@
     </div>
   </div>
 
-  <div class="callout">
-    <div class="callout-label">VNet integration — advanced data isolation</div>
-    <p><strong>VNet integration via Managed Environments</strong> locks outbound Power Platform traffic to your own Azure Virtual Network instead of shared Microsoft infrastructure. You need this in regulated industries, when handling sensitive data, or when enterprise clients won't accept shared egress. A full breakdown of VNet setup and network security hardening is coming in a dedicated post in this series.</p>
-  </div>
-
   <h3>Licensing Boundary</h3>
   <p>What an environment can do — and what it costs — depends on the licenses of the users and the environment's own settings.</p>
 
@@ -958,14 +945,10 @@
   <h3>Deployment Boundary</h3>
   <p>Every environment has a specific role in the deployment chain. Solutions flow in one direction only — left to right — and every environment in the pipeline receives only managed solutions imported through Power Platform Pipelines, never manual changes.</p>
 
-  <div class="screenshot-placeholder">
-    <div class="ph-label">Screenshot placeholder</div>
-    <div class="ph-filename">ppac-pipeline-stages.png</div>
-    <div class="ph-path">/assets/screenshots/post01/ppac-pipeline-stages.png</div>
-    <div class="ph-instruction">Power Platform Admin Center → Pipelines → open your pipeline → show the stage list (Dev → Test → UAT → Prod) with deployment status</div>
-    <div class="ph-dims">Suggested: 1200 × 640 px</div>
-  </div>
-  <p class="figure-caption">Fig. 5b — A pipeline in the Admin Center. Each stage is an environment. Deployment only flows forward.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="/assets/screenshots/post01/ppac-pipeline-stages.svg" alt="Power Platform Admin Center — Pipeline stages showing Dev, Test, UAT, Production deployment flow" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. 5b — A pipeline in the Admin Center. Each stage is an environment. Deployment only flows forward.</p>
+  </figure>
 
   <p>And the critical part: <strong>most of the decisions that define these three boundaries are made at environment creation time and cannot be changed later.</strong> You can add Dataverse to an existing environment after the fact — but you cannot enable Dynamics 365 apps if that toggle wasn't set when the database was first provisioned. You can't change the region. These aren't settings — they're architecture choices baked into the environment at birth.</p>
 
@@ -1183,44 +1166,65 @@
   <p>For any serious Power Platform project, here's the minimum environment layout I recommend. Everything to the left is unmanaged — developers work there freely. Everything to the right receives only managed solutions, deployed through pipelines.</p>
 
   <div class="post-figure">
-  <svg width="100%" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg">
+  <svg width="100%" viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <marker id="arr-topo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
         <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </marker>
     </defs>
-    <rect x="40" y="60" width="290" height="200" rx="16" fill="#faf7f2" stroke="#e0d9cc" stroke-width="0.5"/>
-    <text x="185" y="82" text-anchor="middle" font-size="11" fill="#a89880" font-family="inherit">Unmanaged zone</text>
-    <rect x="350" y="60" width="290" height="200" rx="16" fill="#faf7f2" stroke="#e0d9cc" stroke-width="0.5"/>
-    <text x="495" y="82" text-anchor="middle" font-size="11" fill="#a89880" font-family="inherit">Managed zone</text>
-    <rect x="60" y="96" width="100" height="56" rx="8" fill="#ede8f5" stroke="#9b84cc" stroke-width="0.5"/>
-    <text x="110" y="118" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#4a3580" font-family="inherit">Dev</text>
-    <text x="110" y="138" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#7a68aa" font-family="inherit">Unmanaged solutions</text>
-    <rect x="185" y="96" width="120" height="56" rx="8" fill="#f1eeea" stroke="#c8bfb0" stroke-width="0.5"/>
-    <text x="245" y="118" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#4a3d30" font-family="inherit">Test / SIT</text>
-    <text x="245" y="138" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#8a7060" font-family="inherit">First import target</text>
-    <rect x="370" y="96" width="100" height="56" rx="8" fill="#f1eeea" stroke="#c8bfb0" stroke-width="0.5"/>
-    <text x="420" y="118" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#4a3d30" font-family="inherit">UAT</text>
-    <text x="420" y="138" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#8a7060" font-family="inherit">Business testing</text>
-    <rect x="490" y="80" width="130" height="56" rx="8" fill="#fef3e2" stroke="#e6a830" stroke-width="0.5"/>
-    <text x="555" y="102" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#7a4f00" font-family="inherit">Pre-Prod</text>
-    <text x="555" y="122" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#a06800" font-family="inherit">Final validation</text>
-    <rect x="490" y="160" width="130" height="56" rx="8" fill="#e4f0ea" stroke="#5a9e72" stroke-width="0.5"/>
-    <text x="555" y="182" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#1e5c35" font-family="inherit">Production</text>
-    <text x="555" y="202" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#3a7a50" font-family="inherit">No direct changes</text>
-    <line class="flow-arrow" x1="162" y1="124" x2="183" y2="124" stroke="#9b84cc" stroke-width="1.5" marker-end="url(#arr-topo)" fill="none"/>
-    <line class="flow-arrow-slow" x1="307" y1="124" x2="368" y2="124" stroke="#c8bfb0" stroke-width="1.5" marker-end="url(#arr-topo)" fill="none"/>
-    <line class="flow-arrow" x1="472" y1="110" x2="488" y2="108" stroke="#c8bfb0" stroke-width="1.5" marker-end="url(#arr-topo)" fill="none"/>
-    <line class="flow-arrow" x1="472" y1="138" x2="488" y2="175" stroke="#c8bfb0" stroke-width="1.5" marker-end="url(#arr-topo)" fill="none"/>
-    <line x1="330" y1="72" x2="330" y2="248" stroke="#c8bfb0" stroke-width="0.5" stroke-dasharray="3 3"/>
-    <rect x="185" y="190" width="120" height="48" rx="8" fill="#fef3e2" stroke="#e6a830" stroke-width="0.5"/>
-    <text x="245" y="208" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="#7a4f00" font-family="inherit">Integration</text>
-    <text x="245" y="226" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#a06800" font-family="inherit">External integrations</text>
-    <path d="M245 152 L245 188" fill="none" stroke="#e6a830" stroke-width="0.5" stroke-dasharray="4 3" marker-end="url(#arr-topo)"/>
-    <text x="60" y="285" font-size="11" fill="#a89880" font-family="inherit">Deployment flows left to right only — no exceptions</text>
-    <text x="60" y="303" font-size="11" fill="#a89880" font-family="inherit">Amber = optional, only add when external system integrations are in scope</text>
+
+    <!-- Zone: Unmanaged (Dev only) -->
+    <rect x="20" y="24" width="150" height="118" rx="12" fill="#f7f4f1" stroke="#e0d9cc" stroke-width="0.5"/>
+    <text x="95" y="42" text-anchor="middle" font-size="9" fill="#b5a99a" font-family="inherit" letter-spacing=".08em">UNMANAGED</text>
+
+    <!-- Zone: Managed -->
+    <rect x="178" y="24" width="522" height="118" rx="12" fill="#f7f4f1" stroke="#e0d9cc" stroke-width="0.5"/>
+    <text x="439" y="42" text-anchor="middle" font-size="9" fill="#b5a99a" font-family="inherit" letter-spacing=".08em">MANAGED — SOLUTIONS ONLY</text>
+
+    <!-- Zone divider -->
+    <line x1="174" y1="30" x2="174" y2="136" stroke="#c8bfb0" stroke-width="0.5" stroke-dasharray="3 3"/>
+
+    <!-- Dev -->
+    <rect x="34" y="54" width="120" height="56" rx="8" fill="#ede8f5" stroke="#9b84cc" stroke-width="0.5"/>
+    <text x="94" y="78" text-anchor="middle" font-size="14" font-weight="500" fill="#4a3580" font-family="inherit">Dev</text>
+    <text x="94" y="96" text-anchor="middle" font-size="10" fill="#7a68aa" font-family="inherit">Unmanaged solutions</text>
+
+    <!-- Test/SIT -->
+    <rect x="192" y="54" width="108" height="56" rx="8" fill="#f1eeea" stroke="#c8bfb0" stroke-width="0.5"/>
+    <text x="246" y="78" text-anchor="middle" font-size="14" font-weight="500" fill="#4a3d30" font-family="inherit">Test / SIT</text>
+    <text x="246" y="96" text-anchor="middle" font-size="10" fill="#8a7060" font-family="inherit">First pipeline target</text>
+
+    <!-- UAT -->
+    <rect x="316" y="54" width="96" height="56" rx="8" fill="#f1eeea" stroke="#c8bfb0" stroke-width="0.5"/>
+    <text x="364" y="78" text-anchor="middle" font-size="14" font-weight="500" fill="#4a3d30" font-family="inherit">UAT</text>
+    <text x="364" y="96" text-anchor="middle" font-size="10" fill="#8a7060" font-family="inherit">Business testing</text>
+
+    <!-- Pre-Prod (optional, amber) -->
+    <rect x="428" y="54" width="108" height="56" rx="8" fill="#fef3e2" stroke="#e6a830" stroke-width="0.5"/>
+    <text x="482" y="78" text-anchor="middle" font-size="14" font-weight="500" fill="#7a4f00" font-family="inherit">Pre-Prod</text>
+    <text x="482" y="96" text-anchor="middle" font-size="10" fill="#a06800" font-family="inherit">Final validation</text>
+
+    <!-- Production -->
+    <rect x="552" y="54" width="130" height="56" rx="8" fill="#e4f0ea" stroke="#5a9e72" stroke-width="0.5"/>
+    <text x="617" y="78" text-anchor="middle" font-size="14" font-weight="500" fill="#1e5c35" font-family="inherit">Production</text>
+    <text x="617" y="96" text-anchor="middle" font-size="10" fill="#3a7a50" font-family="inherit">No direct changes</text>
+
+    <!-- Flow arrows -->
+    <line class="flow-arrow" x1="156" y1="82" x2="190" y2="82" stroke="#9b84cc" stroke-width="1.5" marker-end="url(#arr-topo)" fill="none"/>
+    <line class="flow-arrow" x1="302" y1="82" x2="314" y2="82" stroke="#c8bfb0" stroke-width="1.5" marker-end="url(#arr-topo)" fill="none"/>
+    <line class="flow-arrow" x1="414" y1="82" x2="426" y2="82" stroke="#c8bfb0" stroke-width="1.5" marker-end="url(#arr-topo)" fill="none"/>
+    <line class="flow-arrow" x1="538" y1="82" x2="550" y2="82" stroke="#c8bfb0" stroke-width="1.5" marker-end="url(#arr-topo)" fill="none"/>
+
+    <!-- Integration box (optional, below UAT) -->
+    <rect x="316" y="162" width="96" height="44" rx="8" fill="#fef3e2" stroke="#e6a830" stroke-width="0.5" stroke-dasharray="5 2"/>
+    <text x="364" y="181" text-anchor="middle" font-size="13" font-weight="500" fill="#7a4f00" font-family="inherit">Integration</text>
+    <text x="364" y="197" text-anchor="middle" font-size="10" fill="#a06800" font-family="inherit">External systems</text>
+    <path d="M364 112 L364 160" fill="none" stroke="#e6a830" stroke-width="0.5" stroke-dasharray="4 3" marker-end="url(#arr-topo)"/>
+
+    <!-- Legend -->
+    <text x="20" y="222" font-size="10" fill="#b5a99a" font-family="inherit">Amber = optional · Deployment flows left to right only, no exceptions</text>
   </svg>
-  <p class="figure-caption">Fig. 7 — Recommended environment topology. Dev → Test → UAT → Pre-Prod → Production. Arrows flow left to right only.</p>
+  <p class="figure-caption">Fig. 7 — Recommended environment topology. Dev is unmanaged; Test through Prod receive managed solutions only via pipeline.</p>
   </div>
 
   <div class="callout warn">
@@ -1236,23 +1240,15 @@
     <p>If you're using Environment Groups, all environments assigned to a group inherit the group's Managed Environments rules automatically. This is the cleanest way to ensure consistent governance without configuring each environment by hand.</p>
   </div>
 
-  <div class="screenshot-placeholder">
-    <div class="ph-label">Screenshot placeholder — Fig. 8</div>
-    <div class="ph-filename">ppac-managed-vs-unmanaged.png</div>
-    <div class="ph-path">/assets/screenshots/post01/ppac-managed-vs-unmanaged.png</div>
-    <div class="ph-instruction">PPAC → Environments list → show a Managed environment (with the shield badge) alongside an unmanaged one, or open the Managed Environments settings toggle panel</div>
-    <div class="ph-dims">Suggested: 1200 × 680 px</div>
-  </div>
-  <p class="figure-caption">Fig. 8 — Managed vs Unmanaged. Microsoft doesn't trust you either. And that's actually a good thing.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="/assets/screenshots/post01/managed-vs-unmanaged-environments.jpg" alt="Managed vs Unmanaged Environments comparison in Power Platform Admin Center" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. 8 — Managed vs Unmanaged. Microsoft doesn't trust you either. And that's actually a good thing.</p>
+  </figure>
 
-  <div class="screenshot-placeholder">
-    <div class="ph-label">Screenshot placeholder — Fig. 9</div>
-    <div class="ph-filename">ppac-managed-env-benefits.png</div>
-    <div class="ph-path">/assets/screenshots/post01/ppac-managed-env-benefits.png</div>
-    <div class="ph-instruction">PPAC → open a Managed Environment → the Settings panel showing solution checker enforcement, canvas app sharing limits, maker welcome content, and analytics toggles</div>
-    <div class="ph-dims">Suggested: 1200 × 700 px</div>
-  </div>
-  <p class="figure-caption">Fig. 9 — What Managed Environments actually give you.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="/assets/screenshots/post01/managed-environments-benefits.jpg" alt="Managed Environments settings panel — solution checker enforcement, sharing limits, pipelines, analytics" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. 9 — What Managed Environments actually give you.</p>
+  </figure>
 
   <p>For projects that integrate with external systems — third-party ERPs, legacy APIs, Azure services, or Dynamics 365 apps — consider adding a dedicated <strong>Integration / Staging</strong> environment between Dev and Test. This gives you a stable, isolated target for integration testing that doesn't pollute your main test environment with data sync noise, incomplete reference data, or webhook misfires.</p>
 
@@ -1260,14 +1256,10 @@
 
   <p>Environment Groups let you assign multiple environments to a shared governance container. Managed Environments rules defined at the group level are inherited by every member environment automatically — no per-environment configuration required. The recommended split: one group for your delivery pipeline (Test + UAT + Pre-Prod + Prod), one for your development environments.</p>
 
-  <div class="screenshot-placeholder">
-    <div class="ph-label">Screenshot placeholder — Fig. 10</div>
-    <div class="ph-filename">ppac-environment-groups.png</div>
-    <div class="ph-path">/assets/screenshots/post01/ppac-environment-groups.png</div>
-    <div class="ph-instruction">PPAC → Environment Groups → show your groups with the member environments listed underneath, including the Managed badge on pipeline environments</div>
-    <div class="ph-dims">Suggested: 1200 × 640 px</div>
-  </div>
-  <p class="figure-caption">Fig. 10 — Environment Groups. Folders for your tenant. Governance rules set once, inherited everywhere.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="/assets/screenshots/post01/environment-groups.jpg" alt="Environment Groups in Power Platform Admin Center — governance inheritance across grouped environments" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. 10 — Environment Groups. Folders for your tenant. Governance rules set once, inherited everywhere.</p>
+  </figure>
 
 
   <!-- ═══════════════════════════════════════════════ -->
@@ -1286,32 +1278,20 @@
 
   <p>Before we get into the specific mistakes, here's what bad looks like at different maturity levels — so you can recognize where you or your team currently sits.</p>
 
-  <div class="screenshot-placeholder">
-    <div class="ph-label">Screenshot placeholder — Fig. 11</div>
-    <div class="ph-filename">maturity-level-0.png</div>
-    <div class="ph-path">/assets/screenshots/post01/maturity-level-0.png</div>
-    <div class="ph-instruction">Your own diagram or slide — Maturity Level 0: single environment, all users, no deployment boundary, no governance</div>
-    <div class="ph-dims">Suggested: 1200 × 500 px</div>
-  </div>
-  <p class="figure-caption">Fig. 11 — Maturity Level 0 — The Wild West. One environment. Everyone develops here. Chaos reigns.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="/assets/screenshots/post01/maturity-level-0.jpg" alt="Maturity Level 0 — one environment, everyone in it, no deployment boundary" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. 11 — Maturity Level 0. The Wild West. One environment. Everyone develops here. Chaos reigns.</p>
+  </figure>
 
-  <div class="screenshot-placeholder">
-    <div class="ph-label">Screenshot placeholder — Fig. 12</div>
-    <div class="ph-filename">maturity-level-1.png</div>
-    <div class="ph-path">/assets/screenshots/post01/maturity-level-1.png</div>
-    <div class="ph-instruction">Your own diagram — Maturity Level 1: Dev + Prod exist, but deployment is manual export/import with no automation</div>
-    <div class="ph-dims">Suggested: 1200 × 500 px</div>
-  </div>
-  <p class="figure-caption">Fig. 12 — Maturity Level 1 — The Awakening. Manual export/import. Bridge is made of hope and prayer.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="/assets/screenshots/post01/maturity-level-1.jpg" alt="Maturity Level 1 — manual export/import between environments, no pipeline" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. 12 — Maturity Level 1. The Awakening. Manual export/import. Bridge is made of hope and prayer.</p>
+  </figure>
 
-  <div class="screenshot-placeholder">
-    <div class="ph-label">Screenshot placeholder — Fig. 13</div>
-    <div class="ph-filename">maturity-level-2.png</div>
-    <div class="ph-path">/assets/screenshots/post01/maturity-level-2.png</div>
-    <div class="ph-instruction">Your own diagram — Maturity Level 2: full Dev → Test → UAT → Prod pipeline, changes always move forward, never backward</div>
-    <div class="ph-dims">Suggested: 1200 × 500 px</div>
-  </div>
-  <p class="figure-caption">Fig. 13 — Maturity Level 2 — Getting Serious. Changes always move up. Never backwards. This is the minimum acceptable baseline.</p>
+  <figure class="post-figure post-figure--screenshot">
+    <img src="/assets/screenshots/post01/maturity-level-2.jpg" alt="Maturity Level 2 — changes always move upward through environments, never backwards" class="post-screenshot" loading="lazy"/>
+    <p class="figure-caption">Fig. 13 — Maturity Level 2. Getting Serious. Changes always move up. Never backwards. This is the minimum acceptable baseline.</p>
+  </figure>
 
   <!-- Mistake 1 -->
   <div class="mistake-card">
@@ -1356,14 +1336,10 @@
     <p class="figure-caption">Fig. 14 — Without a security group, the environment has no access boundary. Every licensed user in the tenant can walk in.</p>
     </div>
 
-    <div class="screenshot-placeholder">
-      <div class="ph-label">Screenshot placeholder — Fig. 15</div>
-      <div class="ph-filename">ppac-security-group-field.png</div>
-      <div class="ph-path">/assets/screenshots/post01/ppac-security-group-field.png</div>
-      <div class="ph-instruction">PPAC → Create environment → show the "Security group" field in the environment creation panel with a group already selected</div>
-      <div class="ph-dims">Suggested: 900 × 560 px</div>
-    </div>
-    <p class="figure-caption">Fig. 15 — The security group field in Admin Center. Create the group in Entra ID first, then assign it here at creation time.</p>
+    <figure class="post-figure post-figure--screenshot">
+      <img src="/assets/screenshots/post01/security-group.png" alt="Power Platform Admin Center — Security group field during environment creation" class="post-screenshot" loading="lazy"/>
+      <p class="figure-caption">Fig. 15 — The security group field in Admin Center. Create the group in Entra ID first, then assign it here at creation time.</p>
+    </figure>
 
     <div class="callout ok">
       <div class="callout-label">The fix — 5 minutes upfront, hours saved at go-live</div>
@@ -1378,14 +1354,10 @@
     <p>This is the irreversible one. When creating a Dataverse environment, there's a toggle to enable Dynamics 365 apps. Most people skip it because they're "just building a Power App." Then six months later, the client wants to add Dynamics 365 Sales, or integrate with F&O, or install a Dynamics-dependent solution.</p>
     <p><strong>You cannot enable Dynamics 365 apps on an existing environment that was created without this option.</strong> You have to create a new environment, migrate everything, and update every integration. I've seen projects delayed by weeks because of this single skipped toggle.</p>
 
-    <div class="screenshot-placeholder">
-      <div class="ph-label">Screenshot placeholder — Fig. 16</div>
-      <div class="ph-filename">ppac-enable-d365-apps-toggle.png</div>
-      <div class="ph-path">/assets/screenshots/post01/ppac-enable-d365-apps-toggle.png</div>
-      <div class="ph-instruction">PPAC → Create environment → "Enable Dynamics 365 apps" toggle — show it in the OFF state so readers can see exactly what to look for and enable</div>
-      <div class="ph-dims">Suggested: 900 × 400 px</div>
-    </div>
-    <p class="figure-caption">Fig. 16 — The toggle is off by default and cannot be changed after environment creation.</p>
+    <figure class="post-figure post-figure--screenshot">
+      <img src="/assets/screenshots/post01/enable-dynamics-apps.png" alt="Power Platform Admin Center — Enable Dynamics 365 apps toggle during environment creation" class="post-screenshot" loading="lazy"/>
+      <p class="figure-caption">Fig. 16 — The toggle is off by default and cannot be changed after environment creation.</p>
+    </figure>
 
     <div class="callout warn">
       <div class="callout-label">What I saw on a real project</div>
@@ -1413,14 +1385,10 @@
       </div>
     </div>
 
-    <div class="screenshot-placeholder">
-      <div class="ph-label">Screenshot placeholder — Fig. 17</div>
-      <div class="ph-filename">ppac-org-url-field.png</div>
-      <div class="ph-path">/assets/screenshots/post01/ppac-org-url-field.png</div>
-      <div class="ph-instruction">PPAC → Create environment → the URL field showing a clean manually-set name (e.g. "contoso-prod") rather than the auto-generated org ID</div>
-      <div class="ph-dims">Suggested: 900 × 400 px</div>
-    </div>
-    <p class="figure-caption">Fig. 17 — The org URL field in Admin Center. Set it manually at creation time.</p>
+    <figure class="post-figure post-figure--screenshot">
+      <img src="/assets/screenshots/post01/org-url.png" alt="Power Platform Admin Center — Organization URL field during environment creation" class="post-screenshot" loading="lazy"/>
+      <p class="figure-caption">Fig. 17 — The org URL field in Admin Center. Set it manually at creation time.</p>
+    </figure>
 
     <div class="fix-label">✓ The fix</div>
     <p>Always set the URL manually at creation time. Use a consistent naming convention: <code>[client]-[env]</code> — e.g. <code>contoso-dev</code>, <code>contoso-uat</code>, <code>contoso-prod</code>. Two minutes of work, permanent benefit.</p>

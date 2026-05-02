@@ -322,6 +322,51 @@
   .tip-text { font-size: 0.83rem; color: rgba(228,218,205,0.88); line-height: 1.55; }
   .tip-text strong { color: var(--sand); font-weight: 500; }
 
+  /* ── SERIES BLOCK ── */
+  .series-block {
+    padding: 2rem 0 0;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 0.5rem;
+  }
+  .series-block-header { margin-bottom: 1.25rem; }
+  .series-eyebrow {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--copper); margin-bottom: 0.5rem;
+  }
+  .series-title {
+    font-family: var(--serif); font-size: 1.35rem; font-weight: 600;
+    color: var(--ink); margin-bottom: 0.35rem; letter-spacing: -0.01em;
+  }
+  .series-sub {
+    font-size: 0.85rem; color: var(--ink-mid); line-height: 1.6; max-width: 520px;
+  }
+  .series-list { display: flex; flex-direction: column; }
+  .series-item {
+    display: flex; align-items: center; gap: 1.25rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--rule-light);
+    text-decoration: none; color: inherit;
+    transition: background 0.15s;
+  }
+  .series-item--available:hover .si-title { color: var(--copper); }
+  .series-item--soon { opacity: 0.45; pointer-events: none; }
+  .si-num {
+    font-family: var(--mono); font-size: 0.72rem; min-width: 26px;
+    color: var(--ink-light); flex-shrink: 0;
+  }
+  .series-item--available .si-num { color: var(--copper); }
+  .si-content { flex: 1; }
+  .si-title {
+    font-family: var(--serif); font-size: 1rem; font-weight: 600;
+    color: var(--ink); transition: color 0.15s;
+  }
+  .si-sub { font-size: 0.78rem; color: var(--ink-mid); margin-top: 2px; }
+  .si-status {
+    font-family: var(--mono); font-size: 0.62rem; color: var(--copper);
+    letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0;
+  }
+  .si-status--soon { color: var(--ink-light); }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 760px) {
     .page { padding: 0 1.25rem; }
@@ -371,6 +416,57 @@
     <div class="masthead-count" aria-hidden="true">01</div>
   </header>
 
+  <!-- SERIES BLOCK -->
+  <div class="series-block">
+    <div class="series-block-header">
+      <p class="series-eyebrow">Reading series</p>
+      <h2 class="series-title">Power Platform Deployment Series</h2>
+      <p class="series-sub">A practical guide to deploying Power Platform properly — from environment strategy to pipelines, governance, and beyond. Read in order.</p>
+    </div>
+    <div class="series-list">
+      <a href="post00-mr-yolo.html" class="series-item series-item--available">
+        <span class="si-num">00</span>
+        <div class="si-content">
+          <div class="si-title">Meet Mr. YOLO</div>
+          <div class="si-sub">Why this series exists — and the character behind every bad deployment decision</div>
+        </div>
+        <span class="si-status">Read →</span>
+      </a>
+      <a href="post01-environment-strategy.html" class="series-item series-item--available">
+        <span class="si-num">01</span>
+        <div class="si-content">
+          <div class="si-title">Environment Strategy</div>
+          <div class="si-sub">Before you write a single line of code — topology, security groups, DLP, and the four mistakes that haunt every project</div>
+        </div>
+        <span class="si-status">Read →</span>
+      </a>
+      <div class="series-item series-item--soon">
+        <span class="si-num">02</span>
+        <div class="si-content">
+          <div class="si-title">DLP Policies</div>
+          <div class="si-sub">What can connect to what — and what can never touch your data</div>
+        </div>
+        <span class="si-status si-status--soon">Coming soon</span>
+      </div>
+      <div class="series-item series-item--soon">
+        <span class="si-num">03</span>
+        <div class="si-content">
+          <div class="si-title">Solutions and Publishers</div>
+          <div class="si-sub">The packaging layer everything else depends on</div>
+        </div>
+        <span class="si-status si-status--soon">Coming soon</span>
+      </div>
+      <div class="series-item series-item--soon">
+        <span class="si-num">04</span>
+        <div class="si-content">
+          <div class="si-title">Power Platform Pipelines</div>
+          <div class="si-sub">Automated deployment from Dev to Production — no manual exports</div>
+        </div>
+        <span class="si-status si-status--soon">Coming soon</span>
+      </div>
+    </div>
+  </div>
+
   <!-- CONTROLS -->
   <div class="blog-controls">
     <div class="search-wrap">
@@ -392,31 +488,8 @@
   <!-- POST GRID -->
   <div class="post-grid" id="postGrid">
 
-    <!-- Post 00 — featured -->
+    <!-- Post 01 — featured (newest) -->
     <article class="post-card post-card--featured"
-      data-tags="alm,architecture"
-      data-title="Meet Mr. YOLO — Power Platform Deployment Series"
-      data-excerpt="Before environments, pipelines, and solutions — meet the developer who ships first and asks questions never. The story of how good intentions build unmaintainable systems, and why this series exists."
-      onclick="location.href='post00-mr-yolo.html'"
-      style="cursor:pointer">
-      <div class="post-card-thumb">
-        <img src="../assets/screenshots/post00/from_yolo_to_alm_v3.png" alt="From YOLO to ALM — Power Platform Deployment Series" class="post-card-thumb-img" loading="lazy">
-      </div>
-      <div class="post-card-content">
-        <div class="post-card-badge">Deployment Series · Post 00</div>
-        <div class="post-card-meta">
-          <span class="post-card-tag">ALM · Series Intro</span>
-          <span class="post-card-date">March 2026</span>
-          <span class="post-card-read">8 min read</span>
-        </div>
-        <h2 class="post-card-title">Meet Mr. YOLO</h2>
-        <p class="post-card-excerpt">Before environments, pipelines, and solutions — meet the developer who ships first and asks questions never. The story of how good intentions build unmaintainable systems, and why this series exists.</p>
-        <a href="post00-mr-yolo.html" class="post-card-link">Read post →</a>
-      </div>
-    </article>
-
-    <!-- Post 01 -->
-    <article class="post-card"
       data-tags="alm,architecture"
       data-title="Before You Write a Single Line of Code, Get Your Environments Right"
       data-excerpt="Environment decisions in Power Platform are irreversible. Here's what to get right before writing a single line of code — topology, security groups, URLs, and the four mistakes that haunt projects."
@@ -437,6 +510,29 @@
         <h2 class="post-card-title">Before You Write a Single Line of Code, Get Your Environments Right</h2>
         <p class="post-card-excerpt">Environment decisions in Power Platform are irreversible. Here's what to get right before writing a single line of code — topology, security groups, URLs, and the four mistakes that haunt projects.</p>
         <a href="post01-environment-strategy.html" class="post-card-link">Read post →</a>
+      </div>
+    </article>
+
+    <!-- Post 00 -->
+    <article class="post-card"
+      data-tags="alm,architecture"
+      data-title="Meet Mr. YOLO — Power Platform Deployment Series"
+      data-excerpt="Before environments, pipelines, and solutions — meet the developer who ships first and asks questions never. The story of how good intentions build unmaintainable systems, and why this series exists."
+      onclick="location.href='post00-mr-yolo.html'"
+      style="cursor:pointer">
+      <div class="post-card-thumb">
+        <img src="../assets/screenshots/post00/from_yolo_to_alm_v3.png" alt="From YOLO to ALM — Power Platform Deployment Series" class="post-card-thumb-img" loading="lazy">
+      </div>
+      <div class="post-card-content">
+        <div class="post-card-badge">Deployment Series · Post 00</div>
+        <div class="post-card-meta">
+          <span class="post-card-tag">ALM · Series Intro</span>
+          <span class="post-card-date">March 2026</span>
+          <span class="post-card-read">8 min read</span>
+        </div>
+        <h2 class="post-card-title">Meet Mr. YOLO</h2>
+        <p class="post-card-excerpt">Before environments, pipelines, and solutions — meet the developer who ships first and asks questions never. The story of how good intentions build unmaintainable systems, and why this series exists.</p>
+        <a href="post00-mr-yolo.html" class="post-card-link">Read post →</a>
       </div>
     </article>
 
