@@ -421,6 +421,17 @@
   .license-table tr:last-child td { border-bottom: none; }
   .lt-name { font-family: 'Fira Code', monospace; font-size: 12px; color: var(--copper); font-weight: 500; }
 
+  /* ── F&O prerequisite chain ── */
+  .fo-prereq { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 20px auto; max-width: 500px; }
+  .fo-step { display: flex; align-items: flex-start; gap: 14px; background: #fef3e2; border: 1px solid #e6a830; border-radius: 8px; padding: 14px 18px; width: 100%; box-sizing: border-box; }
+  .fo-num { width: 26px; height: 26px; border-radius: 50%; background: #e6a830; color: #fff; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .fo-step-content { flex: 1; }
+  .fo-step-title { font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 600; color: #7a4f00; margin-bottom: 3px; }
+  .fo-step-note { font-size: 12.5px; color: #a06800; line-height: 1.45; }
+  .fo-connector { display: flex; flex-direction: column; align-items: center; padding: 2px 0; gap: 0; }
+  .fo-connector-line { width: 1px; height: 18px; background: #e6a830; }
+  .fo-connector-arrow { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #e6a830; }
+
   /* ── Screenshot placeholder ── */
   .screenshot-placeholder {
     border: 1.5px dashed var(--border2);
@@ -1162,7 +1173,7 @@
         <td>Optional</td>
         <td>✅ Yes (wipes everything)</td>
         <td><span class="cross">✗</span></td>
-        <td>Microsoft's standard type for Dev, Test, and UAT environments in an ALM pipeline. Can be reset, which is useful for refreshing a test environment but wipes everything instantly with no recovery path if triggered carelessly. No SLA. This post recommends Production-type instead; see the note below.</td>
+        <td>Microsoft's recommended type for Dev, Test, and UAT environments. Purpose-built for non-production work. Can be reset, which is useful for refreshing a test environment between cycles, but wipes everything instantly with no recovery path if triggered carelessly. No SLA coverage. See the note below on the Sandbox vs Production-type tradeoff.</td>
       </tr>
       <tr>
         <td class="td-env">Production</td>
@@ -1170,7 +1181,7 @@
         <td>Optional</td>
         <td><span class="cross">✗</span></td>
         <td>✅ Full SLA</td>
-        <td>Required for your production environment. This post also recommends it for Test, UAT, and Pre-Prod — an opinionated stance that trades flexibility for stability: no reset risk, full backup and point-in-time restore, and SLA coverage at every stage. Microsoft's own ALM guidance uses Sandbox for pre-production.</td>
+        <td>Microsoft's recommended type for production environments. Cannot be reset. Full daily backup, point-in-time restore, and SLA coverage. Some teams extend this type to their entire pipeline (Dev, Test, UAT, Pre-Prod) to eliminate reset risk at every stage. That is an opinionated choice, not Microsoft's standard guidance. See the note below.</td>
       </tr>
       <tr>
         <td class="td-env">Trial</td>
@@ -1183,11 +1194,11 @@
     </tbody>
   </table>
 
-  <div class="callout warn">
-    <div class="callout-label">Why this post recommends Production-type for your whole pipeline</div>
-    <p>Microsoft's official ALM guidance uses Sandbox environments for Dev, Test, and UAT — and that's a perfectly valid choice. Sandbox is purpose-built for non-production work and supports reset, which can be genuinely useful for refreshing test data between test cycles.</p>
-    <p>This post takes a more conservative stance: use Production-type environments for every stage in your pipeline, including Dev, Test, and UAT. The reason is reset risk. A Sandbox environment can be wiped by any admin in the Power Platform Admin Center in seconds — one toggle, one confirm. There is no recovery path. On a client-facing project where six months of test data and configuration sits in that environment, that risk isn't worth carrying. Production-type also adds SLA coverage, automatic daily backups, and point-in-time restore to every stage of your pipeline.</p>
-    <p>Know that this is an opinionated recommendation, not universal Microsoft guidance. If your team understands the reset risk and has strict access controls on the Admin Center, Sandbox is a legitimate choice for pre-production stages.</p>
+  <div class="callout">
+    <div class="callout-label">Sandbox vs Production-type: the tradeoff</div>
+    <p><strong>Microsoft's standard guidance:</strong> use Sandbox for Dev, Test, and UAT; use Production for your production environment. Sandbox is purpose-built for non-production work, supports reset for refreshing test data between cycles, and costs the same as Production in terms of capacity. This is the right answer for most teams.</p>
+    <p><strong>The case for Production-type everywhere:</strong> a Sandbox environment can be reset by any admin in the Power Platform Admin Center in seconds, one toggle, one confirm, no recovery path. On a long-running client project where months of test configuration and data sit in that environment, some architects prefer to eliminate that risk entirely by using Production-type for every pipeline stage. You also get SLA coverage and point-in-time restore at every stage, not just production. That is a legitimate risk management decision, but it is not what Microsoft recommends by default.</p>
+    <p>Either approach works. The choice depends on your team's Admin Center access controls and your appetite for reset risk. What is not optional: every pipeline environment needs a security group assigned, Managed Environments enabled, and DLP policies in place regardless of which type you choose.</p>
   </div>
 
 
@@ -1270,6 +1281,35 @@
   <div class="callout warn">
     <div class="callout-label">If you're connecting to Dynamics 365 F&amp;O</div>
     <p>Finance &amp; Operations integration adds three hard constraints that must be decided before any environment is created. First, the Power Platform environment must be a <strong>Linked Environment</strong>: configured from the F&amp;O side, this binds a single Power Platform environment to a specific F&amp;O instance. Second, a Linked Environment must be a <strong>Managed Environment</strong>: not a recommendation, a prerequisite. Third, any environment used for F&amp;O-connected development must have the <strong>Dynamics 365 apps toggle enabled at creation time</strong>: this is irreversible. Miss it and you are recreating the environment from scratch, migrating everything, and updating every integration.</p>
+  </div>
+
+  <div class="post-figure">
+    <div class="fo-prereq">
+      <div class="fo-step">
+        <div class="fo-num">1</div>
+        <div class="fo-step-content">
+          <div class="fo-step-title">Linked Environment</div>
+          <div class="fo-step-note">One Power Platform environment bound to one F&amp;O instance. Configured from the F&amp;O side, not the Power Platform side. Cannot be changed after the link is established.</div>
+        </div>
+      </div>
+      <div class="fo-connector"><div class="fo-connector-line"></div><div class="fo-connector-arrow"></div></div>
+      <div class="fo-step">
+        <div class="fo-num">2</div>
+        <div class="fo-step-content">
+          <div class="fo-step-title">Managed Environment</div>
+          <div class="fo-step-note">Required, not optional. A Linked Environment must be a Managed Environment. Enable this in Power Platform Admin Center under the environment's settings before linking.</div>
+        </div>
+      </div>
+      <div class="fo-connector"><div class="fo-connector-line"></div><div class="fo-connector-arrow"></div></div>
+      <div class="fo-step">
+        <div class="fo-num">3</div>
+        <div class="fo-step-content">
+          <div class="fo-step-title">Dynamics 365 Apps Toggle</div>
+          <div class="fo-step-note">Must be enabled at environment creation time. Irreversible. If this toggle was not set when the database was first provisioned, the environment must be recreated from scratch.</div>
+        </div>
+      </div>
+    </div>
+    <p class="figure-caption">Fig. 7b. F&amp;O integration prerequisites — all three must be decided before the environment is created.</p>
   </div>
 
   <div class="callout warn">
